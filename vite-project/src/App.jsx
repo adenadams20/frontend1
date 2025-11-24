@@ -3,6 +3,6 @@ import React from 'react'
 
 export default function App() {
   return (
-    <div>App</div>
+    <div className='bg-black-100'>App</div>
   )
 }
