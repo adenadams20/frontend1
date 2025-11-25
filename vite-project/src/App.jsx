@@ -1,10 +1,14 @@
-
-import React from 'react'
-import Dashboard from './pages/Dashboard'
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/Transactions";
 
 export default function App() {
   return (
     
-    <Dashboard/>
-  )
+      <Routes>
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Transactions />} />
+      </Routes>
+  );
 }
