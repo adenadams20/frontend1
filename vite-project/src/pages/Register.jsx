@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"
 export default function Register() {
   return (
     <>
@@ -96,9 +96,9 @@ export default function Register() {
 
           <p className="mt-10 text-center text-sm/6 text-gray-400">
             vous avez deja un compte?{' '}
-            <a href="login" className="font-semibold text-indigo-400 hover:text-indigo-300">
+            <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
               sign up
-            </a>
+            </Link>
           </p>
           
         </div>
