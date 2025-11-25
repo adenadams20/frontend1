@@ -40,11 +40,11 @@ export default function Navbar() {
         {/* Cercle profil + email */}
         <div className="flex items-center gap-2 text-gray-500">
           <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold">
-            B
+            
           </div>
           <span>bassirou@email.com</span>
         </div>
       </div>
-    </nav>
+    </nav> 
   );
 }
