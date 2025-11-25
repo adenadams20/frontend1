@@ -1,10 +1,7 @@
-import React from "react";
-function Settings() {
+import React from 'react'
+
+export default function Settings() {
   return (
-    <div className="container-fluid">
-      <h2 class="se">Parametres</h2>
-    </div>
+    <div className='bg-red-800'>Settings</div>
   )
 }
-
-export default Settings;
