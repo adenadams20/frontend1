@@ -1,8 +1,9 @@
+import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-white shadow-lg h-screen p-6">
+    <aside className="hidden md:flex flex-col w-64  bg-white shadow-lg h-screen p-6 overflow-hidden">
 
       <div className="flex flex-col flex-grow justify-between">
 
@@ -16,44 +17,43 @@ export default function Sidebar() {
             <Link 
               to="/dashboard" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition  hover:text-blue-600"
-            >dashboard
-              
-             
+            >
+              <Home /> Dashboard
             </Link>
 
             <Link 
               to="/transactions" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg  hover:bg-blue-50 transition  hover:text-blue-600"
             >
-              Transactions
+              <CreditCard /> Transactions
             </Link>
 
             <Link 
               to="/transfer" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg  hover:bg-blue-50 transition  hover:text-blue-600"
             >
-              Transfert
+              <Send /> Transfert
             </Link>
 
             <Link 
               to="/payment" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg  hover:bg-blue-50 transition  hover:text-blue-600"
             >
-              Paiement
+              <Wallet /> Paiement
             </Link>
 
             <Link 
               to="/settings" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg  hover:bg-blue-50 transition  hover:text-blue-600"
             >
-              Paramètres
+              <Settings /> Paramètres
             </Link>
 
             <Link 
               to="/support" 
               className="flex items-center gap-3 py-3 px-2 rounded-lg  hover:bg-blue-50 transition  hover:text-blue-600"
             >
-              Support
+              <HelpCircle /> Support
             </Link>
 
           </nav>
@@ -67,7 +67,7 @@ export default function Sidebar() {
             to="/login" 
             className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-red-100 hover:text-red-600 transition"
           >
-             Déconnexion
+            <LogOut /> Déconnexion
           </Link>
         </div>
 
