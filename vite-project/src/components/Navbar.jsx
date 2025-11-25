@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Moon, Bell } from "lucide-react";
+import { Menu, X, Moon, Bell, Search } from "lucide-react";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
