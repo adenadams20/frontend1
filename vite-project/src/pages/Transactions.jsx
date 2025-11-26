@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function Transactions() {
   const [active, setActive] = useState("toutes");
   const [dateAsc, setDateAsc] = useState(true); // état pour trier par date
+  const [dateActive, setDateActive] = useState(false);
 
   const transactions = [
     { id: 1, transaction: "Abonnement Netflix", categorie: "Dépenses", date: "2025-01-20", status: "complété", montant: "-11 807 FCFA" },
@@ -32,7 +36,8 @@ export default function Transactions() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className=" ">
+ <div className="min-h-screen bg-gray-100 p-12 max-w-5xl ml-auto">
 
       {/* TITRE */}
       <h1 className="text-3xl font-bold">Transactions</h1>
@@ -40,17 +45,17 @@ export default function Transactions() {
 
       {/* CARDS STATS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-300">
-          <p className="text-gray-600">Revenus ce mois</p>
-          <p className="text-green-600 text-3xl font-semibold mt-2">+3 245 487 XOF</p>
-        </div>
+       <div className="bg-white p-3 rounded-2xl shadow-md border border-gray-300">
+  <p className="text-gray-600">Revenus ce mois</p>
+  <p className="text-green-600 text-3xl font-semibold mt-2">+3 245 487 XOF</p>
+</div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-300">
+        <div className="bg-white p-3 rounded-2xl shadow-md border border-gray-300">
           <p className="text-gray-600">Dépenses ce mois</p>
           <p className="text-red-600 text-3xl font-semibold mt-2">-321 083 XOF</p>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-md border border-gray-300">
+        <div className="bg-white p-3 rounded-2xl shadow-md border border-gray-300">
           <p className="text-gray-600">Total transactions</p>
           <p className="text-3xl font-semibold mt-2">12</p>
         </div>
@@ -62,13 +67,13 @@ export default function Transactions() {
 
           {/* Recherche */}
           <div className="flex items-center bg-gray-100 px-4 py-2 rounded-xl w-full md:w-1/3">
-            <span className="text-gray-500 text-xl">🔍</span>
-            <input
-              type="text"
-              placeholder="Rechercher une transaction..."
-              className="bg-transparent w-full ml-2 focus:outline-none"
-            />
-          </div>
+  <MagnifyingGlassIcon className="w-5 h-5 text-gray-500" />
+  <input
+    type="text"
+    placeholder="Rechercher une transaction..."
+    className="bg-transparent w-full ml-2 focus:outline-none"
+  />
+</div>
 
           {/* Boutons filtres */}
           <div className="flex items-center space-x-3">
@@ -98,20 +103,26 @@ export default function Transactions() {
             </button>
 
             {/* DATE */}
-            <button
-              onClick={() => setDateAsc(!dateAsc)}
-              className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl flex items-center gap-2"
-            >
-              ⬆️ Date
-            </button>
+   <button
+  onClick={() => {
+    setDateAsc(!dateAsc);    // ton code existant pour trier
+    setDateActive(!dateActive); // état pour changer la couleur
+  }}
+  className={`px-5 py-2 rounded-xl flex items-center gap-2 ${
+    dateActive ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-700"
+  }`}
+>
+  <CalendarDaysIcon className="w-5 h-5" />
+  Date
+</button>
 
             {/* EXPORT */}
             <button
-              className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl flex items-center gap-2"
-            >
-              ⬇️ Export
-            </button>
-
+  className="bg-gray-100 text-gray-700 px-5 py-2 rounded-xl flex items-center gap-2"
+>
+  <ArrowUpTrayIcon className="w-5 h-5" />
+  Export
+</button>
           </div>
         </div>
       </div>
@@ -165,6 +176,7 @@ export default function Transactions() {
         </table>
       </div>
 
+    </div>
     </div>
   );
 }
