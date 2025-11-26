@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Menu, X, Moon, Bell, Search } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -51,6 +50,7 @@ export default function Navbar() {
           </div>
           <span>bassirou@email.com</span>
         </div>
+
       </div>
     </nav>
   );

@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions";
+import Transfer from "./pages/Transfer.jsx";
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
         {/* Ajoute ici toutes tes autres pages */}
+        <Route path="/transfer" element={<Transfer />} />
       </Route>
     </Routes>
   );
