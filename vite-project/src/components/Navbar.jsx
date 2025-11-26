@@ -6,7 +6,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-white text-black p-4 flex items-center justify-between shadow">
+    <nav className="w-min-full fixed top-0 w-full md:pr-69  bg-white text-black p-4 flex items-center  justify-between shadow ">
       <h1 className="text-xl font-bold">MyBank</h1>
 
       {/* Bouton menu mobile */}

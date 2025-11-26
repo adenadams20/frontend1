@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar() {
   return (
-    <aside className="hidden md:flex flex-col w-64  bg-white shadow-lg h-screen p-6 overflow-hidden">
+    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bg-white shadow-2xl h-screen p-6">
 
       <div className="flex flex-col flex-grow justify-between">
 

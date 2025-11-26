@@ -8,6 +8,7 @@ import {
   BriefcaseIcon
 } from "@heroicons/react/24/outline";
 
+
 export default function Dashboard() {
 
   const cards = [
@@ -18,16 +19,17 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen  bg-gray-50 p-6 lg:p-12 pr-12 font-sans text-gray-800">
-      <header className="max-w-7xl mx-auto">
+    <div className='min-h-screen w-full mt-15  bg-gray-50 p-6 font-sans text-gray-800'>
+    <div className="min-h-screen w-full   bg-gray-50  font-sans text-gray-800">
+      <header className="max-w-7xl  ">
         <h1 className="text-3xl font-semibold mb-1">Dashboard</h1>
         <p className="text-gray-500 mb-6">Vue d'ensemble de vos finances</p>
       </header>
 
-      <main className="max-w-7xl mx-auto space-y-10">
+      <main className="max-w-7xl  space-y-10">
 
         {/* ------------ HERO CARD ------------ */}
-        <section className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl p-8 shadow-md">
+        <section className="bg-gradient-to-r from-blue-500 to-indigo-600 w-full text-white rounded-2xl p-8 shadow-md">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm opacity-90">Solde Total</p>
@@ -69,6 +71,7 @@ export default function Dashboard() {
         <AccountsCards />
 
       </main>
+    </div>
     </div>
   );
 }
