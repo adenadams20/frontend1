@@ -1,75 +1,67 @@
+import { useState, useEffect } from "react";
 import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
+  const location = useLocation(); // récupérer le chemin actuel
+  const [activePath, setActivePath] = useState(() => {
+    // on initialise avec localStorage ou la route actuelle
+    return localStorage.getItem("activePath") || location.pathname;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("activePath", activePath);
+  }, [activePath]);
+
+  const links = [
+    { to: "/dashboard", label: "Dashboard", icon: Home },
+    { to: "/transactions", label: "Transactions", icon: CreditCard },
+    { to: "/transfer", label: "Transfert", icon: Send },
+    { to: "/paiement", label: "Paiement", icon: Wallet },
+    { to: "/settings", label: "Paramètres", icon: Settings },
+    { to: "/support", label: "Support", icon: HelpCircle },
+  ];
+
   return (
     <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bg-white shadow-2xl h-screen p-6">
-
       <div className="flex flex-col flex-grow justify-between">
-
         <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-8">Bank App</h2>
+          <h2 className="text-2xl font-bold  mb-8">Bank App</h2>
 
           <nav className="flex flex-col text-gray-700">
+            {links.map((link) => {
+              const Icon = link.icon;
+              const isActive = activePath === link.to;
 
-            <Link 
-              to="/dashboard" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <Home /> Dashboard
-            </Link>
-
-            <Link 
-              to="/transactions" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <CreditCard /> Transactions
-            </Link>
-
-            <Link 
-              to="/transfer" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <Send /> Transfert
-            </Link>
-
-            <Link 
-              to="/payment" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <Wallet /> Paiement
-            </Link>
-
-            <Link 
-              to="/settings" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <Settings /> Paramètres
-            </Link>
-
-            <Link 
-              to="/support" 
-              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-blue-50 transition hover:text-blue-600"
-            >
-              <HelpCircle /> Support
-            </Link>
-
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setActivePath(link.to)}
+                  className={`flex items-center gap-3 py-3 px-2 rounded-lg transition
+                    ${isActive
+                      ? "bg-blue-900 text-white"
+                      : "hover:bg-blue-200 hover:text-white"
+                    }`}
+                >
+                  <Icon /> {link.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
         <div>
           <hr className="my-6 border-gray-300" />
 
-          <Link 
-            to="/login" 
+          <Link
+            to="/login"
             className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-red-100 hover:text-red-600 transition"
           >
             <LogOut /> Déconnexion
           </Link>
         </div>
-
       </div>
-
     </aside>
   );
 }
