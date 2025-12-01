@@ -12,12 +12,11 @@ import {
 export default function Dashboard() {
 
   const cards = [
-    { title: 'Transfert', icon: ArrowsRightLeftIcon, color: 'text-blue-600' },
-    { title: 'Paiement', icon: CreditCardIcon, color: 'text-green-500' },
-    { title: 'Historique', icon: ClockIcon, color: 'text-purple-500' },
-    { title: 'Plus', icon: PlusIcon, color: 'text-orange-400' },
-  ];
-
+  { title: 'Transfert', icon: ArrowsRightLeftIcon, color: 'text-blue-600', link: '/transfert' },
+  { title: 'Paiement', icon: CreditCardIcon, color: 'text-green-500', link: '/paiement' },
+  { title: 'Historique', icon: ClockIcon, color: 'text-purple-500', link: '/historique' },
+  { title: 'Plus', icon: PlusIcon, color: 'text-orange-400', link: '/plus' },
+];
   return (
     <div className='min-h-screen w-full mt-15  bg-gray-50 p-6 font-sans text-gray-800'>
     <div className="min-h-screen w-full   bg-gray-50  font-sans text-gray-800">
@@ -50,22 +49,25 @@ export default function Dashboard() {
         </section>
 
         {/* ------------ ACTION CARDS ------------ */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {cards.map((c) => (
-            <div
-              key={c.title}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4"
-            >
-              <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <c.icon className={`w-6 h-6 ${c.color}`} />
-              </div>
+       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+  {cards.map((c) => (
+    <a
+      key={c.title}
+      href={c.link}
+      className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4 hover:shadow-lg transition cursor-pointer"
+    >
+      <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+        <c.icon className={`
+w-6 h-6 ${c.color}`
+} />
+      </div>
 
-              <div className="flex-1">
-                <p className="text-sm text-gray-600">{c.title}</p>
-              </div>
-            </div>
-          ))}
-        </section>
+      <div className="flex-1">
+        <p className="text-sm text-gray-600">{c.title}</p>
+      </div>
+    </a>
+  ))}
+</section>
 
         {/* ------------ MES COMPTES ------------ */}
         <AccountsCards />

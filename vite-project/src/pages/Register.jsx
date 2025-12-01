@@ -110,9 +110,7 @@ export default function Register() {
           </p>
           
         </div>
-        <div className="mt-10 "> 
-            <img src="" alt="" />
-        </div>
+        
         </div>
       </div>
     </>
