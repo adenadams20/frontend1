@@ -1,5 +1,6 @@
 import React from "react";
 
+
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 
@@ -11,6 +12,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import MotdepassOublier from './pages/MotdepassOublier';
 import Paiement from './pages/Paiement';
+import Settings from './pages/Settings';
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 
@@ -29,7 +31,13 @@ function Layout() {
   );
 }
 
-export default function App() {
+
+
+import "./index.css"; 
+
+function App() {
+  
+
   return (
     <Routes>
 
@@ -47,8 +55,17 @@ export default function App() {
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
 
     </Routes>
   );
+    
+    
+      
+   
+  
 }
+
+export default App;
+
