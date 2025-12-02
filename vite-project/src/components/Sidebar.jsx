@@ -56,7 +56,7 @@ export default function Sidebar() {
 
           <Link
             to="/login"
-            className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-red-100 hover:text-red-600 transition"
+            className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 hover:text-red-600 transition"
           >
             <LogOut /> Déconnexion
           </Link>
