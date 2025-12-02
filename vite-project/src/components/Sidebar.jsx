@@ -19,7 +19,7 @@ export default function Sidebar() {
     { to: "/transfer", label: "Transfert", icon: Send },
     { to: "/paiement", label: "Paiement", icon: Wallet },
     { to: "/settings", label: "Paramètres", icon: Settings },
-    { to: "/support", label: "Support", icon: HelpCircle },
+    { to: "/faq", label: "Support", icon: HelpCircle },
   ];
 
   return (

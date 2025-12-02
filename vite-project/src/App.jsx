@@ -1,15 +1,10 @@
 import React from "react";
-<<<<<<< HEAD
-=======
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Transactions from "./pages/Transactions";
-import Faq from "./pages/FAQ";
->>>>>>> 6d3a5e3aef29c12849ad641e5bdae985c0d76b13
 
 
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
+import Faq from "./pages/FAQ";
+
 
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions";
@@ -26,7 +21,6 @@ import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 // Layout principal (Sidebar + Navbar)
 function Layout() {
   return (
-<<<<<<< HEAD
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
@@ -64,6 +58,8 @@ function App() {
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
         <Route path="/settings" element={<Settings />} />
+                 <Route path="/faq" element={<Faq />} />
+
       </Route>
 
     </Routes>
@@ -77,14 +73,5 @@ function App() {
 
 export default App;
 
-=======
-    
-      <Routes>
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Transactions" element={<Transactions />} />
-         <Route path="/" element={<Faq />} />
-      </Routes>
-  );
-}
 
->>>>>>> 6d3a5e3aef29c12849ad641e5bdae985c0d76b13
+

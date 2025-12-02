@@ -36,12 +36,7 @@ export default function Transactions() {
   });
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen w-full max-auto mt-12 bg-gray-100 p-10">
-=======
-    <div className=" ">
- <div className="min-h-screen bg-gray-100 p-12 max-w-5xl ml-auto">
->>>>>>> 6d3a5e3aef29c12849ad641e5bdae985c0d76b13
 
       {/* TITRE */}
       <h1 className="text-3xl font-bold">Transactions</h1>
@@ -180,7 +175,6 @@ export default function Transactions() {
         </table>
       </div>
 
-    </div>
     </div>
   );
 }
