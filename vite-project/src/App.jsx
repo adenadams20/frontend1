@@ -1,8 +1,26 @@
-
 import React from 'react'
+import { Routes, Route } from "react-router-dom"
+import Register from './pages/Register'
+import Login from './pages/Login'
+import MotdepassOublier from './pages/MotdepassOublier'
+import Paiement from './pages/Paiement'
+import ConditiondUtilisation from './pages/Conditiondutilisation'
+
+import './App.css'
 
 export default function App() {
   return (
-    <div>App</div>
+     <Routes>
+       
+        <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+     <Route path="/register" element={<Register />} />
+      <Route path="/motdepassoublier" element={<MotdepassOublier />} /> 
+      <Route path="/paiement" element={<Paiement />} /> 
+      <Route path="/conditiondutilisation" element={<ConditiondUtilisation/>} /> 
+      
+
+    </Routes>
+    
   )
 }
