@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "../components/Button";
 
 export default function Transfer() {
   const [tab, setTab] = useState("interne");
@@ -13,7 +14,7 @@ export default function Transfer() {
 
       {/* Onglets */}
       <div className="flex gap-4 mb-6 border-b pb-2">
-        <button
+        <Button
           className={`pb-2 ${
             tab === "interne"
               ? "border-b-2 border-blue-600 text-blue-600 font-semibold"
@@ -22,9 +23,9 @@ export default function Transfer() {
           onClick={() => setTab("interne")}
         >
           Transfert interne
-        </button>
+        </Button>
 
-        <button
+        <Button
           className={`pb-2 ${
             tab === "externe"
               ? "border-b-2 border-blue-600 text-blue-600 font-semibold"
@@ -33,7 +34,7 @@ export default function Transfer() {
           onClick={() => setTab("externe")}
         >
           Transfert externe
-        </button>
+        </Button>
       </div>
 
       {/* --------------------------------------------- */}
@@ -75,12 +76,12 @@ export default function Transfer() {
             {/* Boutons rapides */}
             <div className="flex gap-2 mt-2">
               {[50, 100, 200, 500].map((value) => (
-                <button
+                <Button
                   key={value}
                   className="px-3 py-2 border rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100"
                 >
                   {value}€
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -97,9 +98,9 @@ export default function Transfer() {
           </div>
 
           {/* Bouton */}
-          <button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
+          <Button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
             Effectuer le transfert
-          </button>
+          </Button>
         </div>
       )}
 
@@ -141,12 +142,12 @@ export default function Transfer() {
 
             <div className="flex gap-2 mt-2">
               {[50, 100, 200, 500].map((value) => (
-                <button
+                <Button
                   key={value}
                   className="px-3 py-2 border rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100"
                 >
-                  {value}€
-                </button>
+                  {value}F
+                </Button>
               ))}
             </div>
           </div>
@@ -163,9 +164,9 @@ export default function Transfer() {
           </div>
 
           {/* Bouton */}
-          <button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
+          <Button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
             Effectuer le transfert
-          </button>
+          </Button>
 
           {/* --------------------------------------------- */}
           {/*      CONTACTS RÉCENTS                         */}

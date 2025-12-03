@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Menu, X, Moon, Bell, Search } from "lucide-react";
+import Button from "./Button";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <nav className="w-min-full fixed top-0 w-full md:pr-69  bg-white text-black p-4 flex items-center  justify-between shadow ">
@@ -33,9 +34,9 @@ export default function Navbar() {
         </div>
 
         {/* Icône lune */}
-        <button className="text-gray-600 hover:text-gray-900">
+        <Button className="text-gray-600 hover:text-gray-900">
           <Moon size={24} />
-        </button>
+        </Button>
 
         {/* Icône cloche */}
         <button className="relative text-gray-600 hover:text-gray-900">

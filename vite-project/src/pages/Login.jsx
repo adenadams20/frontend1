@@ -2,27 +2,20 @@ import { Link } from "react-router-dom"
 import React from "react";
 import img from "../assets/img/WhatsApp_Image_2025-11-28_à_15.15.57_64409da9-removebg-preview.png";
 import img1 from "../assets/img/WhatsApp_Image_2025-11-28_à_15.17.53_c49425cf-removebg-preview.png"
-
+import InputField from "../components/InputField";
 
 export default function Login() {
   return (
     
     <>
-  <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 bg-gray-50 ">
+  <div className="min-h-screen  flex items-center justify-center px-6 py-12 lg:px-8 bg-blue-400 ">
     
     {/* --- Conteneur principal avec image + formulaire --- */}
-    <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10 w-full mx-auto p-8 bg-gray-50   rounded-lg">
       {/* IMAGE */}
-      <div className="flex items-center  justify-center " >
-        <img
-          src={img}
-          alt="login illustration"
-          className="w-full h-100  object-contain rounded-lg"
-        />
-      </div>
+      
 
       {/* FORMULAIRE */}
-      <div className="flex flex-col justify-center w-sm  p-3">
+      <div className="flex flex-col bg-gray-50 rounded-2xl  shadow justify-center w-sm  p-3">
         <div className="">
           <img
           src={img1}
@@ -41,12 +34,12 @@ export default function Login() {
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Adresse email
             </label>
-            <input
+            <InputField
               id="email"
               name="email"
               type="email"
               required
-              className="mt-2 w-full rounded-md border-gray-300 px-3 text-white py-2 bg-blue-900 shadow-sm focus:border-indigo-600 focus:ring-indigo-600 hover:bg-blue-300"
+              className=""
             />
           </div>
 
@@ -54,12 +47,12 @@ export default function Login() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Mot de passe
             </label>
-            <input
+            <InputField
               id="password"
               name="password"
               type="password"
               required
-              className="mt-2 w-full rounded-md border-gray-300 px-3 bg-blue-900 text-white py-2 shadow-sm focus:border-indigo-600 focus:ring-indigo-600"
+              className=""
             />
           </div>
 
@@ -96,7 +89,7 @@ export default function Login() {
 
       
     </div>
-  </div>
+  
 </>
 
   )

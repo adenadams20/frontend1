@@ -1,8 +1,8 @@
 import React from 'react'
-import { 
-  ArrowsRightLeftIcon, 
-  CreditCardIcon, 
-  ClockIcon, 
+import {
+  ArrowsRightLeftIcon,
+  CreditCardIcon,
+  ClockIcon,
   PlusIcon,
   BanknotesIcon,
   BriefcaseIcon
@@ -12,68 +12,68 @@ import {
 export default function Dashboard() {
 
   const cards = [
-  { title: 'Transfert', icon: ArrowsRightLeftIcon, color: 'text-blue-600', link: '/transfert' },
-  { title: 'Paiement', icon: CreditCardIcon, color: 'text-green-500', link: '/paiement' },
-  { title: 'Historique', icon: ClockIcon, color: 'text-purple-500', link: '/historique' },
-  { title: 'Plus', icon: PlusIcon, color: 'text-orange-400', link: '/plus' },
-];
+    { title: 'Transfert', icon: ArrowsRightLeftIcon, color: 'text-blue-600', link: '/transfert' },
+    { title: 'Paiement', icon: CreditCardIcon, color: 'text-green-500', link: '/paiement' },
+    { title: 'Historique', icon: ClockIcon, color: 'text-purple-500', link: '/historique' },
+    { title: 'Plus', icon: PlusIcon, color: 'text-orange-400', link: '/plus' },
+  ];
   return (
     <div className='min-h-screen w-full mt-15  bg-gray-50 p-6 font-sans text-gray-800'>
-    <div className="min-h-screen w-full   bg-gray-50  font-sans text-gray-800">
-      <header className="max-w-7xl  ">
-        <h1 className="text-3xl font-semibold mb-1">Dashboard</h1>
-        <p className="text-gray-500 mb-6">Vue d'ensemble de vos finances</p>
-      </header>
+      <div className="min-h-screen w-full   bg-gray-50  font-sans text-gray-800">
+        <header className="max-w-7xl  ">
+          <h1 className="text-3xl font-semibold mb-1">Dashboard</h1>
+          <p className="text-gray-500 mb-6">Vue d'ensemble de vos finances</p>
+        </header>
 
-      <main className="max-w-7xl  space-y-10">
+        <main className="max-w-7xl  space-y-10">
 
-        {/* ------------ HERO CARD ------------ */}
-        <section className="bg-gradient-to-r from-blue-500 to-indigo-600 w-full text-white rounded-2xl p-8 shadow-md">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-sm opacity-90">Solde Total</p>
-              <p className="text-3xl font-semibold mt-2">86 729,25 €</p>
+          {/* ------------ HERO CARD ------------ */}
+          <section className="bg-gradient-to-r from-blue-500 to-indigo-600 w-full text-white rounded-2xl p-8 shadow-md">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-sm opacity-90">Solde Total</p>
+                <p className="text-3xl font-semibold mt-2">86 729,25 €</p>
 
-              <div className="flex items-center mt-4 text-sm opacity-90">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10l6 6L21 4"></path>
-                </svg>
-                <span>+12.5% ce mois</span>
+                <div className="flex items-center mt-4 text-sm opacity-90">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10l6 6L21 4"></path>
+                  </svg>
+                  <span>+12.5% ce mois</span>
+                </div>
+              </div>
+
+              <div className="mt-6 lg:mt-0 lg:ml-6 flex-1">
+                <div className="h-24 lg:h-20 rounded-xl bg-white/20"></div>
               </div>
             </div>
+          </section>
 
-            <div className="mt-6 lg:mt-0 lg:ml-6 flex-1">
-              <div className="h-24 lg:h-20 rounded-xl bg-white/20"></div>
-            </div>
-          </div>
-        </section>
-
-        {/* ------------ ACTION CARDS ------------ */}
-       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-  {cards.map((c) => (
-    <a
-      key={c.title}
-      href={c.link}
-      className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4 hover:shadow-lg transition cursor-pointer"
-    >
-      <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-        <c.icon className={`
+          {/* ------------ ACTION CARDS ------------ */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {cards.map((c) => (
+              <a
+                key={c.title}
+                href={c.link}
+                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center space-x-4 hover:shadow-lg transition cursor-pointer"
+              >
+                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                  <c.icon className={`
 w-6 h-6 ${c.color}`
-} />
+                  } />
+                </div>
+
+                <div className="flex-1">
+                  <p className="text-sm text-gray-600">{c.title}</p>
+                </div>
+              </a>
+            ))}
+          </section>
+
+          {/* ------------ MES COMPTES ------------ */}
+          <AccountsCards />
+
+        </main>
       </div>
-
-      <div className="flex-1">
-        <p className="text-sm text-gray-600">{c.title}</p>
-      </div>
-    </a>
-  ))}
-</section>
-
-        {/* ------------ MES COMPTES ------------ */}
-        <AccountsCards />
-
-      </main>
-    </div>
     </div>
   );
 }

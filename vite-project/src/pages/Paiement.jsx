@@ -3,6 +3,8 @@ import { FaDroplet } from "react-icons/fa6";
 import { MdElectricBolt } from "react-icons/md";
 import { FaWifi } from "react-icons/fa";
 import { PiDeviceMobileCamera } from "react-icons/pi";
+import Button from "../components/Button";
+import InputField from "../components/InputField";
 
 
 
@@ -19,7 +21,7 @@ export default function Paiement() {
 
 
   return (
-    <div className="w-full mt-20 bg--gray-100 p-4">
+    <div className="w-full mt-15 bg-gray-100 p-2">
       {/* --- TABS CARDS --- */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {tabs.map((t) => (
@@ -43,7 +45,7 @@ export default function Paiement() {
       </ul>
 
       {/* --- CONTENT --- */}
-      <div className="mt-6 p-5 rounded-xl shadow">
+      <div className="mt-6 p-5 rounded-xl ">
         {activeTab === "eau" && (
           <div className=" py-4">
             <h4 className="font-bold text-lg mb-4">Détails du paiement</h4>
@@ -51,14 +53,14 @@ export default function Paiement() {
             <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
 
               {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full shadow-2xl p-4 bg-white rounded-lg">
+              <div className="md:w-2/3 w-full shadow p-4 bg-white rounded-lg">
                 <form>
                     <h4>Payer depuis</h4>
                   
                   <div className="mt-4">
                     <select
                       name=""
-                      className="p-3 w-full border rounded-2xl"
+                      className="p-3 w-full  "
                       id="eau"
                     >
                       <option className="rounded border shadow-2xl bg-white">Choisir un service</option>
@@ -68,21 +70,21 @@ export default function Paiement() {
 
                   <div className="mt-4">
                     <label>Référence / Fournisseur</label>
-                    <input type="text" className="w-full mt-2 border rounded p-2" />
+                    <InputField  />
                   </div>
 
                   <div className="mt-4">
                     <label>Montant</label>
-                    <input
+                    <InputField
                       type="number"
-                      className="w-full mt-2 border rounded p-2 text-end"
+                      
                       placeholder="F"
                     />
                   </div>
 
-                  <button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
                     Payer maintenant
-                  </button>
+                  </Button>
                 </form>
               </div>
 
@@ -127,7 +129,7 @@ export default function Paiement() {
                   <div className="mt-4">
                     <select
                       name=""
-                      className="p-3 w-full border rounded-2xl"
+                      className="p-3 w-full  rounded-2xl"
                       id=""
                     >
                       <option >Choisir un service</option>
@@ -137,21 +139,20 @@ export default function Paiement() {
 
                   <div className="mt-4">
                     <label>Référence / Fournisseur</label>
-                    <input type="text" className="w-full mt-2 border rounded p-2" />
+                    <InputField type="text" className="w-full mt-2  rounded p-2" />
                   </div>
 
                   <div className="mt-4">
                     <label>Montant</label>
-                    <input
+                    <InputField
                       type="number"
-                      className="w-full mt-2 border rounded p-2 text-end"
                       placeholder="F"
                     />
                   </div>
 
-                  <button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
                     Payer maintenant
-                  </button>
+                  </Button>
                 </form>
               </div>
 
@@ -194,11 +195,11 @@ export default function Paiement() {
                   <div className="mt-4">
                     <select
                       name=""
-                      className="p-3 w-full border rounded-2xl"
+                      className="p-3 w-full rounded-2xl"
                       id=""
                     >
                       <option selected="Choisir un service">Choisir un service</option>
-                      <option value="" selected="selected">internet</option>
+                      <option value="" selected="">internet</option>
                     </select>
                   </div>
 
@@ -209,16 +210,17 @@ export default function Paiement() {
 
                   <div className="mt-4">
                     <label>Montant</label>
-                    <input
+                    <InputField
                       type="number"
-                      className="w-full mt-2 border rounded p-2 text-end"
-                      placeholder="F"
+                      
+                      className=" placeholder: text-end "
+                      placeholder="XOF"
                     />
                   </div>
 
-                  <button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
                     Payer maintenant
-                  </button>
+                  </Button>
                 </form>
               </div>
 
@@ -271,21 +273,20 @@ export default function Paiement() {
 
                   <div className="mt-4">
                     <label>Référence / Fournisseur</label>
-                    <input type="text" className="w-full mt-2 border rounded p-2" />
+                    <InputField type="text" className="w-full mt-2 border rounded p-2" />
                   </div>
 
                   <div className="mt-4">
                     <label>Montant</label>
-                    <input
+                    <InputField
                       type="number"
-                      className="w-full mt-2 border rounded p-2 text-end"
                       placeholder="F"
                     />
                   </div>
 
-                  <button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
                     Payer maintenant
-                  </button>
+                  </Button>
                 </form>
               </div>
 

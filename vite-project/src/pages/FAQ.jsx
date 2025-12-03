@@ -201,7 +201,7 @@ export default function CentreAide() {
       </div>
       <div className="col-span-2">
   <label className="block font-medium text-gray-700">Sujet</label>
-  <input
+  <Input
     type="text"
     className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
   />
