@@ -1,24 +1,23 @@
-import { useState } from "react";
-import { Menu, X, Moon, Bell, Search } from "lucide-react"; 
-import { Link } from "react-router-dom";
+import { Menu, Moon, Bell } from "lucide-react";
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
-
+export default function Navbar({ openSidebar }) {
   return (
     <nav className="
-      fixed top-0 left-64 right-0 h-16 bg-white shadow 
+      fixed top-0 left-0 md:left-64 right-0 h-16 bg-white shadow 
       flex items-center justify-between px-6 z-30
     ">
       <h1 className="text-xl font-bold">MyBank</h1>
 
-      <button onClick={() => setOpen(!open)} className="md:hidden text-gray-600">
-        {open ? <X size={28} /> : <Menu size={28} />}
+      {/* Bouton Menu mobile */}
+      <button 
+        onClick={openSidebar} 
+        className="md:hidden text-gray-600"
+      >
+        <Menu size={28} />
       </button>
 
-      <div className={`md:flex items-center gap-4 ${open ? "block mt-4" : "hidden"} md:flex`}>
-        
-       
+      {/* Icônes (desktop seulement) */}
+      <div className="hidden md:flex items-center gap-4">
 
         <button className="text-gray-600 hover:text-gray-800">
           <Moon size={24} />
@@ -30,8 +29,7 @@ export default function Navbar() {
         </button>
 
         <div className="flex items-center gap-2 text-gray-600">
-          <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-black font-bold">
-          </div>
+          <div className="w-8 h-8 rounded-full bg-gray-300"></div>
           <span>bassirou@email.com</span>
         </div>
 

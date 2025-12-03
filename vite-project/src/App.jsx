@@ -1,32 +1,36 @@
-import React from "react";
-import Sidebar from "./components/Sidebar.jsx";
-import Navbar from "./components/Navbar.jsx";
-import { Outlet, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbar";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 // Pages
-import Transfer from "./pages/Transfer.jsx";
+import Transfer from "./pages/Transfer";
 
 export default function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div>
-      {/* Sidebar fixe */}
-      <Sidebar />
+    <div className="flex">
 
-      {/* Navbar fixe */}
-      <Navbar />
+      {/* Sidebar responsive */}
+      <Sidebar 
+        isOpen={isOpen}
+        closeSidebar={() => setIsOpen(false)}
+      />
 
-      {/* Contenu principal */}
-      <div className="ml-64 mt-16 p-6">
-        <Routes>
-          {/* Page de transfert */}
-          <Route path="/transfer" element={<Transfer />} />
+      <div className="flex-1 md:ml-64">
+        
+        {/* Navbar */}
+        <Navbar openSidebar={() => setIsOpen(true)} />
 
-          {/* Autres pages (si tu en ajoutes) */}
-          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-          {/* <Route path="/transactions" element={<Transactions />} /> */}
-        </Routes>
+        {/* Contenu */}
+        <div className="pt-20 p-6">
+          <Routes>
+            <Route path="/transfer" element={<Transfer />} />
+          </Routes>
 
-        <Outlet />
+          <Outlet />
+        </div>
       </div>
     </div>
   );
