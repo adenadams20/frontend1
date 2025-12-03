@@ -17,21 +17,9 @@ export default function Navbar() {
         {open ? <X size={28} /> : <Menu size={28} />}
       </button>
 
-      {/* Menu desktop + mobile */}
-      <div
-        className={`${
-          open ? "block mt-4" : "hidden"
-        } md:flex items-center gap-4`}
-      >
-        {/* Barre de recherche */}
-        <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 md:w-64 w-full">
-          <Search size={20} className="mr-2 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            className="bg-transparent focus:outline-none w-full"
-          />
-        </div>
+      <div className={`md:flex items-center gap-4 ${open ? "block mt-4" : "hidden"} md:flex`}>
+        
+       
 
         {/* Icône lune */}
         <Button className="text-gray-600 hover:text-gray-900">

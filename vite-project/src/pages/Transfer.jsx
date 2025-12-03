@@ -1,210 +1,281 @@
 import { useState } from "react";
 import Button from "../components/Button";
 
-export default function Transfer() {
-  const [tab, setTab] = useState("interne");
+export default function Transfert() {
+  const [activeTab, setActiveTab] = useState("interne"); // interne | externe
+  return (
+    <div className="flex justify-center min-h-2 bg-gray-50 mt-18 items-center w-full">
+    <div className="p-6 max-w-4xl   mx-auto">
+      {/* NAVTABS */}
+      <div className="flex justify-center mb-6">
+        <div className="flex bg-gray-100 gap-3 rounded-xl p-1">
+          <Button
+            onClick={() => setActiveTab("interne")}
+            className={`px-6 py-2 rounded-xl ${
+              activeTab === "interne"
+                ? "bg-blue-600 shadow  font-medium text-white focus:bg-blue-600"
+                : "text-blue-600"
+            }`}
+          >
+            Transfert interne
+          </Button>
+
+          <Button
+            onClick={() => setActiveTab("externe")}
+            className={`px-6 py-6 rounded-xl ${
+              activeTab === "externe"
+                ? "bg-blue-600 shadow font-medium text-white focus:bg-blue-600"
+                : "text-blue-600"
+            }`}
+          >
+            Transfert externe
+          </Button>
+        </div>
+      </div>
+
+      {activeTab === "interne" ? <TransfertInterne /> : <TransfertExterne />}
+    </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------
+   🔵 TRANSFERT INTERNE
+--------------------------------------------------- */
+function TransfertInterne() {
+  const [montant, setMontant] = useState("");
+  const [compte, setCompte] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  const quickValues = [50, 100, 200, 500];
+
+  const handleTransfert = () => {
+    if (!montant || !compte) return alert("Veuillez remplir tous les champs");
+
+    setDisabled(true);
+    setSuccess(true);
+
+    setTimeout(() => {
+      setSuccess(false);
+      setDisabled(false);
+      setMontant("");
+      setCompte("");
+    }, 2000);
+  };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {/* Titre */}
-      <h1 className="text-3xl font-bold mb-2">Transfert d'argent</h1>
-      <p className="text-gray-600 mb-6">
-        Effectuez un transfert entre vos comptes ou vers un bénéficiaire
-      </p>
+    <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
 
-      {/* Onglets */}
-      <div className="flex gap-4 mb-6 border-b pb-2">
-        <Button
-          className={`pb-2 ${
-            tab === "interne"
-              ? "border-b-2 border-blue-600 text-blue-600 font-semibold"
-              : "text-gray-500"
-          }`}
-          onClick={() => setTab("interne")}
+      {/* Popup succès */}
+      {success && (
+        <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
+          <div className="text-blue-600 text-5xl">✔</div>
+          <p className="text-blue-600 text-lg font-semibold mt-2">
+            Transfert interne réussi !
+          </p>
+        </div>
+      )}
+
+      <div >
+        <label className="font-medium">Vers le compte</label>
+        <select
+          className="w-full p-3 border rounded-xl mt-1 border-gray-300"
+          value={compte}
+          onChange={(e) => setCompte(e.target.value)}
         >
-          Transfert interne
-        </Button>
+          <option value="">Sélectionner un compte</option>
+          <option>Courant</option>
+          <option>Épargne</option>
+          <option>Business</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="font-medium">Montant</label>
+
+        <div className="flex items-center mt-1">
+          <input
+            type="number"
+            value={montant}
+            onChange={(e) => setMontant(e.target.value)}
+            placeholder="0.00"
+            disabled={disabled}
+            className="w-full p-3 border border-gray-300 rounded-l-xl"
+          />
+          <div className="p-3 border border-gray-300 rounded-r-xl bg-gray-100">
+            XOF
+          </div>
+        </div>
+
+        <div className="flex gap-2 mt-2 flex-wrap">
+          {quickValues.map((v) => (
+            <Button
+              key={v}
+              disabled={disabled}
+              onClick={() => setMontant(v)}
+              className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
+            >
+              {v} XOF
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <Button
+        onClick={handleTransfert}
+        disabled={disabled}
+        className="w-full bg-blue-600 text-white p-3 rounded-xl font-medium disabled:bg-blue-300"
+      >
+        Effectuer le transfert
+      </Button>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------
+   🟣 TRANSFERT EXTERNE (AVEC CONTACTS RÉCENTS)
+--------------------------------------------------- */
+function TransfertExterne() {
+  const [montant, setMontant] = useState("");
+  const [beneficiaire, setBeneficiaire] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  const quickValues = [50, 100, 200, 500];
+
+  // Contacts récents (modifiable)
+  const [contacts, setContacts] = useState([
+    { initials: "MD", name: "Marie Dubois", email: "marie@email.com" },
+    { initials: "PM", name: "Pierre Martin", email: "pierre@email.com" },
+  ]);
+
+  const handleTransfert = () => {
+    if (!montant || !beneficiaire)
+      return alert("Veuillez remplir tous les champs");
+
+    setDisabled(true);
+    setSuccess(true);
+
+    // 🔥 Ajouter automatiquement le nouveau bénéficiaire
+    const newContact = {
+      initials: beneficiaire
+        .split(" ")
+        .map((c) => c[0])
+        .join("")
+        .toUpperCase(),
+      name: beneficiaire,
+      email: "inconnu@email.com",
+    };
+
+    setContacts([newContact, ...contacts]);
+
+    setTimeout(() => {
+      setSuccess(false);
+      setDisabled(false);
+      setMontant("");
+      setBeneficiaire("");
+    }, 2000);
+  };
+
+  return (
+    <div className="relative flex flex-col lg:flex-row gap-6">
+
+      {/* Popup succès */}
+      {success && (
+        <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
+          <div className="text-blue-600 text-5xl">✔</div>
+          <p className="text-blue-600 text-lg font-semibold mt-2">
+            Transfert externe réussi !
+          </p>
+        </div>
+      )}
+
+      {/* FORMULAIRE */}
+      <div className="w-full lg:w-2/3 space-y-4 bg-white p-6 rounded-2xl shadow">
+
+        <div>
+          <label className="font-medium">Depuis le compte</label>
+          <div className="p-3 border border-gray-200 rounded-xl mt-1">
+            <p className="text-gray-500 text-sm">Compte courant</p>
+          </div>
+        </div>
+
+        <div>
+          <label className="font-medium">Bénéficiaire</label>
+          <input
+            type="text"
+            value={beneficiaire}
+            onChange={(e) => setBeneficiaire(e.target.value)}
+            placeholder="Ex: Pierre Ndiaye"
+            disabled={disabled}
+            className="w-full p-3 border border-gray-300 rounded-xl mt-1"
+          />
+        </div>
+
+        <div>
+          <label className="font-medium">Montant</label>
+
+          <div className="flex items-center mt-1">
+            <input
+              type="number"
+              value={montant}
+              onChange={(e) => setMontant(e.target.value)}
+              placeholder="0.00"
+              disabled={disabled}
+              className="w-full p-3 border border-gray-300 rounded-l-xl"
+            />
+            <div className="p-3 border border-gray-300 rounded-r-xl bg-gray-100">
+              XOF
+            </div>
+          </div>
+
+          <div className="flex gap-2 mt-2 flex-wrap">
+            {quickValues.map((v) => (
+              <Button
+                key={v}
+                disabled={disabled}
+                onClick={() => setMontant(v)}
+                className="px-3 py-2 bg-gray-100 k border border-gray-300 rounded-xl text-sm"
+              >
+                {v} XOF
+              </Button>
+            ))}
+          </div>
+        </div>
 
         <Button
-          className={`pb-2 ${
-            tab === "externe"
-              ? "border-b-2 border-blue-600 text-blue-600 font-semibold"
-              : "text-gray-500"
-          }`}
-          onClick={() => setTab("externe")}
+          onClick={handleTransfert}
+          disabled={disabled}
+          className="w-full bg-blue-600 text-white p-3 rounded-xl font-medium disabled:bg-blue-300"
         >
-          Transfert externe
+          Effectuer le transfert
         </Button>
       </div>
 
-      {/* --------------------------------------------- */}
-      {/*        FORMULAIRE TRANSFERT INTERNE           */}
-      {/* --------------------------------------------- */}
+      {/* CONTACTS RÉCENTS */}
+      <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow mt-4 lg:mt-0">
+        <h3 className="font-semibold mb-4">Contacts récents</h3>
 
-      {tab === "interne" && (
         <div className="space-y-4">
-          {/* Depuis le compte */}
-          <div>
-            <label className="font-medium text-gray-700">Depuis le compte</label>
-            <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-              Compte Courant (**** 1234) - 12 458,5 €
-            </div>
-          </div>
-
-          {/* Vers le compte */}
-          <div>
-            <label className="font-medium text-gray-700">Vers le compte</label>
-            <select className="mt-1 w-full p-3 border rounded-lg bg-white">
-              <option>Sélectionner un compte</option>
-              <option>Compte Épargne (**** 5678)</option>
-              <option>Compte Joint (**** 3322)</option>
-            </select>
-          </div>
-
-          {/* Montant */}
-          <div>
-            <label className="font-medium text-gray-700">Montant</label>
-            <div className="flex items-center gap-2 mt-1">
-              <input
-                type="number"
-                className="w-full p-3 border rounded-lg"
-                placeholder="0.00"
-              />
-              <span className="text-gray-700">€</span>
-            </div>
-
-            {/* Boutons rapides */}
-            <div className="flex gap-2 mt-2">
-              {[50, 100, 200, 500].map((value) => (
-                <Button
-                  key={value}
-                  className="px-3 py-2 border rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100"
-                >
-                  {value}€
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="font-medium text-gray-700">
-              Description (optionnel)
-            </label>
-            <textarea
-              className="w-full mt-1 p-3 border rounded-lg"
-              placeholder="Ajoutez une note..."
-            />
-          </div>
-
-          {/* Bouton */}
-          <Button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
-            Effectuer le transfert
-          </Button>
+          {contacts.map((c, i) => (
+            <Button
+              key={i}
+              onClick={() => setBeneficiaire(c.name)}
+              disabled={disabled}
+              className="flex items-center gap-3 w-full text-left"
+            >
+              <div className="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-medium">
+                {c.initials}
+              </div>
+              <div>
+                <p className="font-medium">{c.name}</p>
+                <p className="text-sm text-white">{c.email}</p>
+              </div>
+            </Button>
+          ))}
         </div>
-      )}
-
-      {/* --------------------------------------------- */}
-      {/*        FORMULAIRE TRANSFERT EXTERNE           */}
-      {/* --------------------------------------------- */}
-
-      {tab === "externe" && (
-        <div className="space-y-4">
-          {/* Depuis le compte */}
-          <div>
-            <label className="font-medium text-gray-700">Depuis le compte</label>
-            <div className="mt-1 p-3 border rounded-lg bg-gray-50">
-              Compte Courant (**** 1234) - 12 458,5 €
-            </div>
-          </div>
-
-          {/* Bénéficiaire */}
-          <div>
-            <label className="font-medium text-gray-700">Bénéficiaire</label>
-            <input
-              type="text"
-              placeholder="Nom du bénéficiaire ou IBAN"
-              className="mt-1 w-full p-3 border rounded-lg"
-            />
-          </div>
-
-          {/* Montant */}
-          <div>
-            <label className="font-medium text-gray-700">Montant</label>
-            <div className="flex items-center gap-2 mt-1">
-              <input
-                type="number"
-                className="w-full p-3 border rounded-lg"
-                placeholder="0.00"
-              />
-              <span className="text-gray-700">€</span>
-            </div>
-
-            <div className="flex gap-2 mt-2">
-              {[50, 100, 200, 500].map((value) => (
-                <Button
-                  key={value}
-                  className="px-3 py-2 border rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100"
-                >
-                  {value}F
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="font-medium text-gray-700">
-              Description (optionnel)
-            </label>
-            <textarea
-              className="w-full mt-1 p-3 border rounded-lg"
-              placeholder="Ajoutez une note..."
-            />
-          </div>
-
-          {/* Bouton */}
-          <Button className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold mt-4 hover:bg-blue-700">
-            Effectuer le transfert
-          </Button>
-
-          {/* --------------------------------------------- */}
-          {/*      CONTACTS RÉCENTS                         */}
-          {/* --------------------------------------------- */}
-
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-4">Contacts récents</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { initials: "MD", name: "Marie Dubois", email: "marie.d@email.com" },
-                { initials: "PM", name: "Pierre Martin", email: "pierre.m@email.com" },
-                { initials: "SB", name: "Sophie Bernard", email: "sophie.b@email.com" },
-                { initials: "LP", name: "Lucas Petit", email: "lucas.p@email.com" },
-              ].map((contact) => (
-                <div
-                  key={contact.email}
-                  className="flex items-center gap-3 p-4 border rounded-lg bg-gray-50"
-                >
-                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
-                    {contact.initials}
-                  </div>
-
-                  <div>
-                    <p className="font-medium">{contact.name}</p>
-                    <p className="text-sm text-gray-600">{contact.email}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-gray-500 text-sm mt-4">
-              💡 Les transferts externes peuvent prendre jusqu'à 24 heures selon la
-              banque du bénéficiaire.
-            </p>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

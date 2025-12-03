@@ -5,6 +5,7 @@ import { FaWifi } from "react-icons/fa";
 import { PiDeviceMobileCamera } from "react-icons/pi";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
+import Select from "../components/Select";
 
 
 
@@ -21,14 +22,22 @@ export default function Paiement() {
 
 
   return (
-    <div className="w-full mt-15 bg-gray-100 p-2">
+    
+    <div className="w-full mt-19 p-4  bg-gray-50 ">
+      <div className="">
+        <h1 className="font-bold text-2xl mt-1">
+          Paiement de factures
+
+        </h1>
+        <p className="mt-1 mb-7">Payez vos factures et services en ligne</p>
+      </div>
       {/* --- TABS CARDS --- */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {tabs.map((t) => (
           <li
             key={t.id}
             onClick={() => setActiveTab(t.id)}
-            className={`cursor-pointer text-center shadow-2xl p-5 w-full rounded-xl   
+            className={`cursor-pointer text-center shadow p-5 w-full rounded-xl   
               flex flex-col items-center gap-2
               transition duration-200
               ${
@@ -58,14 +67,11 @@ export default function Paiement() {
                     <h4>Payer depuis</h4>
                   
                   <div className="mt-4">
-                    <select
-                      name=""
-                      className="p-3 w-full  "
-                      id="eau"
-                    >
-                      <option className="rounded border shadow-2xl bg-white">Choisir un service</option>
-                      <option selected>Eau</option>
-                    </select>
+                   <Select id="eau">
+                     <option>Choisir un service</option>
+                     <option selected>Eau</option>
+                   </Select>
+
                   </div>
 
                   <div className="mt-4">
@@ -78,11 +84,11 @@ export default function Paiement() {
                     <InputField
                       type="number"
                       
-                      placeholder="F"
+                      placeholder="XOF"
                     />
                   </div>
 
-                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className=" w-full">
                     Payer maintenant
                   </Button>
                 </form>
@@ -94,7 +100,7 @@ export default function Paiement() {
 
                 <div className="flex justify-between mb-2">
                   <span>Montant</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
@@ -106,7 +112,7 @@ export default function Paiement() {
 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
               </div>
 
@@ -122,47 +128,44 @@ export default function Paiement() {
             <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
 
               {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow-2xl p-4 bg-white rounded-lg">
+              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
               
                 <form>
                   <h4>Payer depuis</h4>
                   <div className="mt-4">
-                    <select
-                      name=""
-                      className="p-3 w-full  rounded-2xl"
-                      id=""
-                    >
-                      <option >Choisir un service</option>
-                      <option selected="selected">electricite</option>
-                    </select>
+                   <Select id="electricite">
+                      <option>Choisir un service</option>
+                      <option selected>electricite</option>
+                   </Select>
+
                   </div>
 
                   <div className="mt-4">
                     <label>Référence / Fournisseur</label>
-                    <InputField type="text" className="w-full mt-2  rounded p-2" />
+                    <InputField type="text" placeholder="ex:" className="" />
                   </div>
 
                   <div className="mt-4">
                     <label>Montant</label>
                     <InputField
                       type="number"
-                      placeholder="F"
+                      placeholder="XOF"
                     />
                   </div>
 
-                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className=" w-full">
                     Payer maintenant
                   </Button>
                 </form>
               </div>
 
               {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow-2xl p-4 rounded-lg">
+              <div className="md:w-1/3 w-full bg-white shadow- p-4 rounded-lg">
                 <p className="font-semibold mb-4">Récapitulatif</p>
 
                 <div className="flex justify-between mb-2">
                   <span>Montant</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
@@ -174,7 +177,7 @@ export default function Paiement() {
 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
               </div>
 
@@ -189,23 +192,19 @@ export default function Paiement() {
             <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
 
               {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow-2xl p-4 bg-white rounded-lg">
+              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
                 <form>
                   <h4>Payer depuis</h4>
                   <div className="mt-4">
-                    <select
-                      name=""
-                      className="p-3 w-full rounded-2xl"
-                      id=""
-                    >
-                      <option selected="Choisir un service">Choisir un service</option>
-                      <option value="" selected="">internet</option>
-                    </select>
+                     <Select id="internet">
+                      <option selected>Choisir un service</option>
+                      <option >internet</option>
+                   </Select>
                   </div>
 
                   <div className="mt-4 ">
                     <label>Référence / Fournisseur</label>
-                    <input type="text" className="w-full mt-2 border rounded p-2" />
+                    <InputField type="text" className= " b rounded  " placeholder="ex:" />
                   </div>
 
                   <div className="mt-4">
@@ -218,19 +217,19 @@ export default function Paiement() {
                     />
                   </div>
 
-                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="  w-full">
                     Payer maintenant
                   </Button>
                 </form>
               </div>
 
               {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow-2xl p-4 rounded-lg">
+              <div className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg">
                 <p className="font-semibold mb-4">Récapitulatif</p>
 
                 <div className="flex justify-between mb-2">
                   <span>Montant</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
@@ -242,7 +241,7 @@ export default function Paiement() {
 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
               </div>
 
@@ -257,46 +256,42 @@ export default function Paiement() {
             <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
 
               {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow-2xl p-4 bg-white rounded-lg">
+              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
                 <form>
                   <h4>Payer depuis</h4>
                   <div className="mt-4">
-                    <select
-                      name=""
-                      className="p-3 w-full border rounded-2xl"
-                      id=""
-                    >
+                    <Select id="mobile">
                       <option selected>Choisir un service</option>
-                      <option selected="selected">mobile</option>
-                    </select>
+                      <option >mobile</option>
+                   </Select>
                   </div>
 
                   <div className="mt-4">
                     <label>Référence / Fournisseur</label>
-                    <InputField type="text" className="w-full mt-2 border rounded p-2" />
+                    <InputField type="text" placeholder="ex:" className="w-full  " />
                   </div>
 
                   <div className="mt-4">
                     <label>Montant</label>
                     <InputField
                       type="number"
-                      placeholder="F"
+                      placeholder="XOF"
                     />
                   </div>
 
-                  <Button className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold p-2 rounded-lg w-full">
+                  <Button className="mt-4 w-full">
                     Payer maintenant
                   </Button>
                 </form>
               </div>
 
               {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow-2xl p-4 rounded">
+              <div className="md:w-1/3 w-full bg-white shadow p-4 rounded">
                 <p className="font-semibold mb-4">Récapitulatif</p>
 
                 <div className="flex justify-between mb-2">
                   <span>Montant</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
 
                 <div className="flex justify-between mb-2">
@@ -308,7 +303,7 @@ export default function Paiement() {
 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>F</span>
+                  <span>XOF</span>
                 </div>
               </div>
 

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { PhoneIcon, EnvelopeIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon, ChevronUpIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
+import InputField from "../components/InputField";
+import Button from "../components/Button";
 
-export default function CentreAide() {
+export default function FAQ() {
   const categories = [
     "Toutes",
     "Compte",
@@ -58,7 +60,7 @@ export default function CentreAide() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 max-w-5xl ml-auto">
+    <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
 
       {/* HEADER */}
       <div className="text-center mb-14">
@@ -134,7 +136,7 @@ export default function CentreAide() {
               onClick={() => setActiveCategory(cat)}
               className={`px-5 py-2 rounded-xl text-sm transition ${
                 activeCategory === cat
-                  ? "bg-blue-600 text-white"
+                  ? "bg-blue-900 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -186,24 +188,24 @@ export default function CentreAide() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div>
         <label className="block font-medium text-gray-700">Nom</label>
-        <input
+        <InputField
           type="text"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
+          className="w-full px-4 py-2 mt-1"
         />
       </div>
 
       <div>
         <label className="block font-medium text-gray-700">Email</label>
-        <input
+        <InputField
           type="email"
-          className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
+          className="w-full   px-4 py-2 mt-1"
         />
       </div>
       <div className="col-span-2">
   <label className="block font-medium text-gray-700">Sujet</label>
-  <Input
+  <InputField
     type="text"
-    className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
+    className="w-full  px-4 py-2 mt-1"
   />
 </div>
     </div>
@@ -218,13 +220,13 @@ export default function CentreAide() {
     </div>
 
     {/* BOUTON */}
-    <button
+    <Button
   type="submit"
-  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl text-lg transition-all"
+  className="flex items-center gap-2  text-white py-3 px-6 rounded-xl text-lg transition-all"
 >
   <PaperAirplaneIcon className="w-5 h-5 text-white rotate-45" />
   Envoyer le message
-</button>
+</Button>
 
   </form>
 </div>

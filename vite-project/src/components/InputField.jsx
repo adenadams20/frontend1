@@ -20,7 +20,7 @@ export default function InputField({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full border-2 border-blue-950 rounded-xl mt-2 p-2 pr-10 outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border-2 bg-gray-50 border-blue-950 rounded-xl mt-4 p-2  outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         />
         {type === "password" && toggleShowPassword && (
           <span
