@@ -1,40 +1,42 @@
 import { useState } from "react";
-import Button from "../components/Button";
 
 export default function Transfert() {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="flex justify-center min-h-2 bg-gray-50 mt-18 items-center w-full">
-    <div className="p-6 max-w-4xl   mx-auto">
+    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
+       <div className="mt-6">
+        <h1 className="text-3xl font-semibold mb-1 ">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600">Effectuez un transfert entre vos comptes ou vers un bénéficiaire
+        </p>
+      </div>
       {/* NAVTABS */}
       <div className="flex justify-center mb-6">
-        <div className="flex bg-gray-100 gap-3 rounded-xl p-1">
-          <Button
+        <div className="flex bg-gray-100 gap-2 rounded-xl p-1">
+          <button
             onClick={() => setActiveTab("interne")}
-            className={`px-6 py-2 rounded-xl ${
+            className={`px-6 py-5 rounded-xl ${
               activeTab === "interne"
-                ? "bg-blue-600 shadow  font-medium text-white focus:bg-blue-600"
+                ? "bg-blue-900 shadow font-medium text-white"
                 : "text-blue-600"
             }`}
           >
             Transfert interne
-          </Button>
+          </button>
 
-          <Button
+          <button
             onClick={() => setActiveTab("externe")}
-            className={`px-6 py-6 rounded-xl ${
+            className={`px-6 py-5 rounded-xl ${
               activeTab === "externe"
-                ? "bg-blue-600 shadow font-medium text-white focus:bg-blue-600"
+                ? "bg-blue-900 shadow font-medium text-white"
                 : "text-blue-600"
             }`}
           >
             Transfert externe
-          </Button>
+          </button>
         </div>
       </div>
 
       {activeTab === "interne" ? <TransfertInterne /> : <TransfertExterne />}
-    </div>
     </div>
   );
 }
@@ -77,7 +79,7 @@ function TransfertInterne() {
         </div>
       )}
 
-      <div >
+      <div>
         <label className="font-medium">Vers le compte</label>
         <select
           className="w-full p-3 border rounded-xl mt-1 border-gray-300"
@@ -110,25 +112,27 @@ function TransfertInterne() {
 
         <div className="flex gap-2 mt-2 flex-wrap">
           {quickValues.map((v) => (
-            <Button
+            <button
               key={v}
               disabled={disabled}
               onClick={() => setMontant(v)}
               className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
             >
               {v} XOF
-            </Button>
+            </button>
           ))}
         </div>
       </div>
 
-      <Button
+      <div className="text-center">
+        <button
         onClick={handleTransfert}
         disabled={disabled}
-        className="w-full bg-blue-600 text-white p-3 rounded-xl font-medium disabled:bg-blue-300"
+        className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600 "
       >
         Effectuer le transfert
-      </Button>
+      </button>
+      </div>
     </div>
   );
 }
@@ -180,6 +184,7 @@ function TransfertExterne() {
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
+     
 
       {/* Popup succès */}
       {success && (
@@ -232,25 +237,25 @@ function TransfertExterne() {
 
           <div className="flex gap-2 mt-2 flex-wrap">
             {quickValues.map((v) => (
-              <Button
+              <button
                 key={v}
                 disabled={disabled}
                 onClick={() => setMontant(v)}
-                className="px-3 py-2 bg-gray-100 k border border-gray-300 rounded-xl text-sm"
+                className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
               >
                 {v} XOF
-              </Button>
+              </button>
             ))}
           </div>
         </div>
 
-        <Button
+        <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-full bg-blue-600 text-white p-3 rounded-xl font-medium disabled:bg-blue-300"
+          className="w-full bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600"
         >
           Effectuer le transfert
-        </Button>
+        </button>
       </div>
 
       {/* CONTACTS RÉCENTS */}
@@ -259,20 +264,20 @@ function TransfertExterne() {
 
         <div className="space-y-4">
           {contacts.map((c, i) => (
-            <Button
+            <button
               key={i}
               onClick={() => setBeneficiaire(c.name)}
               disabled={disabled}
               className="flex items-center gap-3 w-full text-left"
             >
-              <div className="w-10 h-10 bg-gray-300 text-white rounded-full flex items-center justify-center font-medium">
+              <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center font-medium">
                 {c.initials}
               </div>
               <div>
                 <p className="font-medium">{c.name}</p>
-                <p className="text-sm text-white">{c.email}</p>
+                <p className="text-sm text-gray-500">{c.email}</p>
               </div>
-            </Button>
+            </button>
           ))}
         </div>
       </div>

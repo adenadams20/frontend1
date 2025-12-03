@@ -58,7 +58,7 @@ function App() {
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
         <Route path="/settings" element={<Settings />} />
-                 <Route path="/faq" element={<Faq />} />
+         <Route path="/faq" element={<Faq />} />
 
       </Route>
 

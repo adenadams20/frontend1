@@ -365,7 +365,7 @@ export default function Settings() {
 
                     <button 
                       type="submit" 
-                      className="w-full sm:w-auto mt-2 px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"
+                      className="w-full sm:w-auto mt-2 px-6 py-2 bg-blue-900 text-white font-medium rounded-xl hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"
                     >
                       Mettre à jour le mot de passe
                     </button>

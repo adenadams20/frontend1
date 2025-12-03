@@ -25,11 +25,11 @@ export default function Paiement() {
     
     <div className="w-full mt-19 p-4  bg-gray-50 ">
       <div className="">
-        <h1 className="font-bold text-2xl mt-1">
+        <h1 className="font-semibold text-3xl mt-1">
           Paiement de factures
 
         </h1>
-        <p className="mt-1 mb-7">Payez vos factures et services en ligne</p>
+        <p className="mt-1 mb-7 text-gray-600">Payez vos factures et services en ligne</p>
       </div>
       {/* --- TABS CARDS --- */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -3,9 +3,8 @@ import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lu
 import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
-  const location = useLocation(); // récupérer le chemin actuel
+  const location = useLocation();
   const [activePath, setActivePath] = useState(() => {
-    // on initialise avec localStorage ou la route actuelle
     return localStorage.getItem("activePath") || location.pathname;
   });
 
@@ -23,10 +22,10 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bg-white shadow-2xl h-screen p-6">
+    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bg-gray-50 shadow-2xl h-screen p-6">
       <div className="flex flex-col flex-grow justify-between">
         <div>
-          <h2 className="text-2xl font-bold  mb-8">Bank App</h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-8">Bank App</h2>
 
           <nav className="flex flex-col text-gray-700">
             {links.map((link) => {
@@ -41,7 +40,7 @@ export default function Sidebar() {
                   className={`flex items-center gap-3 py-3 px-2 rounded-lg transition
                     ${isActive
                       ? "bg-blue-900 text-white"
-                      : "hover:bg-blue-200 hover:text-white"
+                      : "hover:bg-blue-200 text-gray-700"
                     }`}
                 >
                   <Icon /> {link.label}
@@ -56,7 +55,7 @@ export default function Sidebar() {
 
           <Link
             to="/login"
-            className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 hover:text-red-600 transition"
+            className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 transition"
           >
             <LogOut /> Déconnexion
           </Link>
