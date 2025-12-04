@@ -1,453 +1,278 @@
 import React, { useState } from "react";
-// Les icônes Fa* ont été remplacées par des SVG inline pour résoudre l'erreur de dépendance.
+// Importations d'icônes
+import { LuShield } from "react-icons/lu";
+import { BsPerson } from "react-icons/bs";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { RiGlobalLine, RiSunLine } from "react-icons/ri"; 
+import { FaRegEye, FaEyeSlash } from "react-icons/fa";
+import { FiLock } from "react-icons/fi";
 
-// --- SVGs INLINE (Remplacent react-icons) ---
+// --- Sous-composant : Toggle Switch (Inchangé) ---
+const ToggleSwitch = ({ label, description, isEnabled, onToggle, icon: Icon }) => {
+    return (
+        <div className="flex justify-between items-center py-3">
+            <div className="flex items-center">
+                {Icon && <Icon className="w-5 h-5 mr-3 text-gray-600 shrink-0" />}
+                <div>
+                    <div className="font-semibold text-gray-800">{label}</div>
+                    <div className="text-sm text-gray-500">{description}</div>
+                </div>
+            </div>
 
-// SVG pour FaUser (Profil)
-const SvgUser = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"  viewBox="0 -960 960 960" ><path d="M480-480q-66 0-113-47t-47-113 47-113 113-47 113 47 47 113-47 113-113 47M160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440t130 15.5T736-378q29 15 46.5 43.5T800-272v112zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360t-111 13.5T260-306q-9 5-14.5 14t-5.5 20zm240-320q33 0 56.5-23.5T560-640t-23.5-56.5T480-720t-56.5 23.5T400-640t23.5 56.5T480-560m0 320"/></svg>
-);
-
-// SVG pour FaShieldAlt (Sécurité)
-const SvgShield = (props) => (
- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1zM8 12h.01M12 12h.01M16 12h.01"/></svg>
-
-);
-
-// SVG pour FaBell (Notifications)
-const SvgBell = (props) => (
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960"><path d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880t42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80zM480-80q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80M320-280h320v-280q0-66-47-113t-113-47-113 47-47 113z"/></svg> 
-);
-
-// SVG pour FaPaintBrush (preference)
-const SvgPaintBrush = (props) => (
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></svg>
-);
-
-// SVG pour FaEye (Afficher)
-const SvgEye = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-    <path fillRule="evenodd" d="M1.323 11.498a.75.75 0 010-1.496l.666-.333A18.508 18.508 0 0112 5.051c2.813 0 5.467.576 7.822 1.518l.666.333a.75.75 0 010 1.496l-.666.333c-2.355.942-5.009 1.518-7.822 1.518s-5.467-.576-7.822-1.518l-.666-.333z" clipRule="evenodd" />
-  </svg>
-);
-
-// SVG pour FaEyeSlash (Masquer)
-const SvgEyeSlash = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M3.53 2.441a.75.75 0 00-1.06 1.06l16.12 16.12a.75.75 0 101.06-1.06L4.59 2.441a.75.75 0 00-1.06 0zm15.786 8.52a.75.75 0 00-1.06 0c-1.854 1.854-4.223 2.924-6.256 3.033l1.832 1.832c3.04-2.128 5.712-4.664 7.022-7.07.03-.04.06-.09.09-.14a.75.75 0 00-.73-.974zM12.025 15.688c-1.854 0-3.593-.687-4.954-2.048L3.25 16.592a.75.75 0 001.06 1.06c1.111-1.112 2.418-2.028 3.863-2.61l.14-.055a15.753 15.753 0 012.712-.516l2.122 2.121c-.815.01-1.63-.037-2.437-.145a5.952 5.952 0 01-1.543-.377L13.78 17.5a18.514 18.514 0 01-1.755.228.75.75 0 00-.075 1.5l.075-.001a18.514 18.514 0 002.58-.335l2.457 2.457a.75.75 0 001.06-1.06L14.77 18.665l.555-.555c1.455.582 2.902 1.002 4.414 1.258a.75.75 0 00.748-1.296c-.198-.109-.4-.216-.605-.319L20.8 17.5a.75.75 0 00-.707-1.353l-.117.061A19.982 19.982 0 0012.025 15.688z" />
-    <path fillRule="evenodd" d="M12.025 6.094a.75.75 0 00.75-.75v-.5a.75.75 0 00-1.5 0v.5a.75.75 0 00.75.75z" clipRule="evenodd" />
-    <path d="M12.025 8.344a.75.75 0 00-.75.75v4.5a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75z" />
-  </svg>
-);
-// --- FIN SVGs INLINE ---
-
-
-// --- Sous-composant : Toggle Switch avec Tailwind ---
-const ToggleSwitch = ({ label, description, isEnabled, onToggle }) => {
-  return (
-    <div className="flex justify-between items-center py-3 border-t border-gray-100">
-      <div>
-        <div className="font-semibold text-gray-800">{label}</div>
-        <div className="text-sm text-gray-500">{description}</div>
-      </div>
-      
-      {/* Le bouton / switch lui-même */}
-      <div
-        onClick={onToggle}
-        className={`relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors duration-200 ease-in-out ${
-          isEnabled ? 'bg-blue-600' : 'bg-gray-300'
-        } shadow-inner`}
-        aria-checked={isEnabled}
-        role="switch"
-      >
-        <span
-          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out shadow ${
-            isEnabled ? 'translate-x-6' : 'translate-x-1'
-          }`}
-        />
-      </div>
-    </div>
-  );
+            <div
+                onClick={onToggle}
+                className={`relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors duration-200 ease-in-out ${
+                    isEnabled ? 'bg-blue-600' : 'bg-gray-300'
+                } shadow-inner shrink-0`}
+                aria-checked={isEnabled}
+                role="switch"
+            >
+                <span
+                    className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out shadow ${
+                        isEnabled ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                />
+            </div>
+        </div>
+    );
 };
 
-// --- Sous-composant : Champ de mot de passe avec icône ---
-const PasswordInput = ({ label, value, onChange, showPassword, toggleShowPassword }) => {
-  return (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-500 mb-1">{label}</label>
-      <div className="flex items-center border border-gray-300 rounded-xl p-3 shadow-sm focus-within:ring-1 focus-within:ring-blue-500">
-        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-lock text-gray-500" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3"/>
-</svg>
-        
-        <input
-          className="grow  border-none outline-none text-base focus:ring-0"
-          type={showPassword ? 'text' : 'password'}
-          value={value}
-          onChange={onChange}
-          placeholder="Entrez votre mot de passe"
-          required
-        />
-        <span 
-          className="text-gray-500 cursor-pointer ml-3" 
-          onClick={toggleShowPassword}
-        >
-          {/* Utilisation des SVGs remplacés */}
-        
-         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
-        </span>
-      </div>
-    </div>
-  );
+
+// --- Sous-composant : Champ de mot de passe (Inchangé) ---
+const PasswordInput = ({ label, value, onChange, showPassword, toggleShowPassword, isConfirm = false }) => {
+    return (
+        <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
+            <div className="flex items-center border border-gray-300 rounded-xl p-3 shadow-sm focus-within:ring-1 focus-within:ring-blue-500">
+                <FiLock className="text-gray-400 text-xl mr-3 shrink-0" />
+
+                <input
+                    className="grow border-none outline-none text-base focus:ring-0 w-full p-0"
+                    type={isConfirm ? 'password' : (showPassword ? 'text' : 'password')} 
+                    value={value}
+                    onChange={onChange}
+                />
+                {!isConfirm && ( 
+                    <span
+                        className="text-gray-500 cursor-pointer ml-3 shrink-0"
+                        onClick={toggleShowPassword}
+                    >
+                        {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaRegEye className="w-5 h-5" />}
+                    </span>
+                )}
+            </div>
+        </div>
+    );
 };
 
 
 // --- Composant Principal : Settings ---
 export default function Settings() {
-  const [activeTab, setActiveTab] = useState("profil");
-  const [success, setSuccess] = useState(false);
-  
-  // États pour la section PROFIL
-  const [fullName, setFullName] = useState("Mohamed Dione");
-  const [email, setEmail] = useState("mohameddione14@gmail.com");
-  const [phone, setPhone] = useState("+221 76 370 81 64");
-  const [address, setAddress] = useState("HLM grand yoff villa N°10");
+    const [activeTab, setActiveTab] = useState("preference");
+    const [success, setSuccess] = useState(false);
 
-  // États pour la section SÉCURITÉ
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [twoFactorAuthEnabled, setTwoFactorAuthEnabled] = useState(false);
-  const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+    // États du composant (simplifiés)
+    const [fullName, setFullName] = useState("Mohamed Dione");
+    const [email, setEmail] = useState("mohameddione14@gmail.com");
+    const [phone, setPhone] = useState("+221 76 370 81 64");
+    const [address, setAddress] = useState("HLM grand yoff villa N°10");
 
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [twoFactorAuthEnabled, setTwoFactorAuthEnabled] = useState(false);
 
-  const handleProfileSubmit = (e) => {
-    e.preventDefault();
-    console.log('Profil mis à jour');
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
-  };
-  
-  const handlePasswordChangeSubmit = (e) => {
-    e.preventDefault();
-    console.log('Changement de mot de passe soumis');
-    // NOTE: Remplacer alert() par un modal ou message d'erreur dans l'UI réelle.
-    alert('Mot de passe mis à jour (simulation) - Note: Les alerts doivent être remplacés par un messagebox.'); 
-    if (newPassword !== confirmPassword) {
-      alert("Les nouveaux mots de passe ne correspondent pas !");
-      return;
-    }
-    // Logique d'API ici
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-  };
+    const [transactionAlertsEnabled, setTransactionAlertsEnabled] = useState(true);
+    const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(true);
+    const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(true);
+    const [marketingEmailsEnabled, setMarketingEmailsEnabled] = useState(true);
+    
+    const [isDarkModeEnabled, setIsDarkModeEnabled] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState('Français');
+    const [selectedCurrency, setSelectedCurrency] = useState('EUR (€)');
 
+    // Fonctions de soumission (simulées)
+    const handleProfileSubmit = (e) => {
+        e.preventDefault();
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+    };
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10">
-      
-      {/* En-tête (Centré ou ajusté pour mobile) */}
-      <div className="mb-6 max-w-4xl mx-auto md:ml-0">
-        <h1 className="text-3xl font-bold text-gray-800">Paramètres</h1>
-        <p className="text-gray-500">Gérez vos préférences et sécurité</p>
-      </div>
+    const handlePasswordChangeSubmit = (e) => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            alert("Les nouveaux mots de passe ne correspondent pas !");
+            return;
+        }
+        alert('Mot de passe mis à jour (simulation)');
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+    };
+    
+    // Composant de Navigation
+    const NavItem = ({ icon: Icon, tabName, label }) => {
+        const isActive = activeTab === tabName;
+        return (
+            <div
+                className={`flex items-center gap-4 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
+                    isActive
+                        ? "bg-blue-100 text-blue-700 font-semibold"
+                        : "text-gray-700 hover:bg-gray-100"
+                }`}
+                onClick={() => setActiveTab(tabName)}
+            >
+                <Icon className="w-5 h-5" />
+                <span>{label}</span>
+            </div>
+        );
+    };
+    
+    // --- Rendu Principal ---
+    return (
+        <div className="min-h-screen bg-gray-50 p-6 md:p-10">
 
-      <div className="flex flex-col md:flex-row max-w-4xl mx-auto gap-6">
+            <div className="mb-6 max-w-4xl mx-auto">
+                <h5 className="text-2xl font-semibold text-gray-800">Paramètres</h5>
+                <p className="text-gray-500">Gérez vos préférences et sécurité</p>
+            </div>
 
-        {/* Card 1: Navigation Latérale */}
-        <div className="w-full md:w-64 bg-white shadow-lg rounded-xl p-5 h-fit">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Compte</h2>
+            <div className="flex flex-col md:flex-row max-w-4xl mx-auto gap-6">
 
-          {/* Onglet Profil */}
-          <div
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 ${
-              activeTab === "profil" 
-                ? "bg-blue-300 text-blue-500 shadow-md" 
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveTab("profil")}
-          >
-            <SvgUser className="w-4 h-4" />
-            <span>Profil</span>
-          </div>
+                {/* Navigation Latérale */}
+                <div className="md:w-58 bg-white shadow-lg rounded-xl p-3 h-fit shrink-0">
+                    <NavItem icon={BsPerson} tabName="profil" label ="Profil"/> 
+                    <NavItem icon={LuShield} tabName="securite" label ="Sécurité" />
+                    <NavItem icon={IoNotificationsOutline} tabName="notifications" label="Notifications" />
+                    <NavItem icon={RiGlobalLine} tabName="preference" label="Préférences" />
+                </div>
 
-          {/* Onglet Sécurité */}
-          <div
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
-              activeTab === "securite" 
-                ? "bg-blue-300 text-blue-500 shadow-md" 
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveTab("securite")}
-          >
-            <SvgShield className="w-4 h-4" />
-            <span>Sécurité</span>
-          </div>
+                {/* Contenu des Onglets */}
+                <div className="w-full grow bg-white shadow-lg rounded-xl p-6">
 
-          {/* Onglet Notifications */}
-          <div
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
-              activeTab === "notifications" 
-                ? "bg-blue-300 text-blue-500 shadow-md" 
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveTab("notifications")}
-          >
-            <SvgBell className="w-4 h-4" />
-            <span>Notifications</span>
-          </div>
+                    {/* Contenu PROFIL (pour la complétude) */}
+                    {activeTab === "profil" && (
+                        <>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-6">Informations personnelles</h3>
+                            <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
+                                <div className="w-20 h-20 rounded-full bg-linear-to-br from-cyan-300 via-blue-500 to-indigo-700 flex items-center justify-center text-white text-2xl shrink-0">
+                                    {fullName ? fullName[0].toUpperCase() : 'J'}
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md">Changer la photo</button>
+                                    <span className="text-xs text-gray-500">JPG, PNG ou GIF. Max 2MB</span>
+                                </div>
+                            </div>
+                            <form onSubmit={handleProfileSubmit}>
+                                <div className="grid gap-6 md:grid-cols-2">
+                                    <div><label htmlFor="full_name" className="block mb-2 text-sm text-gray-600">Nom complet</label><input type="text" id="full_name" className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" value={fullName} onChange={(e) => setFullName(e.target.value)} /></div>
+                                    <div><label htmlFor="email" className="block mb-2 text-sm text-gray-600">Email</label><input type="email" id="email" className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+                                    <div><label htmlFor="phone" className="block mb-2 text-sm text-gray-600">Téléphone</label><input type="text" id="phone" className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" value={phone} onChange={(e) => setPhone(e.target.value)} /></div>
+                                    <div><label htmlFor="address" className="block mb-2 text-sm text-gray-600">Adresse</label><input type="text" id="address" className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" value={address} onChange={(e) => setAddress(e.target.value)} /></div>
+                                </div>
+                                <button type="submit" className={`col-span-1 sm:col-span-1 mt-6 px-4 py-3 rounded-xl font-semibold w-full md:w-auto flex justify-center items-center gap-2 transition duration-150 ${success ? "bg-green-500 hover:bg-green-600 text-white shadow-lg" : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg"}`}>{success ? "Enregistré avec succès !" : "Enregistrer les modifications"}</button>
+                            </form>
+                        </>
+                    )}
 
-          {/* Onglet Preference */}
-          <div
-            className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
-              activeTab === "apparence" 
-                ? "bg-blue-300 text-blue-500 shadow-md" 
-                : "text-gray-700 hover:bg-gray-100"
-            }`}
-            onClick={() => setActiveTab("apparence")}
-          >
-            <SvgPaintBrush className="w-4 h-4" />
-            <span>Preference</span>
-          </div>
+                    {/* 🛡️ Contenu SÉCURITÉ (Structure Plate) */}
+                    {activeTab === "securite" && (
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-semibold text-gray-800">Sécurité et Connexion</h3>
+                            
+                            {/* Section Mot de passe */}
+                            <div className="p-5 border border-gray-200 rounded-xl bg-white shadow-sm">
+                                <h4 className="font-semibold text-gray-700 mb-4">Changer le mot de passe</h4>
+                                <form onSubmit={handlePasswordChangeSubmit}>
+                                    <PasswordInput label="Mot de passe actuel" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} showPassword={showCurrentPassword} toggleShowPassword={() => setShowCurrentPassword(!showCurrentPassword)}/>
+                                    <PasswordInput label="Nouveau mot de passe" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} showPassword={showNewPassword} toggleShowPassword={() => setShowNewPassword(!showNewPassword)}/>
+                                    <PasswordInput label="Confirmer le mot de passe" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} isConfirm={true} />
+                                    <button type="submit" className="w-full md:w-auto mt-2 px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition duration-150 ease-in-out shadow-lg">Mettre à jour le mot de passe</button>
+                                </form>
+                            </div>
+                            
+                            {/* Section 2FA */}
+                            <div className="p-5 border border-gray-200 rounded-xl bg-white shadow-sm">
+                                <h4 className="font-semibold text-gray-700 mb-2">Authentification à deux facteurs</h4>
+                                <ToggleSwitch label="Activer 2FA" description="Code par SMS ou email" isEnabled={twoFactorAuthEnabled} onToggle={() => setTwoFactorAuthEnabled(!twoFactorAuthEnabled)}/>
+                                <div className="mt-4 p-3 text-sm text-gray-600 bg-yellow-50 rounded-lg">L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire.</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 🔔 Contenu NOTIFICATIONS (Structure Plate) */}
+                    {activeTab === "notifications" && (
+                        <>
+                            <h3 className="text-md text-gray-800 mb-6">Notifications</h3>
+                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 p-2">
+                                <ToggleSwitch label="Notifications par email" description="Recevoir des notifications par email" isEnabled={transactionAlertsEnabled} onToggle={() => setTransactionAlertsEnabled(!transactionAlertsEnabled)}/>
+                                <ToggleSwitch label="Notifications Push" description="Recevoir des notifications push" isEnabled={pushNotificationsEnabled} onToggle={() => setPushNotificationsEnabled(!pushNotificationsEnabled)}/>
+                                <ToggleSwitch label="Alertes de transaction" description="Être notifié de chaque transaction" isEnabled={emailNotificationsEnabled} onToggle={() => setEmailNotificationsEnabled(!emailNotificationsEnabled)}/>
+                                <ToggleSwitch label="Emails marketing" description="Recevoir des offres et promotions" isEnabled={marketingEmailsEnabled} onToggle={() => setMarketingEmailsEnabled(!marketingEmailsEnabled)}/>
+                            </div>
+                        </>
+                    )}
+
+                    {/* 🌍 Contenu PRÉFÉRENCES (Structure Plate exacte du prototype) */}
+                    {activeTab === "preference" && (
+                        <div className="space-y-6">
+                            <h3 className="text-md text-gray-800 mb-6">Préférences</h3>
+                            
+                            {/* --- 1. APPARENCE --- */}
+                            <div className="p-4  rounded-xl bg-white shadow-sm">
+                                <h4 className="text-base font-semibold text-gray-800 mb-4">Apparence</h4>
+                                <div className="bg-gray-200 rounded-lg p-3">
+                                    <ToggleSwitch 
+                                        label="Mode sombre" 
+                                        description={isDarkModeEnabled ? "Désactivé" : "Désactivé"} // Texte fixé sur l'image
+                                        isEnabled={isDarkModeEnabled} 
+                                        onToggle={() => setIsDarkModeEnabled(!isDarkModeEnabled)}
+                                        icon={RiSunLine} // Icône Soleil
+                                    />
+                                </div>
+                            </div>
+
+                            {/* --- 2. LOCALISATION (Langue et Devise sans icône) --- */}
+                            <div className="p-4 border border-gray-200 rounded-xl bg-white shadow-sm">
+                                
+                                {/* Section Langue */}
+                                <div className="mb-6">
+                                    <h4 className="text-base font-semibold text-gray-800 mb-2">Langue</h4>
+                                    <select
+                                        value={selectedLanguage}
+                                        onChange={(e) => setSelectedLanguage(e.target.value)}
+                                        // Le style est simple et large comme sur l'image
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-8"
+                                    >
+                                        <option value="Français" className="font-light text-sm">Français</option>
+                                        <option value="English" className="font-light text-sm" >English</option>
+                                        <option value="Español" className="font-light text-sm">Español</option>
+                                        <option value="Deutsch" className="font-light text-sm">Deutsch</option>
+
+                                    </select>
+                                </div>
+                                
+                                {/* Section Devise */}
+                                <div>
+                                    <h4 className="text-base font-semibold text-gray-800 mb-2">Devise</h4>
+                                    <select
+                                        value={selectedCurrency}
+                                        onChange={(e) => setSelectedCurrency(e.target.value)}
+                                        // Le style est simple et large comme sur l'image
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white pr-8"
+                                    >
+                                        <option value="EUR (€)" className="font-light text-sm">EUR (€)</option>
+                                        <option value="USD ($)" className="font-light text-sm">USD ($)</option>
+                                        <option value="GBP (£)" className="font-light text-sm">GBP (£)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
-
-        {/* Card 2: Contenu des Onglets */}
-        <div className="w-full md: `flex-grow bg-white shadow-lg rounded-xl p-6">
-          
-          {/* PROFIL */}
-          {activeTab === "profil" && (
-            <>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Informations personnelles</h3>
-              
-              {/* Avatar et bouton de changement */}
-              <div className="flex flex-col sm:flex-row items-center gap-4 mb-6 relative">
-                {/* Avatar avec la lettre J */}
-                <div className="w-20 h-20 rounded-full bg-linear-to-br from-cyan-300 via-blue-500 to-indigo-700 flex items-center justify-center text-white text-3xl font-bold shrink-0">
-                  J
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md">
-                    Changer la photo
-                  </button>
-                  <span className="text-xs text-gray-500">JPG, PNG ou GIF. Max 2MB</span>
-                </div>
-              </div>
-
-              {/* Formulaire de profil */}
-              <form onSubmit={handleProfileSubmit}>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div>
-                    <label htmlFor="full_name" className="block mb-2 text-sm font-medium text-gray-500">
-                      Nom complet
-                    </label>
-                    <input
-                      type="text"
-                      id="full_name"
-                      className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Mohamed Dione"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-500">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="mohameddione14@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-500">
-                      Telephone
-                    </label>
-                    <input
-                      type="text"
-                      id="phone"
-                      className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="+221 76 370 81 64"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-500">
-                      Adresse
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="HLM grand yoff villa N°10"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
-
-                  
-
-                <button
-  type="submit"
-  className={`col-span-1 sm:col-span-1 mt-4 px-4 py-3 rounded-xl font-semibold 
-              w-full flex justify-center items-center gap-2
-              transition duration-150
-              ${
-                success 
-                  ? "bg-green-500 hover:bg-green-600 text-white shadow-lg" 
-                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
-              }`}
->
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="18" 
-    height="18" 
-    fill="currentColor" 
-    viewBox="0 0 16 16"
-  >
-    <path d="M11 2H9v3h2z"/>
-    <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"/>
-  </svg>
-
-  {success ? "Enregistré !" : "Enregistrer les modifications"}
-</button>
-
-                </div>
-              </form>
-            </>
-          )}
-
-          {/* SÉCURITÉ */}
-          {activeTab === "securite" && (
-             <>
-                {/* --- Section Changer le mot de passe --- */}
-                <div className="mb-8">
-                  <h4 className="text-md text-md text-gray-700 mb-4">Sécurité</h4>
-                  <h4 className="text-md text-md text-gray-700 mb-4">Changer le mot de passe</h4>
-                  
-                  <form onSubmit={handlePasswordChangeSubmit}>
-                    <PasswordInput
-                      label="Mot de passe actuel"
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      showPassword={showCurrentPassword}
-                      toggleShowPassword={() => setShowCurrentPassword(!showCurrentPassword)}
-                    />
-
-                    <PasswordInput
-                      label="Nouveau mot de passe"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      showPassword={showNewPassword}
-                      toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
-                    />
-
-                    <PasswordInput
-                      label="Confirmer le mot de passe"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      showPassword={showConfirmPassword}
-                      toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
-                    />
-
-                    <button 
-                      type="submit" 
-                      className="w-full sm:w-auto mt-2 px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition duration-150 ease-in-out shadow-md"
-                    >
-                      Mettre à jour le mot de passe
-                    </button>
-                  </form>
-                </div>
-
-                <hr className="my-6 border-gray-200" />
-
-                {/* --- Section Authentification à deux facteurs --- */}
-                <div className="mb-4">
-                  <h4 className="text-lg font-semibold text-gray-700 mb-4">Authentification à deux facteurs</h4>
-                  
-                  <ToggleSwitch
-                    label="Authentification 2FA"
-                    description="Code par SMS ou email"
-                    isEnabled={twoFactorAuthEnabled}
-                    onToggle={() => setTwoFactorAuthEnabled(!twoFactorAuthEnabled)}
-                  />
-                  
-                  <ToggleSwitch
-                    label="Biométrie"
-                    description="Empreinte digitale ou Face ID"
-                    isEnabled={biometricsEnabled}
-                    onToggle={() => setBiometricsEnabled(!biometricsEnabled)}
-                  />
-                </div>
-
-              </>
-          )}
-
-          {/* NOTIFICATIONS */}
-          {activeTab === "notifications" && (
-            <>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Préférences de Notifications</h3>
-              <div className="space-y-4 pt-2">
-                <ToggleSwitch
-                  label="Alertes Email"
-                  description="Recevez des notifications importantes par email."
-                  isEnabled={true}
-                  onToggle={() => {}}
-                />
-                <ToggleSwitch
-                  label="Notifications Push"
-                  description="Recevez des notifications en temps réel sur votre appareil."
-                  isEnabled={false}
-                  onToggle={() => {}}
-                />
-                <ToggleSwitch
-                  label="Mises à jour promotionnelles"
-                  description="Recevez des informations sur les nouveaux produits et offres."
-                  isEnabled={true}
-                  onToggle={() => {}}
-                />
-              </div>
-            </>
-          )}
-
-          {/* APPARENCE */}
-          {activeTab === "apparence" && (
-            <>
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">Personnalisation de l'Apparence</h3>
-              <div className="pt-2">
-                  <p className="text-gray-600 mb-4">Choisissez votre thème préféré pour l'interface utilisateur.</p>
-                  
-                  <div className="flex gap-4">
-                      {/* Thème Clair */}
-                      <div className="p-4 border-2 border-blue-500 rounded-lg cursor-pointer w-32 text-center shadow-md">
-                          <SvgPaintBrush className="w-6 h-6 mx-auto mb-2 text-blue-500" />
-                          <p className="font-medium text-sm">Clair (Défaut)</p>
-                      </div>
-                      
-                      {/* Thème Sombre */}
-                      <div className="p-4 border border-gray-300 rounded-lg cursor-pointer w-32 text-center bg-gray-800 text-white shadow-md hover:border-gray-500">
-                          <SvgPaintBrush className="w-6 h-6 mx-auto mb-2 text-gray-400" />
-                          <p className="font-medium text-sm">Sombre</p>
-                      </div>
-                  </div>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
