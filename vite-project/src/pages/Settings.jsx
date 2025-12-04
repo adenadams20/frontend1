@@ -206,9 +206,13 @@ export default function Settings() {
                     {activeTab === "notifications" && (
                         <>
                             <h3 className="text-md text-gray-800 mb-6">Notifications</h3>
-                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 p-2">
+                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 my-4">
                                 <ToggleSwitch label="Notifications par email" description="Recevoir des notifications par email" isEnabled={transactionAlertsEnabled} onToggle={() => setTransactionAlertsEnabled(!transactionAlertsEnabled)}/>
+                            </div>
+                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 my-4">
                                 <ToggleSwitch label="Notifications Push" description="Recevoir des notifications push" isEnabled={pushNotificationsEnabled} onToggle={() => setPushNotificationsEnabled(!pushNotificationsEnabled)}/>
+                            </div>
+                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 my-4">
                                 <ToggleSwitch label="Alertes de transaction" description="Être notifié de chaque transaction" isEnabled={emailNotificationsEnabled} onToggle={() => setEmailNotificationsEnabled(!emailNotificationsEnabled)}/>
                                 <ToggleSwitch label="Emails marketing" description="Recevoir des offres et promotions" isEnabled={marketingEmailsEnabled} onToggle={() => setMarketingEmailsEnabled(!marketingEmailsEnabled)}/>
                             </div>
