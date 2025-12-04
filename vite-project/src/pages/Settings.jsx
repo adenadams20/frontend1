@@ -214,6 +214,8 @@ export default function Settings() {
                             </div>
                             <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 my-4">
                                 <ToggleSwitch label="Alertes de transaction" description="Être notifié de chaque transaction" isEnabled={emailNotificationsEnabled} onToggle={() => setEmailNotificationsEnabled(!emailNotificationsEnabled)}/>
+                            </div>
+                            <div className="space-y-4 pt-2 bg-gray-100 rounded-xl px-4 my-4">
                                 <ToggleSwitch label="Emails marketing" description="Recevoir des offres et promotions" isEnabled={marketingEmailsEnabled} onToggle={() => setMarketingEmailsEnabled(!marketingEmailsEnabled)}/>
                             </div>
                         </>
