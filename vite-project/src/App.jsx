@@ -24,22 +24,15 @@ function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex">
-
-      {/* Sidebar */}
+    <div className="flex relative z-0">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
       <div className="flex-1 md:ml-64">
+        <Navbar onSidebarToggle={() => setSidebarOpen(true)} />
 
-        {/* Navbar */}
-        <Navbar
-          onSidebarToggle={() => setSidebarOpen(true)}
-        />
-
-        {/* Contenu */}
         <div className="p-4 pt-20">
           <Outlet />
         </div>
