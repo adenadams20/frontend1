@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Faq from "./pages/FAQ";
-import ConditiondUtilisation from './pages/Conditiondutilisation'
+import ConditiondUtilisation from './pages/ConditiondUtilisation'
 
 
 import Dashboard from "./pages/Dashboard.jsx";
