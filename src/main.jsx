@@ -9,7 +9,7 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
-    <BrowserRouter basename="/frontend1">
+    <BrowserRouter basename="/">
       
 
       <App />
