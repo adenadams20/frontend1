@@ -165,18 +165,18 @@ export default function Register() {
     </form>
 
     <div className="text-center mt-6 text-gray-700 text-sm sm:text-base">
-      <button>
+      <p>
         Déjà inscrit ?{" "}
-        <Link to="/login">
+        <Link to="/login" className="text-blue-600 hover:underline">
           Se connecter
         </Link>
-      </button>
+      </p>
 
       <br />
 
       <p>
         En vous inscrivant, vous acceptez{" "}
-        <Link to="/conditiondutilisation" className="text-blue-600 hover:underline">
+        <Link to="/ConditionUtilisation" className="text-blue-600 hover:underline">
           nos Conditions générales, notre Politique de confidentialité
         </Link>{" "}
         et notre Politique d’utilisation des cookies.
