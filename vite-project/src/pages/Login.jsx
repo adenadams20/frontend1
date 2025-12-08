@@ -1,7 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -14,8 +12,10 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✔️ handleChange simplifié et garanti fonctionnel
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -57,11 +57,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4  border-y-5 border-purple-400">
+    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4">
 
-      <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
-        
-        {/* Icône */}
+      <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg relative z-50">
+
         <div className="flex justify-center mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -79,11 +78,14 @@ export default function Login() {
             <path d="M22 2 11 13" />
           </svg>
         </div>
-        <div className="text-center mt-5 ">
-            <p className="text-blue-900 font-bold">Connecter vous <br /> a votre compte banckaire</p>
-          </div>
 
-        <h4 className="text-2xl font-bold text-blue-900 text-center mb-6">
+        <div className="text-center mt-5">
+          <p className="text-blue-900 font-bold">
+            Connectez-vous <br /> à votre compte bancaire
+          </p>
+        </div>
+
+        <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">
           Connexion
         </h4>
 
@@ -95,33 +97,35 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
 
+          {/* ✔️ EMAIL */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
               Email
             </label>
-            <InputField
+            <input
               type="email"
               id="email"
               name="email"
               placeholder="Entrez votre Email"
               required
-              className="w-full px-4 py-2  rounded-md focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-500 bg-white"
               value={form.email}
               onChange={handleChange}
             />
           </div>
 
+          {/* ✔️ PASSWORD */}
           <div className="mb-4">
             <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
               Mot de passe
             </label>
-            <InputField
+            <input
               type="password"
               id="password"
               name="password"
               placeholder="Entrez votre mot de passe"
               required
-              className="w-full px-4 py-2  rounded-md focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-500 bg-white"
               value={form.password}
               onChange={handleChange}
             />
@@ -133,13 +137,13 @@ export default function Login() {
             </Link>
           </p>
 
-          <Button
+          <button
             type="submit"
-            className="w-full  text-white py-2 rounded-md  transition"
+            className="w-full bg-[#312c85] text-white py-2 rounded-md hover:bg-blue-700 transition"
             disabled={loading}
           >
             {loading ? "Connexion..." : "Se connecter"}
-          </Button>
+          </button>
         </form>
 
         <div className="text-center mt-6 text-gray-700">
