@@ -1,10 +1,8 @@
-import React from "react";
-
+import React, { useState } from "react";
 
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Faq from "./pages/FAQ";
-
 
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions";
@@ -17,17 +15,33 @@ import Paiement from './pages/Paiement';
 import Settings from './pages/Settings';
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import "./index.css";
 
 // Layout principal (Sidebar + Navbar)
 function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="flex">
-      <Sidebar />
+
+      {/* Sidebar */}
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
       <div className="flex-1 md:ml-64">
-        <Navbar />
-        <div className="p-4">
+
+        {/* Navbar */}
+        <Navbar
+          onSidebarToggle={() => setSidebarOpen(true)}
+        />
+
+        {/* Contenu */}
+        <div className="p-4 pt-20">
           <Outlet />
         </div>
+
       </div>
     </div>
   );
@@ -35,11 +49,7 @@ function Layout() {
 
 
 
-import "./index.css"; 
-
 function App() {
-  
-
   return (
     <Routes>
 
@@ -58,20 +68,11 @@ function App() {
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
         <Route path="/settings" element={<Settings />} />
-         <Route path="/faq" element={<Faq />} />
-
+        <Route path="/faq" element={<Faq />} />
       </Route>
 
     </Routes>
   );
-    
-    
-      
-   
-  
 }
 
 export default App;
-
-
-

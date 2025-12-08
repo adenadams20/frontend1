@@ -36,10 +36,10 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen mt-20 bg-gray-50  md:p-2">
+    <div className="min-h-screen mt-20 bg-gray-50 px-3 md:p-2">
 
       {/* HEADER */}
-      <h1 className="text-3xl font-semibold">Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-semibold">Dashboard</h1>
       <p className="text-gray-600 mb-10">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
@@ -58,7 +58,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex-1 mt-6 lg:mt-0">
-            <div className="h-24 md:h-20 rounded-xl bg-white/20"></div>
+            <div className="h-20 md:h-24 rounded-xl bg-white/20"></div>
           </div>
         </div>
       </section>
@@ -67,55 +67,61 @@ export default function Dashboard() {
       <AccountsCards />
 
       {/* QUICK ACTIONS */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 my-10">
+      <section className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 my-10">
         {cards.map((c) => (
           <a
             key={c.title}
             href={c.link}
-            className="bg-white rounded-xl p-6 shadow-sm  flex items-center gap-4 hover:shadow-lg transition"
+            className="bg-white rounded-xl p-4 md:p-6 shadow-sm flex items-center gap-3 hover:shadow-lg transition"
           >
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-              <c.icon className={`w-6 h-6 ${c.color}`} />
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-50 flex items-center justify-center">
+              <c.icon className={`w-5 h-5 md:w-6 md:h-6 ${c.color}`} />
             </div>
-            <p className="text-gray-700">{c.title}</p>
+            <p className="text-gray-700 text-sm md:text-base">{c.title}</p>
           </a>
         ))}
       </section>
 
       {/* GRAPHIQUES */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* LINE CHART */}
-        <div className="bg-white p-6 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold">Revenus vs Dépenses</h2>
-          <p className="text-gray-500 mb-4">6 derniers mois</p>
 
-          <LineChart width={450} height={260} data={lineData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="revenus" stroke="#22c55e" strokeWidth={3} />
-            <Line type="monotone" dataKey="depenses" stroke="#ef4444" strokeWidth={3} />
-          </LineChart>
+        {/* LINE CHART */}
+        <div className="bg-white p-4 md:p-6 rounded-2xl shadow w-full overflow-x-auto">
+          <h2 className="text-lg md:text-xl font-semibold">Revenus vs Dépenses</h2>
+          <p className="text-gray-500 mb-4 text-sm">6 derniers mois</p>
+
+          <div className="min-w-[320px]">
+            <LineChart width={500} height={260} data={lineData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="revenus" stroke="#22c55e" strokeWidth={3} />
+              <Line type="monotone" dataKey="depenses" stroke="#ef4444" strokeWidth={3} />
+            </LineChart>
+          </div>
         </div>
 
         {/* BAR CHART */}
-        <div className="bg-white p-6 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold">Dépenses par catégorie</h2>
-          <p className="text-gray-500 mb-4">Ce mois</p>
+        <div className="bg-white p-4 md:p-6 rounded-2xl shadow w-full overflow-x-auto">
+          <h2 className="text-lg md:text-xl font-semibold">Dépenses par catégorie</h2>
+          <p className="text-gray-500 mb-4 text-sm">Ce mois</p>
 
-          <BarChart width={450} height={260} data={barData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} />
-          </BarChart>
+          <div className="min-w-[320px]">
+            <BarChart width={500} height={260} data={barData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="value" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </div>
         </div>
       </div>
 
       {/* TRANSACTIONS + PIE CHART */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
+
         {/* TRANSACTIONS */}
         <div className="bg-white p-6 md:p-10 rounded-2xl shadow space-y-6">
           <div className="flex justify-between items-center mb-4">
@@ -166,11 +172,11 @@ export default function Dashboard() {
         </div>
 
         {/* PIE CHART */}
-        <div className="bg-white p-6 rounded-2xl shadow flex flex-col items-center">
+        <div className="bg-white p-6 rounded-2xl shadow flex flex-col items-center w-full">
           <h2 className="text-xl font-semibold mb-4">Répartition</h2>
 
-          <PieChart width={300} height={300}>
-            <Pie data={pieData} cx={150} cy={150} outerRadius={120} dataKey="value">
+          <PieChart width={250} height={250}>
+            <Pie data={pieData} cx={125} cy={125} outerRadius={110} dataKey="value">
               <Cell fill="#ef4444" />
               <Cell fill="#22c55e" />
             </Pie>
@@ -195,7 +201,7 @@ export default function Dashboard() {
   );
 }
 
-/* TRANSACTION ITEM COMPONENT */
+/* TRANSACTION ITEM */
 function TransactionItem({ icon, bg, color, title, subtitle, amount, amountColor, date }) {
   return (
     <div className="flex justify-between">
@@ -227,9 +233,7 @@ function AccountsCards() {
 
   return (
     <div className="mt-10">
-      <div className="flex justify-between mb-6">
-        <h2 className="text-2xl font-semibold">Mes Comptes</h2>
-      </div>
+      <h2 className="text-2xl font-semibold mb-6">Mes Comptes</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {accounts.map((acc, i) => (
