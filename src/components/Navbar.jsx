@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Menu, X, Moon, Bell, Search } from "lucide-react";
 import Button from "./Button";
 
-export default function Navbar() {
-  const [open, setOpen] = useState(true);
+export default function Navbar({ onSidebarToggle }) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-min-full fixed top-0 w-full md:pr-69  bg-white text-black p-4 flex items-center  justify-between shadow ">
-      <h1 className="text-xl font-bold  ">MyBank</h1>
+    <nav className="w-min-full fixed top-0 w-full md:pr-69 bg-white text-black p-4 flex items-center justify-between shadow">
+      <h1 className="text-xl font-bold">MyBank</h1>
+
+     
 
       {/* Bouton menu mobile */}
       <button
@@ -17,9 +19,19 @@ export default function Navbar() {
         {open ? <X size={28} /> : <Menu size={28} />}
       </button>
 
-      <div className={`md:flex items-center gap-4 ${open ? "block mt-4" : "hidden"} md:flex`}>
-        
-       
+      {/* Menu desktop + mobile */}
+      <div
+        className={`${open ? "block mt-4" : "hidden"} md:flex items-center gap-4`}
+      >
+        {/* Barre de recherche */}
+        <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 md:w-64 w-full">
+          <Search size={20} className="mr-2 text-gray-500" />
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            className="bg-transparent focus:outline-none w-full"
+          />
+        </div>
 
         {/* Icône lune */}
         <Button className="text-gray-600 hover:text-gray-900">
@@ -39,7 +51,6 @@ export default function Navbar() {
           </div>
           <span>bassirou@email.com</span>
         </div>
-
       </div>
     </nav>
   );

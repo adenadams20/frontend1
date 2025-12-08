@@ -25,7 +25,7 @@ export default function Sidebar() {
     <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bg-gray-50 shadow-2xl h-screen p-6">
       <div className="flex flex-col flex-grow justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-blue-900 mb-8">Bank App</h2>
+          <h2 className="text-2xl font-bold mb-8">Bank App</h2>
 
           <nav className="flex flex-col text-gray-700">
             {links.map((link) => {
