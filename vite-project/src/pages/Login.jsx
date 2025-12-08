@@ -1,96 +1,157 @@
-import { Link } from "react-router-dom"
-import React from "react";
-import img from "../assets/img/WhatsApp_Image_2025-11-28_à_15.15.57_64409da9-removebg-preview.png";
-import img1 from "../assets/img/WhatsApp_Image_2025-11-28_à_15.17.53_c49425cf-removebg-preview.png"
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import InputField from "../components/InputField";
+import Button from "../components/Button";
 
 export default function Login() {
-  return (
-    
-    <>
-  <div className="min-h-screen  flex items-center justify-center px-6 py-12 lg:px-8 bg-blue-400 ">
-    
-    {/* --- Conteneur principal avec image + formulaire --- */}
-      {/* IMAGE */}
-      
+  const navigate = useNavigate();
 
-      {/* FORMULAIRE */}
-      <div className="flex flex-col bg-gray-50 rounded-2xl  shadow justify-center w-sm  p-3">
-        <div className="">
-          <img
-          src={img1}
-          alt="login illustration"
-          className="w-full h-15  object-contain rounded-lg"
-        />
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!form.email || !form.password) {
+      setError("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Identifiants incorrects");
+        setLoading(false);
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/dashboard");
+
+    } catch (err) {
+      setError("Erreur de connexion au serveur.");
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4  border-y-5 border-purple-400">
+
+      <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
+        
+        {/* Icône */}
+        <div className="flex justify-center mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-send w-6 h-6 text-blue-700"
+          >
+            <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+            <path d="M22 2 11 13" />
+          </svg>
         </div>
         <div className="text-center mt-5 ">
             <p className="text-blue-900 font-bold">Connecter vous <br /> a votre compte banckaire</p>
           </div>
 
-        <form className="space-y-6 mt-7">
-          
-          
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Adresse email
+        <h4 className="text-2xl font-bold text-blue-900 text-center mb-6">
+          Connexion
+        </h4>
+
+        {error && (
+          <div className="text-red-700 text-center mb-4 font-medium">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+              Email
             </label>
             <InputField
+              type="email"
               id="email"
               name="email"
-              type="email"
+              placeholder="Entrez votre Email"
               required
-              className=""
+              className="w-full px-4 py-2  rounded-md focus:ring-blue-500"
+              value={form.email}
+              onChange={handleChange}
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
               Mot de passe
             </label>
             <InputField
+              type="password"
               id="password"
               name="password"
-              type="password"
+              placeholder="Entrez votre mot de passe"
               required
-              className=""
+              className="w-full px-4 py-2  rounded-md focus:ring-blue-500"
+              value={form.password}
+              onChange={handleChange}
             />
           </div>
 
-          <div className="flex justify-between">
-            <Link
-              to="/motdepasseoublier"
-              className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-            >
+          <p className="text-right mb-2">
+            <Link to="/motdepassoublier" className="text-blue-600 hover:underline">
               Mot de passe oublié ?
             </Link>
-          </div>
+          </p>
 
-          <div className="text-center">
-            <button
+          <Button
             type="submit"
-            className="w-40 rounded-lg bg-indigo-900 py-2 text-white font-semibold hover:bg-indigo-500"
+            className="w-full  text-white py-2 rounded-md  transition"
+            disabled={loading}
           >
-            
-
-            <Link to="/dashboard" className="font-semibold text-indigo-600 hover:text-indigo-900">
-           se connecter
-          </Link>
-          </button>
-          </div>
+            {loading ? "Connexion..." : "Se connecter"}
+          </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Vous n'avez pas de compte ?{' '}
-          <Link to="/register" className="font-semibold text-indigo-600 hover:text-indigo-900">
-            Créer un compte
-          </Link>
-        </p>
+        <div className="text-center mt-6 text-gray-700">
+          <p>
+            Vous n’avez pas de compte ?{" "}
+            <Link to="/register" className="text-blue-600 hover:underline">
+              Inscrivez-vous
+            </Link>
+          </p>
+        </div>
+
       </div>
-
-      
     </div>
-  
-</>
-
-  )
+  );
 }

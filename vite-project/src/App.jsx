@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Faq from "./pages/FAQ";
+import ConditiondUtilisation from './pages/Conditiondutilisation'
+
 
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions";
@@ -59,7 +61,9 @@ function App() {
       {/* Pages SANS sidebar / navbar */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/motdepasseoublier" element={<MotdepassOublier />} />
+      <Route path="/motdepassoublier" element={<MotdepassOublier />} />
+      <Route path="/conditiondutilisation" element={<ConditiondUtilisation/>} /> 
+
 
       {/* Pages AVEC layout */}
       <Route element={<Layout />}>

@@ -1,118 +1,190 @@
-import { Link } from "react-router-dom"
+import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+
 export default function Register() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+
+    // validations rapides
+    if (form.password !== form.confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Erreur lors de l'inscription");
+        setLoading(false);
+        return; 
+        
+      }
+
+      // stocker token + infos user
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // redirection après succès
+      navigate("/dashboard");
+
+    } catch (err) {
+      setError("Erreur serveur, vérifiez votre connexion.");
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-900">
-        <body class="h-full">
-        ```
-      */}
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        
-       
+    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4 border-y-5 border-purple-400">
   
-             <div>
-             <h2 className="mt-10 text-  sm:text-center text-2xl/9 font-bold tracking-tight  text-black">Sign in to your account</h2>
+  <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
 
-          </div>
-                <div className="flex justify-around ">
+    {/* Icon */}
+    <div className="flex justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        className="lucide lucide-send w-6 h-6 text-blue-700">
+        <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path>
+        <path d="m21.854 2.147-10.94 10.939"></path>
+      </svg>
+    </div>
 
-        <div className="mt-10   shadow-2xl px-2 w-full py-2 sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6 ">
-            <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                Nom complet
-              </label>
-              <div className="mt-2">
-                <input
-                  id="nomcomplet"
-                  name="email"
-                  type="text"
-                  required
-                  autoComplete="current-nomcomplet"
-                  className="block w-full rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
+    <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">Inscription</h4>
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  Password
-                </label>
-            
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-             <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-                  confirmPassword
-                </label>
-            
-              </div>
-              <div className="mt-2">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  autoComplete="current-confirmPassword"
-                  className="block w-full rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                />
-              </div>
-            </div>
-
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-900 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              >
-               Creer compte
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-400">
-            vous avez deja un compte?{' '}
-            <Link to="/login" className="font-semibold text-indigo-400 hover:text-indigo-300">
-              sign up
-            </Link>
-          </p>
-          
-        </div>
-        
-        </div>
+    {error && (
+      <div className="text-red-700 mb-4 text-center font-medium text-sm sm:text-base">
+        {error}
       </div>
-    </>
-  )
+    )}
+
+    <form onSubmit={handleSubmit}>
+      {/* Nom complet */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Nom complet</label>
+        <input
+          type="text"
+          name="fullName"
+          value={form.fullName}
+          onChange={handleChange}
+          placeholder="Entrez votre prénom et nom"
+          required
+          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Email */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Email</label>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="Entrez votre email"
+          required
+          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Téléphone */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Téléphone</label>
+        <input
+          type="text"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+          placeholder="Entrez votre numéro"
+          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Mot de passe */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Mot de passe</label>
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          placeholder="Entrez votre mot de passe"
+          required
+          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+        />
+      </div>
+
+      {/* Confirmation */}
+      <div className="mb-4">
+        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Confirmation</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          value={form.confirmPassword}
+          onChange={handleChange}
+          placeholder="Confirmez votre mot de passe"
+          required
+          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="w-full bg-[#312c85] text-white py-2 rounded-md hover:bg-blue-700 transition text-sm sm:text-base"
+        disabled={loading}
+      >
+        {loading ? "Création du compte..." : "S'inscrire"}
+      </button>
+    </form>
+
+    <div className="text-center mt-6 text-gray-700 text-sm sm:text-base">
+      <button>
+        Déjà inscrit ?{" "}
+        <Link to="/login">
+          Se connecter
+        </Link>
+      </button>
+
+      <br />
+
+      <p>
+        En vous inscrivant, vous acceptez{" "}
+        <Link to="/conditiondutilisation" className="text-blue-600 hover:underline">
+          nos Conditions générales, notre Politique de confidentialité
+        </Link>{" "}
+        et notre Politique d’utilisation des cookies.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+  );
 }
