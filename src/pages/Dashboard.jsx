@@ -24,9 +24,9 @@ import {
 
 export default function Dashboard() {
   const cards = [
-    { title: "Transfert", icon: ArrowsRightLeftIcon, color: "text-blue-600", link: "/transfert" },
+    { title: "Transfert", icon: ArrowsRightLeftIcon, color: "text-blue-600", link: "/transfer" },
     { title: "Paiement", icon: CreditCardIcon, color: "text-green-500", link: "/paiement" },
-    { title: "Historique", icon: ClockIcon, color: "text-purple-500", link: "/historique" },
+    { title: "Historique", icon: ClockIcon, color: "text-purple-500", link: "/transactions" },
     { title: "Plus", icon: PlusIcon, color: "text-orange-400", link: "/plus" },
   ];
 

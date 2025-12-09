@@ -33,7 +33,7 @@ function Layout() {
       <div className="flex-1 md:ml-64">
         <Navbar onSidebarToggle={() => setSidebarOpen(true)} />
 
-        <div className="p-4 pt-20">
+        <div className="p-4 pt-2">
           <Outlet />
         </div>
 
