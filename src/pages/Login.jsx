@@ -1,8 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+
 
 export default function Login() {
   const navigate = useNavigate();
+
+   const { login } = useAuth(); // ⬅️ on vient chercher login() du contexte
 
   const [form, setForm] = useState({
     email: "",
@@ -42,10 +46,18 @@ export default function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // localStorage.setItem("token", data.token);
+      // localStorage.setItem("user", JSON.stringify(data.user));
+      
+       // ✅ on informe le contexte qu'on est connecté
+      // data.token et data.user viennent du backend
+      login(data.token, data.user);
 
       navigate("/dashboard");
+
+      // ✅ Forcer un rechargement pour que Navbar relise le token
+      // window.location.reload();
+
 
     } catch (err) {
       setError("Erreur de connexion au serveur.");
