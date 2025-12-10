@@ -12,7 +12,7 @@ export default function Transfert() {
         </p>
       </div>
 
-      {/* NAVTABS */}
+      {/* NAV TABS */}
       <div className="flex justify-center mb-6">
         <div className="flex bg-gray-100 gap-2 rounded-xl p-1">
           <button
@@ -45,7 +45,7 @@ export default function Transfert() {
 }
 
 /* ---------------------------------------------------
-   🔵 TRANSFERT INTERNE (avec fetch)
+   🔵 TRANSFERT INTERNE — fetch corrigé
 --------------------------------------------------- */
 function TransfertInterne() {
   const [montant, setMontant] = useState("");
@@ -63,14 +63,22 @@ function TransfertInterne() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/transactions/transfer/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({
-          montant: Number(montant),
-          compte,
-        }),
-      });
+
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amount: Number(montant),
+            toAccount: compte,
+            type: "interne",
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -163,7 +171,7 @@ function TransfertInterne() {
 }
 
 /* ---------------------------------------------------
-   🟣 TRANSFERT EXTERNE (fetch + contacts automatiques)
+   🟣 TRANSFERT EXTERNE — fetch corrigé
 --------------------------------------------------- */
 function TransfertExterne() {
   const [montant, setMontant] = useState("");
@@ -186,14 +194,22 @@ function TransfertExterne() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/transactions/transfer/beneficiary", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" ,"Authorization": `Bearer ${token}`  },
-        body: JSON.stringify({
-          montant: Number(montant),
-          beneficiaire,
-        }),
-      });
+
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer/beneficiary",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amount: Number(montant),
+            beneficiary: beneficiaire,
+            type: "externe",
+          }),
+        }
+      );
 
       const data = await res.json();
 

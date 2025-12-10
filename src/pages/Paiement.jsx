@@ -41,6 +41,7 @@ export default function Paiement() {
   const montant = parseFloat(formData.amount) || 0;
   const frais = 0;
   const total = montant + frais;
+  
 
   return (
     <div className="w-full mt-5 p-4 bg-gray-50">
