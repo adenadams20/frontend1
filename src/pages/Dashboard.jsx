@@ -47,7 +47,7 @@ export default function Dashboard() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
             <p className="text-sm opacity-90">Solde Total</p>
-            <p className="text-3xl font-semibold mt-2">86 729,25 €</p>
+            <p className="text-3xl font-semibold mt-2">86 729,25 XOF</p>
 
             <div className="flex items-center mt-4 text-sm opacity-90">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,9 +226,9 @@ function TransactionItem({ icon, bg, color, title, subtitle, amount, amountColor
 /* COMPTES */
 function AccountsCards() {
   const accounts = [
-    { name: "Compte Courant", amount: "12 458,50 €", number: "****1234", icon: CreditCardIcon, gradient: "from-blue-500 to-blue-700" },
-    { name: "Compte Épargne", amount: "28 950,00 €", number: "****2234", icon: BanknotesIcon, gradient: "from-green-500 to-green-600" },
-    { name: "Compte Business", amount: "45 320,75 €", number: "****3234", icon: BriefcaseIcon, gradient: "from-fuchsia-500 to-purple-600" },
+    { name: "Compte Courant", amount: "122 458,50 XOF", number: "****1234", icon: CreditCardIcon, gradient: "from-blue-500 to-blue-700" },
+    { name: "Compte Épargne", amount: "2 581 950,00 XOF", number: "****2234", icon: BanknotesIcon, gradient: "from-green-500 to-green-600" },
+    { name: "Compte Business", amount: "45 320,75 XOF", number: "****3234", icon: BriefcaseIcon, gradient: "from-fuchsia-500 to-purple-600" },
   ];
 
   return (

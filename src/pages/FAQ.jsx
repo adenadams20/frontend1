@@ -6,6 +6,11 @@ import InputField from "../components/InputField";
 import Button from "../components/Button";
 
 export default function FAQ() {
+  const [activeCategory, setActiveCategory] = useState("Toutes");
+  const [openIndex, setOpenIndex] = useState(null);
+  const [search, setSearch] = useState("");
+  const [chatOpen, setChatOpen] = useState(false); // État du chat
+
   const categories = [
     "Toutes",
     "Compte",
@@ -25,7 +30,7 @@ export default function FAQ() {
     {
       category: "Transferts",
       question: "Quelle est la limite de transfert quotidienne ?",
-      answer: "La limite de transfert quotidienne standard est de 3 279 785 Francs CFA.Pour augmenter cette limite, contactez notre service client.",
+      answer: "La limite de transfert quotidienne standard est de 3 279 785 Francs CFA. Pour augmenter cette limite, contactez notre service client.",
     },
     {
       category: "Sécurité",
@@ -48,10 +53,6 @@ export default function FAQ() {
       answer: "Contactez immédiatement notre support.",
     },
   ];
-
-  const [activeCategory, setActiveCategory] = useState("Toutes");
-  const [openIndex, setOpenIndex] = useState(null);
-  const [search, setSearch] = useState("");
 
   const filteredQuestions = questions.filter((q) => {
     const matchCategory = activeCategory === "Toutes" || q.category === activeCategory;
@@ -104,9 +105,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Chat en direct</h2>
           <p className="text-gray-500 mt-1">Lun–Ven, 9h–18h</p>
-          <a href="/chat" className="text-blue-600 font-medium mt-3 inline-block">
-            Démarrer le chat
-          </a>
+          {/* Plus de lien “Démarrer le chat” ici */}
         </div>
 
       </div>
@@ -175,64 +174,81 @@ export default function FAQ() {
       </div>
 
       {/* FORMULAIRE */}
-     <div className="max-w-5xl mx-auto mt-16 bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
-  
-  <h2 className="text-2xl font-semibold text-center mb-4">Contactez-nous</h2>
-  <p className="text-gray-600 text-center mb-6">
-    Remplissez ce formulaire pour envoyer un message
-  </p>
+      <div className="max-w-5xl mx-auto mt-16 bg-white p-10 rounded-3xl shadow-sm border border-gray-100">
 
-  <form className="space-y-4">
+        <h2 className="text-2xl font-semibold text-center mb-4">Contactez-nous</h2>
+        <p className="text-gray-600 text-center mb-6">
+          Remplissez ce formulaire pour envoyer un message
+        </p>
 
-    {/* NOM + EMAIL SUR LA MÊME LIGNE */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label className="block font-medium text-gray-700">Nom</label>
-        <InputField
-          type="text"
-          className="w-full px-4 py-2 mt-1"
-        />
+        <form className="space-y-4">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-medium text-gray-700">Nom</label>
+              <InputField
+                type="text"
+                className="w-full px-4 py-2 mt-1"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-gray-700">Email</label>
+              <InputField
+                type="email"
+                className="w-full px-4 py-2 mt-1"
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block font-medium text-gray-700">Sujet</label>
+              <InputField
+                type="text"
+                className="w-full px-4 py-2 mt-1"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium text-gray-700">Message</label>
+            <textarea
+              rows="4"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
+            ></textarea>
+          </div>
+
+          <Button
+            type="submit"
+            className="flex items-center gap-2 text-white py-3 px-6 rounded-xl text-lg transition-all"
+          >
+            <PaperAirplaneIcon className="w-5 h-5 text-white rotate-45" />
+            Envoyer le message
+          </Button>
+
+        </form>
       </div>
 
-      <div>
-        <label className="block font-medium text-gray-700">Email</label>
-        <InputField
-          type="email"
-          className="w-full   px-4 py-2 mt-1"
-        />
-      </div>
-      <div className="col-span-2">
-  <label className="block font-medium text-gray-700">Sujet</label>
-  <InputField
-    type="text"
-    className="w-full  px-4 py-2 mt-1"
-  />
-</div>
-    </div>
+      {/* WIDGET CHAT FLOTTANT */}
+      {chatOpen && (
+        <div className="fixed bottom-24 right-8 w-80 h-96 z-50 shadow-xl border rounded-xl overflow-hidden">
+          <iframe
+            src="https://cdn.botpress.cloud/webchat/v3.5/shareable.html?configUrl=https://files.bpcontent.cloud/2025/12/09/15/20251209152529-RX4ONOEM.json&backgroundColor=%238000ff"
+            className="w-full h-full"
+            title="Support Chat"
+            frameBorder="0"
+            allow="microphone; camera"
+          ></iframe>
+        </div>
+      )}
 
-    {/* MESSAGE */}
-    <div>
-      <label className="block font-medium text-gray-700">Message</label>
-      <textarea
-        rows="4"
-        className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
-      ></textarea>
-    </div>
-
-    {/* BOUTON */}
-    <Button
-  type="submit"
-  className="flex items-center gap-2  text-white py-3 px-6 rounded-xl text-lg transition-all"
->
-  <PaperAirplaneIcon className="w-5 h-5 text-white rotate-45" />
-  Envoyer le message
-</Button>
-
-  </form>
-</div>
-
+      {/* BOUTON DE LA BULLE FIXE */}
+      <button
+        onClick={() => setChatOpen(!chatOpen)}
+        className="fixed bottom-8 right-8 bg-purple-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-50 hover:bg-purple-700 transition"
+      >
+        <ChatBubbleLeftRightIcon className="w-8 h-8" />
+      </button>
 
     </div>
   );
 }
-
