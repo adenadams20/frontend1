@@ -1,15 +1,18 @@
 import { useState } from "react";
 
 export default function Transfert() {
-  const [activeTab, setActiveTab] = useState("interne"); // interne | externe
+  const [activeTab, setActiveTab] = useState("interne");
+
   return (
     <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
-       <div className="mt-6">
-        <h1 className="text-3xl font-semibold mb-1 ">Transfert d'argent</h1>
-        <p className="mb-5 text-gray-600">Effectuez un transfert entre vos comptes ou vers un bénéficiaire
+      <div className="mt-6">
+        <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600">
+          Effectuez un transfert entre vos comptes ou vers un bénéficiaire
         </p>
       </div>
-      {/* NAVTABS */}
+
+      {/* NAV TABS */}
       <div className="flex justify-center mb-6">
         <div className="flex bg-gray-100 gap-2 rounded-xl p-1">
           <button
@@ -42,7 +45,7 @@ export default function Transfert() {
 }
 
 /* ---------------------------------------------------
-   🔵 TRANSFERT INTERNE
+   🔵 TRANSFERT INTERNE — fetch corrigé
 --------------------------------------------------- */
 function TransfertInterne() {
   const [montant, setMontant] = useState("");
@@ -52,24 +55,55 @@ function TransfertInterne() {
 
   const quickValues = [50, 100, 200, 500];
 
-  const handleTransfert = () => {
-    if (!montant || !compte) return alert("Veuillez remplir tous les champs");
+  const handleTransfert = async () => {
+    if (!montant || !compte)
+      return alert("Veuillez remplir tous les champs");
 
     setDisabled(true);
-    setSuccess(true);
 
-    setTimeout(() => {
-      setSuccess(false);
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amount: Number(montant),
+            toAccount: compte,
+            type: "interne",
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Erreur serveur");
+        setDisabled(false);
+        return;
+      }
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        setDisabled(false);
+        setMontant("");
+        setCompte("");
+      }, 2000);
+    } catch (err) {
+      alert("Erreur réseau");
       setDisabled(false);
-      setMontant("");
-      setCompte("");
-    }, 2000);
+    }
   };
 
   return (
     <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
-
-      {/* Popup succès */}
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -95,7 +129,6 @@ function TransfertInterne() {
 
       <div>
         <label className="font-medium">Montant</label>
-
         <div className="flex items-center mt-1">
           <input
             type="number"
@@ -126,19 +159,19 @@ function TransfertInterne() {
 
       <div className="text-center">
         <button
-        onClick={handleTransfert}
-        disabled={disabled}
-        className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600 "
-      >
-        Effectuer le transfert
-      </button>
+          onClick={handleTransfert}
+          disabled={disabled}
+          className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600"
+        >
+          Effectuer le transfert
+        </button>
       </div>
     </div>
   );
 }
 
 /* ---------------------------------------------------
-   🟣 TRANSFERT EXTERNE (AVEC CONTACTS RÉCENTS)
+   🟣 TRANSFERT EXTERNE — fetch corrigé
 --------------------------------------------------- */
 function TransfertExterne() {
   const [montant, setMontant] = useState("");
@@ -148,45 +181,72 @@ function TransfertExterne() {
 
   const quickValues = [50, 100, 200, 500];
 
-  // Contacts récents (modifiable)
   const [contacts, setContacts] = useState([
     { initials: "MD", name: "Marie Dubois", email: "marie@email.com" },
     { initials: "PM", name: "Pierre Martin", email: "pierre@email.com" },
   ]);
 
-  const handleTransfert = () => {
+  const handleTransfert = async () => {
     if (!montant || !beneficiaire)
       return alert("Veuillez remplir tous les champs");
 
     setDisabled(true);
-    setSuccess(true);
 
-    // 🔥 Ajouter automatiquement le nouveau bénéficiaire
-    const newContact = {
-      initials: beneficiaire
-        .split(" ")
-        .map((c) => c[0])
-        .join("")
-        .toUpperCase(),
-      name: beneficiaire,
-      email: "inconnu@email.com",
-    };
+    try {
+      const token = localStorage.getItem("token");
 
-    setContacts([newContact, ...contacts]);
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer/beneficiary",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amount: Number(montant),
+            beneficiary: beneficiaire,
+            type: "externe",
+          }),
+        }
+      );
 
-    setTimeout(() => {
-      setSuccess(false);
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Erreur serveur");
+        setDisabled(false);
+        return;
+      }
+
+      setSuccess(true);
+
+      const newContact = {
+        initials: beneficiaire
+          .split(" ")
+          .map((c) => c[0])
+          .join("")
+          .toUpperCase(),
+        name: beneficiaire,
+        email: "inconnu@email.com",
+      };
+
+      setContacts([newContact, ...contacts]);
+
+      setTimeout(() => {
+        setSuccess(false);
+        setDisabled(false);
+        setMontant("");
+        setBeneficiaire("");
+      }, 2000);
+    } catch (err) {
+      alert("Erreur réseau");
       setDisabled(false);
-      setMontant("");
-      setBeneficiaire("");
-    }, 2000);
+    }
   };
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
-     
-
-      {/* Popup succès */}
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -198,7 +258,6 @@ function TransfertExterne() {
 
       {/* FORMULAIRE */}
       <div className="w-full lg:w-2/3 space-y-4 bg-white p-6 rounded-2xl shadow">
-
         <div>
           <label className="font-medium">Depuis le compte</label>
           <div className="p-3 border border-gray-200 rounded-xl mt-1">
@@ -220,7 +279,6 @@ function TransfertExterne() {
 
         <div>
           <label className="font-medium">Montant</label>
-
           <div className="flex items-center mt-1">
             <input
               type="number"
