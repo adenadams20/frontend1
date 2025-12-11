@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Transfert() {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
@@ -46,30 +46,113 @@ export default function Transfert() {
 --------------------------------------------------- */
 function TransfertInterne() {
   const [montant, setMontant] = useState("");
-  const [compte, setCompte] = useState("");
+  const [fromId, setFromId] = useState("");      // compte source
+  const [toId, setToId] = useState("");          // compte destination
   const [success, setSuccess] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
+  const [accounts, setAccounts] = useState([]);
+
   const quickValues = [50, 100, 200, 500];
 
-  const handleTransfert = () => {
-    if (!montant || !compte) return alert("Veuillez remplir tous les champs");
+  // Charger les comptes utilisateur
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/accounts", {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ très important
+          },
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          console.log("Erreur récupération comptes :", data.message);
+          return;
+        }
+
+        // 👇 adapte si ton back renvoie { accounts: [...] }
+        const accs = Array.isArray(data) ? data : data.accounts || [];
+        setAccounts(accs);
+
+        // Par défaut : source = COURANT s'il existe
+        const courant = accs.find(
+          (a) => a.type?.toUpperCase() === "COURANT"
+        );
+        if (courant) setFromId(courant._id);
+      } catch (err) {
+        console.log("Erreur récupération comptes :", err);
+      }
+    };
+
+    fetchAccounts();
+  }, []);
+
+  const handleTransfert = async () => {
+    if (!montant || !fromId || !toId) {
+      return alert("Veuillez choisir les deux comptes et le montant");
+    }
+
+    if (fromId === toId) {
+      return alert("Le compte source et le compte destination doivent être différents");
+    }
+
+    const source = accounts.find((a) => a._id === fromId);
+    const dest = accounts.find((a) => a._id === toId);
+
+    if (!source || !dest) {
+      return alert("Comptes introuvables");
+    }
 
     setDisabled(true);
-    setSuccess(true);
 
-    setTimeout(() => {
-      setSuccess(false);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅
+          },
+          body: JSON.stringify({
+            fromId,
+            toId,
+            amount: Number(montant),
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Erreur serveur");
+        setDisabled(false);
+        return;
+      }
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        setDisabled(false);
+        setMontant("");
+        setFromId(source._id); // on peut garder le même source
+        setToId("");
+      }, 2000);
+    } catch (err) {
+      alert("Erreur réseau");
       setDisabled(false);
-      setMontant("");
-      setCompte("");
-    }, 2000);
+    }
   };
+
+  // Comptes destination = tous les comptes sauf le compte source sélectionné
+  const destAccounts = accounts.filter((a) => a._id !== fromId);
 
   return (
     <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
-
-      {/* Popup succès */}
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -79,23 +162,45 @@ function TransfertInterne() {
         </div>
       )}
 
+      {/* Depuis le compte (source) */}
+      <div>
+        <label className="font-medium">Depuis le compte</label>
+        <select
+          className="w-full p-3 border rounded-xl mt-1 border-gray-300"
+          value={fromId}
+          onChange={(e) => setFromId(e.target.value)}
+          disabled={disabled || accounts.length === 0}
+        >
+          <option value="">Sélectionner un compte</option>
+          {accounts.map((acc) => (
+            <option key={acc._id} value={acc._id}>
+              {acc.type} — Solde : {acc.balance} XOF
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Vers le compte (destination) */}
       <div>
         <label className="font-medium">Vers le compte</label>
         <select
           className="w-full p-3 border rounded-xl mt-1 border-gray-300"
-          value={compte}
-          onChange={(e) => setCompte(e.target.value)}
+          value={toId}
+          onChange={(e) => setToId(e.target.value)}
+          disabled={disabled || destAccounts.length === 0}
         >
           <option value="">Sélectionner un compte</option>
-          <option>Courant</option>
-          <option>Épargne</option>
-          <option>Business</option>
+          {destAccounts.map((acc) => (
+            <option key={acc._id} value={acc._id}>
+              {acc.type} — Solde : {acc.balance} XOF
+            </option>
+          ))}
         </select>
       </div>
 
+      {/* Montant */}
       <div>
         <label className="font-medium">Montant</label>
-
         <div className="flex items-center mt-1">
           <input
             type="number"
@@ -126,12 +231,12 @@ function TransfertInterne() {
 
       <div className="text-center">
         <button
-        onClick={handleTransfert}
-        disabled={disabled}
-        className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600 "
-      >
-        Effectuer le transfert
-      </button>
+          onClick={handleTransfert}
+          disabled={disabled}
+          className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600"
+        >
+          Effectuer le transfert
+        </button>
       </div>
     </div>
   );
