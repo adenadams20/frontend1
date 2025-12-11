@@ -1,18 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Transfert() {
-  const [activeTab, setActiveTab] = useState("interne");
-
+  const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
     <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
-      <div className="mt-6">
-        <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
-        <p className="mb-5 text-gray-600">
-          Effectuez un transfert entre vos comptes ou vers un bénéficiaire
+       <div className="mt-6">
+        <h1 className="text-3xl font-semibold mb-1 ">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600">Effectuez un transfert entre vos comptes ou vers un bénéficiaire
         </p>
       </div>
-
-      {/* NAV TABS */}
+      {/* NAVTABS */}
       <div className="flex justify-center mb-6">
         <div className="flex bg-gray-100 gap-2 rounded-xl p-1">
           <button
@@ -45,37 +42,85 @@ export default function Transfert() {
 }
 
 /* ---------------------------------------------------
-   🔵 TRANSFERT INTERNE — fetch corrigé
+   🔵 TRANSFERT INTERNE
 --------------------------------------------------- */
 function TransfertInterne() {
   const [montant, setMontant] = useState("");
-  const [compte, setCompte] = useState("");
+  const [fromId, setFromId] = useState("");      // compte source
+  const [toId, setToId] = useState("");          // compte destination
   const [success, setSuccess] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
+  const [accounts, setAccounts] = useState([]);
+
   const quickValues = [50, 100, 200, 500];
 
+  // Charger les comptes utilisateur
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/accounts", {
+          headers: {
+            Authorization:` Bearer ${token}`, // ✅ très important
+          },
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          console.log("Erreur récupération comptes :", data.message);
+          return;
+        }
+
+        // 👇 adapte si ton back renvoie { accounts: [...] }
+        const accs = Array.isArray(data) ? data : data.accounts || [];
+        setAccounts(accs);
+
+        // Par défaut : source = COURANT s'il existe
+        const courant = accs.find(
+          (a) => a.type?.toUpperCase() === "COURANT"
+        );
+        if (courant) setFromId(courant._id);
+      } catch (err) {
+        console.log("Erreur récupération comptes :", err);
+      }
+    };
+
+    fetchAccounts();
+  }, []);
+
   const handleTransfert = async () => {
-    if (!montant || !compte)
-      return alert("Veuillez remplir tous les champs");
+    if (!montant || !fromId || !toId) {
+      return alert("Veuillez choisir les deux comptes et le montant");
+    }
+
+    if (fromId === toId) {
+      return alert("Le compte source et le compte destination doivent être différents");
+    }
+
+    const source = accounts.find((a) => a._id === fromId);
+    const dest = accounts.find((a) => a._id === toId);
+
+    if (!source || !dest) {
+      return alert("Comptes introuvables");
+    }
 
     setDisabled(true);
 
     try {
       const token = localStorage.getItem("token");
-
       const res = await fetch(
         "http://localhost:5000/api/transactions/transfer",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // ✅
           },
           body: JSON.stringify({
+            fromId,
+            toId,
             amount: Number(montant),
-            toAccount: compte,
-            type: "interne",
           }),
         }
       );
@@ -94,13 +139,17 @@ function TransfertInterne() {
         setSuccess(false);
         setDisabled(false);
         setMontant("");
-        setCompte("");
+        setFromId(source._id); // on peut garder le même source
+        setToId("");
       }, 2000);
     } catch (err) {
       alert("Erreur réseau");
       setDisabled(false);
     }
   };
+
+  // Comptes destination = tous les comptes sauf le compte source sélectionné
+  const destAccounts = accounts.filter((a) => a._id !== fromId);
 
   return (
     <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
@@ -113,20 +162,43 @@ function TransfertInterne() {
         </div>
       )}
 
+      {/* Depuis le compte (source) */}
+      <div>
+        <label className="font-medium">Depuis le compte</label>
+        <select
+          className="w-full p-3 border rounded-xl mt-1 border-gray-300"
+          value={fromId}
+          onChange={(e) => setFromId(e.target.value)}
+          disabled={disabled || accounts.length === 0}
+        >
+          <option value="">Sélectionner un compte</option>
+          {accounts.map((acc) => (
+            <option key={acc._id} value={acc._id}>
+              {acc.type} — Solde : {acc.balance} XOF
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Vers le compte (destination) */}
       <div>
         <label className="font-medium">Vers le compte</label>
         <select
           className="w-full p-3 border rounded-xl mt-1 border-gray-300"
-          value={compte}
-          onChange={(e) => setCompte(e.target.value)}
+          value={toId}
+          onChange={(e) => setToId(e.target.value)}
+          disabled={disabled || destAccounts.length === 0}
         >
           <option value="">Sélectionner un compte</option>
-          <option>Courant</option>
-          <option>Épargne</option>
-          <option>Business</option>
+          {destAccounts.map((acc) => (
+            <option key={acc._id} value={acc._id}>
+              {acc.type} — Solde : {acc.balance} XOF
+            </option>
+          ))}
         </select>
       </div>
 
+      {/* Montant */}
       <div>
         <label className="font-medium">Montant</label>
         <div className="flex items-center mt-1">
@@ -171,7 +243,7 @@ function TransfertInterne() {
 }
 
 /* ---------------------------------------------------
-   🟣 TRANSFERT EXTERNE — fetch corrigé
+   🟣 TRANSFERT EXTERNE (AVEC CONTACTS RÉCENTS)
 --------------------------------------------------- */
 function TransfertExterne() {
   const [montant, setMontant] = useState("");
@@ -181,72 +253,45 @@ function TransfertExterne() {
 
   const quickValues = [50, 100, 200, 500];
 
+  // Contacts récents (modifiable)
   const [contacts, setContacts] = useState([
     { initials: "MD", name: "Marie Dubois", email: "marie@email.com" },
     { initials: "PM", name: "Pierre Martin", email: "pierre@email.com" },
   ]);
 
-  const handleTransfert = async () => {
+  const handleTransfert = () => {
     if (!montant || !beneficiaire)
       return alert("Veuillez remplir tous les champs");
 
     setDisabled(true);
+    setSuccess(true);
 
-    try {
-      const token = localStorage.getItem("token");
+    // 🔥 Ajouter automatiquement le nouveau bénéficiaire
+    const newContact = {
+      initials: beneficiaire
+        .split(" ")
+        .map((c) => c[0])
+        .join("")
+        .toUpperCase(),
+      name: beneficiaire,
+      email: "inconnu@email.com",
+    };
 
-      const res = await fetch(
-        "http://localhost:5000/api/transactions/transfer/beneficiary",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            amount: Number(montant),
-            beneficiary: beneficiaire,
-            type: "externe",
-          }),
-        }
-      );
+    setContacts([newContact, ...contacts]);
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Erreur serveur");
-        setDisabled(false);
-        return;
-      }
-
-      setSuccess(true);
-
-      const newContact = {
-        initials: beneficiaire
-          .split(" ")
-          .map((c) => c[0])
-          .join("")
-          .toUpperCase(),
-        name: beneficiaire,
-        email: "inconnu@email.com",
-      };
-
-      setContacts([newContact, ...contacts]);
-
-      setTimeout(() => {
-        setSuccess(false);
-        setDisabled(false);
-        setMontant("");
-        setBeneficiaire("");
-      }, 2000);
-    } catch (err) {
-      alert("Erreur réseau");
+    setTimeout(() => {
+      setSuccess(false);
       setDisabled(false);
-    }
+      setMontant("");
+      setBeneficiaire("");
+    }, 2000);
   };
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
+     
+
+      {/* Popup succès */}
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -258,6 +303,7 @@ function TransfertExterne() {
 
       {/* FORMULAIRE */}
       <div className="w-full lg:w-2/3 space-y-4 bg-white p-6 rounded-2xl shadow">
+
         <div>
           <label className="font-medium">Depuis le compte</label>
           <div className="p-3 border border-gray-200 rounded-xl mt-1">
@@ -279,6 +325,7 @@ function TransfertExterne() {
 
         <div>
           <label className="font-medium">Montant</label>
+
           <div className="flex items-center mt-1">
             <input
               type="number"
