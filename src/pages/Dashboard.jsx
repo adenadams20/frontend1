@@ -192,7 +192,7 @@ export default function Dashboard() {
           <div>
             <p className="text-sm opacity-90">Solde Total</p>
             <p className="text-3xl font-semibold mt-2">
-              {Number.isFinite(totalBalance) ? totalBalance.toLocaleString() : "0"} €
+              {Number.isFinite(totalBalance) ? totalBalance.toLocaleString() : "0"} XOF
             </p>
             <div className="flex items-center mt-4 text-sm opacity-90">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
