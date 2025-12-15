@@ -14,11 +14,11 @@ export default function Paiement() {
 
   // 🔹 Formulaire (temps réel)
   const [formData, setFormData] = useState({
-    service: "Eau", // label pour l'UI
-    serviceCode: "EAU", // code backend
-    billNumber: "", // référence facturation
-    amount: "", // montant
-    description: "", // description facultative
+    service: "Eau",       // label pour l'UI
+    serviceCode: "EAU",   // code backend
+    billNumber: "",       // référence facturation
+    amount: "",           // montant
+    description: "",      // description facultative
   });
 
   // 🔹 Reçu (figé après paiement)
@@ -114,16 +114,16 @@ export default function Paiement() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ✅ corrigé
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             accountId: accountId,
             serviceCode: formData.serviceCode,
-            serviceName: formData.service, // ajouté pour correspondre au backend
+            serviceName: formData.service,       // ajouté pour correspondre au backend
             billNumber: formData.billNumber,
             amount: Number(formData.amount),
-            currency: "XOF", // ajouté pour backend
-            description: formData.description, // ajouté pour backend
+            currency: "XOF",                     // ajouté pour backend
+            description: formData.description,   // ajouté pour backend
           }),
         }
       );
@@ -154,6 +154,7 @@ export default function Paiement() {
         amount: "",
         description: "",
       });
+
     } catch (error) {
       setModalStatus("error");
       setModalMessage(error.message);
@@ -183,11 +184,7 @@ export default function Paiement() {
               });
             }}
             className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${
-                activeTab === t.id
-                  ? "bg-blue-900 text-white"
-                  : "bg-white hover:bg-gray-100"
-              }`}
+              ${activeTab === t.id ? "bg-blue-900 text-white" : "bg-white hover:bg-gray-100"}`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -273,14 +270,9 @@ export default function Paiement() {
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 w-80 text-center">
-            <h2
-              className={`text-xl font-semibold mb-3 ${
-                modalStatus === "success" ? "text-green-600" : "text-red-600"
-              }`}
-            >
+            <h2 className={`text-xl font-semibold mb-3 ${modalStatus === "success" ? "text-green-600" : "text-red-600"}`}>
               {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
             </h2>
-
             <p>{modalMessage}</p>
             <button
               onClick={() => setShowModal(false)}

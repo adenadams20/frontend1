@@ -30,6 +30,8 @@ async function get(endpoint, token = null) {
   return result;
 }
 
+
+
 // 🔹 NOUVEAU : Fonction générique pour PUT
 async function put(endpoint, data, token = null) {
   const headers = { "Content-Type": "application/json" };
@@ -48,10 +50,12 @@ async function put(endpoint, data, token = null) {
 
 // 🔐 Authentification
 export async function login(email, password) {
+  // backend : POST /api/auth/login
   return post("/auth/login", { email, password });
 }
 
 export async function register(userData) {
+  // backend : POST /api/auth/register
   return post("/auth/register", userData);
 }
 

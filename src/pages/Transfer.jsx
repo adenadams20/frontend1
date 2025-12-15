@@ -193,6 +193,9 @@ function TransfertInterne() {
   // Comptes destination = tous les comptes sauf le compte source sélectionné
   const destAccounts = accounts.filter((a) => a._id !== fromId);
 
+  // Comptes destination = tous les comptes sauf le compte source sélectionné
+  // const destAccounts = accounts.filter((a) => a._id !== fromId);
+
   return (
     <div className="relative space-y-6 bg-white p-4 sm:p-6 rounded-2xl shadow">
       {success && (
@@ -265,6 +268,7 @@ function TransfertInterne() {
         </select>
       </div>
 
+      {/* Montant */}
       {/* Montant */}
       <div>
         <label className="font-medium">Montant</label>
