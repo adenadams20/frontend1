@@ -1,317 +1,296 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { FaDroplet } from "react-icons/fa6";
 import { MdElectricBolt } from "react-icons/md";
 import { FaWifi } from "react-icons/fa";
 import { PiDeviceMobileCamera } from "react-icons/pi";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
 
-
-
 export default function Paiement() {
   const [activeTab, setActiveTab] = useState("eau");
 
+  // 🔹 Formulaire (temps réel)
+  const [formData, setFormData] = useState({
+    service: "Eau", // label pour l'UI
+    serviceCode: "EAU", // code backend
+    billNumber: "", // référence facturation
+    amount: "", // montant
+    description: "", // description facultative
+  });
+
+  // 🔹 Reçu (figé après paiement)
+  const [receiptData, setReceiptData] = useState({
+    service: "-",
+    billNumber: "-",
+    amount: 0,
+    total: 0,
+    description: "-",
+  });
+
+  const receiptRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalStatus, setModalStatus] = useState("success");
+  const [loading, setLoading] = useState(false);
+
+  const serviceMap = {
+    Eau: "EAU",
+    Électricité: "ELECTRICITE",
+    Internet: "INTERNET",
+    Mobile: "MOBILE",
+  };
+
+  const serviceToTab = {
+    Eau: "eau",
+    Électricité: "electricite",
+    Internet: "internet",
+    Mobile: "mobile",
+  };
+
   const tabs = [
-  { id: "eau", label: "Eau", icon: FaDroplet },  // ✅ utiliser WaterDropIcon ici aussi
-  { id: "electricite", label: "Électricité", icon: MdElectricBolt  },
-  { id: "internet", label: "Internet", icon: FaWifi },
-  { id: "mobile", label: "Mobile", icon: PiDeviceMobileCamera },
-];
+    { id: "eau", label: "Eau", icon: FaDroplet },
+    { id: "electricite", label: "Électricité", icon: MdElectricBolt },
+    { id: "internet", label: "Internet", icon: FaWifi },
+    { id: "mobile", label: "Mobile", icon: PiDeviceMobileCamera },
+  ];
 
+  // 🔹 Synchronisation dropdown / tabs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "service") {
+      setActiveTab(serviceToTab[value]);
+      setFormData({
+        ...formData,
+        service: value,
+        serviceCode: serviceMap[value],
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
+  // 🔹 Téléchargement PDF du reçu
+  const downloadReceiptPDF = async () => {
+    if (!receiptRef.current) return;
+    const canvas = await html2canvas(receiptRef.current);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
+    pdf.save("recu-paiement.pdf");
+  };
+
+  // 🔹 Paiement avec Bearer Token
+  const handlePayment = async (e) => {
+    e.preventDefault();
+
+    if (!formData.billNumber || !formData.amount) {
+      setModalStatus("error");
+      setModalMessage("Veuillez remplir tous les champs.");
+      setShowModal(true);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const accountId = localStorage.getItem("accountId"); // récupérer accountId depuis le localStorage
+
+    if (!token || !accountId) {
+      setModalStatus("error");
+      setModalMessage("Vous devez être connecté pour effectuer un paiement.");
+      setShowModal(true);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/transactions/bill-payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ corrigé
+          },
+          body: JSON.stringify({
+            accountId: accountId,
+            serviceCode: formData.serviceCode,
+            serviceName: formData.service, // ajouté pour correspondre au backend
+            billNumber: formData.billNumber,
+            amount: Number(formData.amount),
+            currency: "XOF", // ajouté pour backend
+            description: formData.description, // ajouté pour backend
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.message || "Erreur lors du paiement.");
+      }
+
+      // ✅ Reçu figé après succès
+      setReceiptData({
+        service: formData.service,
+        billNumber: formData.billNumber,
+        amount: Number(formData.amount),
+        total: Number(formData.amount),
+        description: formData.description || "-",
+      });
+
+      setModalStatus("success");
+      setModalMessage("Paiement effectué avec succès.");
+      setShowModal(true);
+
+      // Réinitialiser le formulaire
+      setFormData({
+        service: formData.service,
+        serviceCode: formData.serviceCode,
+        billNumber: "",
+        amount: "",
+        description: "",
+      });
+    } catch (error) {
+      setModalStatus("error");
+      setModalMessage(error.message);
+      setShowModal(true);
+    }
+
+    setLoading(false);
+  };
 
   return (
-    
-    <div className="w-full mt-19 p-4  bg-gray-50 ">
-      <div className="">
-        <h1 className="font-semibold text-3xl mt-1">
-          Paiement de factures
+    <div className="w-full mt-5 p-4 bg-gray-50">
+      <h1 className="font-semibold text-3xl mb-6">Paiement de factures</h1>
 
-        </h1>
-        <p className="mt-1 mb-7 text-gray-600">Payez vos factures et services en ligne</p>
-      </div>
-      {/* --- TABS CARDS --- */}
+      {/* ONGLET */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {tabs.map((t) => (
           <li
             key={t.id}
-            onClick={() => setActiveTab(t.id)}
-            className={`cursor-pointer text-center shadow p-5 w-full rounded-xl   
-              flex flex-col items-center gap-2
-              transition duration-200
+            onClick={() => {
+              setActiveTab(t.id);
+              setFormData({
+                service: t.label,
+                serviceCode: serviceMap[t.label],
+                billNumber: "",
+                amount: "",
+                description: "",
+              });
+            }}
+            className={`cursor-pointer text-center shadow p-5 rounded-xl transition
               ${
                 activeTab === t.id
                   ? "bg-blue-900 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
-              }
-            `}
+                  : "bg-white hover:bg-gray-100"
+              }`}
           >
-            <t.icon className="w-8 h-8" />
+            <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
           </li>
         ))}
       </ul>
 
-      {/* --- CONTENT --- */}
-      <div className="mt-6 p-5 rounded-xl ">
-        {activeTab === "eau" && (
-          <div className=" py-4">
-            <h4 className="font-bold text-lg mb-4">Détails du paiement</h4>
+      <div className="mt-6 flex flex-col md:flex-row gap-6">
+        {/* FORMULAIRE */}
+        <div className="md:w-2/3 bg-white shadow p-4 rounded-lg">
+          <form onSubmit={handlePayment}>
+            <Select name="service" value={formData.service} onChange={handleChange}>
+              <option value="Eau">Eau</option>
+              <option value="Électricité">Électricité</option>
+              <option value="Internet">Internet</option>
+              <option value="Mobile">Mobile</option>
+            </Select>
 
-            <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
+            <InputField
+              className="mt-4"
+              name="billNumber"
+              value={formData.billNumber}
+              onChange={handleChange}
+              placeholder="Référence / Numéro de facture"
+            />
 
-              {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full shadow p-4 bg-white rounded-lg">
-                <form>
-                    <h4>Payer depuis</h4>
-                  
-                  <div className="mt-4">
-                   <Select id="eau">
-                     <option>Choisir un service</option>
-                     <option selected>Eau</option>
-                   </Select>
+            <InputField
+              className="mt-4"
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              placeholder="Montant XOF"
+            />
 
-                  </div>
+            <InputField
+              className="mt-4"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Description (facultatif)"
+            />
 
-                  <div className="mt-4">
-                    <label>Référence / Fournisseur</label>
-                    <InputField  />
-                  </div>
+            <Button type="submit" className="mt-4 w-full" disabled={loading}>
+              {loading ? "Paiement..." : "Payer maintenant"}
+            </Button>
+          </form>
+        </div>
 
-                  <div className="mt-4">
-                    <label>Montant</label>
-                    <InputField
-                      type="number"
-                      
-                      placeholder="XOF"
-                    />
-                  </div>
-
-                  <Button className=" w-full">
-                    Payer maintenant
-                  </Button>
-                </form>
-              </div>
-
-              {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow-2xl p-4 rounded-lg">
-                <p className="font-semibold mb-4">Récapitulatif</p>
-
-                <div className="flex justify-between mb-2">
-                  <span>Montant</span>
-                  <span>XOF</span>
-                </div>
-
-                <div className="flex justify-between mb-2">
-                  <span>Frais de service</span>
-                  <span className="text-green-500">Gratuit</span>
-                </div>
-
-                <hr className="my-2" />
-
-                <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>XOF</span>
-                </div>
-              </div>
-
-            </div>
+        {/* 🧾 REÇU */}
+        <div ref={receiptRef} className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg">
+          <p className="font-semibold mb-4">Récapitulatif</p>
+          <div className="flex justify-between mb-2">
+            <span>Service</span>
+            <span>{receiptData.service}</span>
           </div>
-        )}
-
-        {activeTab === "electricite" && (
-
-          <div className=" py-4">
-            <h4 className="font-bold text-lg mb-4">Détails du paiement</h4>
-
-            <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
-
-              {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
-              
-                <form>
-                  <h4>Payer depuis</h4>
-                  <div className="mt-4">
-                   <Select id="electricite">
-                      <option>Choisir un service</option>
-                      <option selected>electricite</option>
-                   </Select>
-
-                  </div>
-
-                  <div className="mt-4">
-                    <label>Référence / Fournisseur</label>
-                    <InputField type="text" placeholder="ex:" className="" />
-                  </div>
-
-                  <div className="mt-4">
-                    <label>Montant</label>
-                    <InputField
-                      type="number"
-                      placeholder="XOF"
-                    />
-                  </div>
-
-                  <Button className=" w-full">
-                    Payer maintenant
-                  </Button>
-                </form>
-              </div>
-
-              {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow- p-4 rounded-lg">
-                <p className="font-semibold mb-4">Récapitulatif</p>
-
-                <div className="flex justify-between mb-2">
-                  <span>Montant</span>
-                  <span>XOF</span>
-                </div>
-
-                <div className="flex justify-between mb-2">
-                  <span>Frais de service</span>
-                  <span className="text-green-500">Gratuit</span>
-                </div>
-
-                <hr className="my-2" />
-
-                <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>XOF</span>
-                </div>
-              </div>
-
-            </div>
+          <div className="flex justify-between mb-2">
+            <span>Référence / Facture</span>
+            <span>{receiptData.billNumber}</span>
           </div>
-        )}
-
-        {activeTab === "internet" && (
-          <div className=" py-4">
-            <h4 className="font-bold text-lg mb-4">Détails du paiement</h4>
-
-            <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
-
-              {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
-                <form>
-                  <h4>Payer depuis</h4>
-                  <div className="mt-4">
-                     <Select id="internet">
-                      <option selected>Choisir un service</option>
-                      <option >internet</option>
-                   </Select>
-                  </div>
-
-                  <div className="mt-4 ">
-                    <label>Référence / Fournisseur</label>
-                    <InputField type="text" className= " b rounded  " placeholder="ex:" />
-                  </div>
-
-                  <div className="mt-4">
-                    <label>Montant</label>
-                    <InputField
-                      type="number"
-                      
-                      className=" placeholder: text-end "
-                      placeholder="XOF"
-                    />
-                  </div>
-
-                  <Button className="  w-full">
-                    Payer maintenant
-                  </Button>
-                </form>
-              </div>
-
-              {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg">
-                <p className="font-semibold mb-4">Récapitulatif</p>
-
-                <div className="flex justify-between mb-2">
-                  <span>Montant</span>
-                  <span>XOF</span>
-                </div>
-
-                <div className="flex justify-between mb-2">
-                  <span>Frais de service</span>
-                  <span className="text-green-500">Gratuit</span>
-                </div>
-
-                <hr className="my-2" />
-
-                <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>XOF</span>
-                </div>
-              </div>
-
-            </div>
+          <div className="flex justify-between mb-2">
+            <span>Montant</span>
+            <span>{receiptData.amount} XOF</span>
           </div>
-        )}
-
-        {activeTab === "mobile" && (
-<div className=" py-4">
-            <h4 className="font-bold text-lg mb-4">Détails du paiement</h4>
-
-            <div className="flex flex-col md:flex-row gap-6 p-4 w-full">
-
-              {/* FORMULAIRE */}
-              <div className="md:w-2/3 w-full  shadow p-4 bg-white rounded-lg">
-                <form>
-                  <h4>Payer depuis</h4>
-                  <div className="mt-4">
-                    <Select id="mobile">
-                      <option selected>Choisir un service</option>
-                      <option >mobile</option>
-                   </Select>
-                  </div>
-
-                  <div className="mt-4">
-                    <label>Référence / Fournisseur</label>
-                    <InputField type="text" placeholder="ex:" className="w-full  " />
-                  </div>
-
-                  <div className="mt-4">
-                    <label>Montant</label>
-                    <InputField
-                      type="number"
-                      placeholder="XOF"
-                    />
-                  </div>
-
-                  <Button className="mt-4 w-full">
-                    Payer maintenant
-                  </Button>
-                </form>
-              </div>
-
-              {/* RÉCAP */}
-              <div className="md:w-1/3 w-full bg-white shadow p-4 rounded">
-                <p className="font-semibold mb-4">Récapitulatif</p>
-
-                <div className="flex justify-between mb-2">
-                  <span>Montant</span>
-                  <span>XOF</span>
-                </div>
-
-                <div className="flex justify-between mb-2">
-                  <span>Frais de service</span>
-                  <span className="text-green-500">Gratuit</span>
-                </div>
-
-                <hr className="my-2" />
-
-                <div className="flex justify-between font-semibold">
-                  <span>Total</span>
-                  <span>XOF</span>
-                </div>
-              </div>
-
-            </div>
-          </div>      
-        
-        )}
+          <div className="flex justify-between mb-2">
+            <span>Description</span>
+            <span>{receiptData.description}</span>
+          </div>
+          <hr className="my-2" />
+          <div className="flex justify-between font-semibold">
+            <span>Total</span>
+            <span>{receiptData.total} XOF</span>
+          </div>
+          {receiptData.amount > 0 && (
+            <Button className="mt-4 w-full" onClick={downloadReceiptPDF}>
+              Télécharger le reçu (PDF)
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+          <div className="bg-white rounded-xl p-6 w-80 text-center">
+            <h2
+              className={`text-xl font-semibold mb-3 ${
+                modalStatus === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
+            </h2>
+
+            <p>{modalMessage}</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="mt-6 bg-blue-900 text-white px-4 py-2 rounded-lg w-full"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

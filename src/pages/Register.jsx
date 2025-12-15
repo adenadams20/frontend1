@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";//ajouter
+
 
 export default function Register() {
   const navigate = useNavigate();
@@ -14,6 +16,9 @@ export default function Register() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false); //ajouter
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -128,32 +133,59 @@ export default function Register() {
       </div>
 
       {/* Mot de passe */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Mot de passe</label>
-        <input
-          type="password"
-          name="password"
-          value={form.password}
-          onChange={handleChange}
-          placeholder="Entrez votre mot de passe"
-          required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
-        />
-      </div>
+      {/* Mot de passe */}
+<div className="mb-4">
+  <label className="block text-gray-700 font-medium mb-1 sm:mb-2">
+    Mot de passe
+  </label>
 
-      {/* Confirmation */}
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Confirmation</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={form.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirmez votre mot de passe"
-          required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
-        />
-      </div>
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      value={form.password}
+      onChange={handleChange}
+      placeholder="Entrez votre mot de passe"
+      required
+      className="w-full px-3 py-2 border rounded-md text-sm sm:text-base pr-10"
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+    >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </button>
+  </div>
+</div>
+
+{/* Confirmation */}
+<div className="mb-4">
+  <label className="block text-gray-700 font-medium mb-1 sm:mb-2">
+    Confirmation
+  </label>
+
+  <div className="relative">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      name="confirmPassword"
+      value={form.confirmPassword}
+      onChange={handleChange}
+      placeholder="Confirmez votre mot de passe"
+      required
+      className="w-full px-3 py-2 border rounded-md text-sm sm:text-base pr-10"
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+    >
+      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+    </button>
+  </div>
+</div>
 
       <button
         type="submit"

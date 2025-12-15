@@ -316,20 +316,16 @@ function TransfertInterne() {
 function TransfertExterne() {
   const [montant, setMontant] = useState("");
   const [beneficiaire, setBeneficiaire] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
+  const [accountNumber, setAccountNumber] = useState(""); // chez toi = phone
 
   const [fromAccountId, setFromAccountId] = useState("");
   const [beneficiaryId, setBeneficiaryId] = useState("");
 
   const [contacts, setContacts] = useState([]);
 
-  const [success, setSuccess] = useState(false);
   const [disabled, setDisabled] = useState(false);
-
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
-
-  const quickValues = [50, 100, 200, 500];
+  const [messageType, setMessageType] = useState(""); // success | warning | error
 
   /* ----------------------------------
      1️⃣ Charger le compte courant
@@ -338,56 +334,96 @@ function TransfertExterne() {
     const fetchCourant = async () => {
       try {
         const token = localStorage.getItem("token");
+
         const res = await fetch("http://localhost:5000/api/accounts", {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         const data = await res.json();
-
         const accs = Array.isArray(data) ? data : data.accounts || [];
-        const courant = accs.find(
-          (a) => a.type?.toUpperCase() === "COURANT"
-        );
 
+        const courant = accs.find((a) => a.type?.toUpperCase() === "COURANT");
         if (courant) setFromAccountId(courant._id);
-      } catch {}
+      } catch (e) {
+        console.error(e);
+      }
     };
+
     fetchCourant();
   }, []);
 
   /* ----------------------------------
-     2️⃣ Charger les bénéficiaires
+     2️⃣ Charger les bénéficiaires stockés
   ---------------------------------- */
   const fetchBeneficiaries = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/beneficiaries", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+  try {
+    setMessage("");
+    setMessageType("");
 
-      const list = data?.beneficiary || [];
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage("Token manquant. Veuillez vous reconnecter.");
+      setMessageType("error");
+      return;
+    }
 
-      const formatted = list.map((b) => ({
-        _id: b._id,
-        name: b.name,
-        initials: b.name
-          .split(" ")
-          .map((c) => c[0])
-          .join("")
-          .toUpperCase(),
-        accountNumber: b.accountNumber,
-      }));
+    const res = await fetch("http://localhost:5000/api/beneficiaries", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      setContacts(formatted);
-    } catch {}
-  };
+    // ✅ si backend renvoie HTML (erreur) ou JSON => on gère proprement
+    let data = null;
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      throw new Error(text || "Réponse non JSON (backend/route)");
+    }
+
+    if (!res.ok) {
+      const msg =
+        data?.message ||
+        (res.status === 401
+          ? "Session expirée. Reconnectez-vous."
+          : res.status === 404
+          ? "Route /api/beneficiaries introuvable (404)."
+          : "Erreur lors du chargement des bénéficiaires.");
+      setMessage(msg);
+      setMessageType("error");
+      return;
+    }
+
+    const list = data?.beneficiary || [];
+    const formatted = list.map((b) => ({
+      _id: b._id,
+      name: b.name,
+      initials: (b.name || "")
+        .split(" ")
+        .filter(Boolean)
+        .map((c) => c[0])
+        .join("")
+        .toUpperCase(),
+      accountNumber: b.accountNumber,
+    }));
+
+    setContacts(formatted);
+  } catch (err) {
+    console.error("fetchBeneficiaries error:", err);
+    setMessage("Erreur lors du rafraîchissement des contacts");
+    setMessageType("error");
+  }
+};
+
 
   useEffect(() => {
     fetchBeneficiaries();
   }, []);
 
   /* ----------------------------------
-     3️⃣ Transfert externe (LOGIQUE CLÉ)
+     3️⃣ Transfert = créer/obtenir bénéficiaire interne puis transférer
   ---------------------------------- */
   const handleTransfert = async () => {
     setMessage("");
@@ -401,10 +437,8 @@ function TransfertExterne() {
       return;
     }
 
-    if (!beneficiaire || !accountNumber) {
-      setMessage(
-        "Veuillez renseigner le bénéficiaire et son numéro de compte"
-      );
+    if (!accountNumber.trim()) {
+      setMessage("Veuillez saisir le numéro de téléphone du bénéficiaire");
       setMessageType("warning");
       return;
     }
@@ -419,44 +453,43 @@ function TransfertExterne() {
 
     try {
       const token = localStorage.getItem("token");
+
+      // ✅ 1) si pas choisi dans contacts, on tente de le créer (INTERNAL uniquement côté backend)
       let finalBeneficiaryId = beneficiaryId;
 
-      /* 🔵 A — créer bénéficiaire si non existant */
       if (!finalBeneficiaryId) {
-        const resCreate = await fetch(
-          "http://localhost:5000/api/beneficiaries",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              name: beneficiaire,
-              accountNumber,
-              type: "EXTERNAL",
-            }),
-          }
-        );
+        const resCreate = await fetch("http://localhost:5000/api/beneficiaries", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: (beneficiaire || "Bénéficiaire").trim(),
+            accountNumber: accountNumber.trim(), // chez toi = phone
+          }),
+        });
 
         const dataCreate = await resCreate.json();
 
         if (!resCreate.ok) {
-          setMessage(dataCreate?.message || "Erreur création bénéficiaire");
+          // ex: 404 "Utilisateur bénéficiaire introuvable..."
+          setMessage(dataCreate?.message || "Impossible d'ajouter ce bénéficiaire");
           setMessageType("error");
           setDisabled(false);
           return;
         }
 
-        finalBeneficiaryId = dataCreate.beneficiary._id;
+        finalBeneficiaryId = dataCreate?.beneficiary?._id;
         setBeneficiaryId(finalBeneficiaryId);
 
-        await fetchBeneficiaries(); // refresh contacts
+        // ✅ rafraîchir la liste à droite (il sera stocké maintenant)
+        await fetchBeneficiaries();
       }
 
-      /* 🔵 B — effectuer le transfert */
+      // ✅ 2) effectuer le transfert
       const resTransfer = await fetch(
-        "http://localhost:5000/api/transactions/transfer/beneficiaries",
+        "http://localhost:5000/api/transactions/transfer/beneficiary",
         {
           method: "POST",
           headers: {
@@ -482,30 +515,25 @@ function TransfertExterne() {
         return;
       }
 
-      setSuccess(true);
-      setMessage("Transfert externe effectué avec succès");
+      setMessage(dataTransfer?.message || "Transfert effectué avec succès");
       setMessageType("success");
 
       setTimeout(() => {
-        setSuccess(false);
         setDisabled(false);
         setMontant("");
-        setBeneficiaire("");
-        setAccountNumber("");
-        setBeneficiaryId("");
-        setMessage("");
-        setMessageType("");
-      }, 2000);
-    } catch {
+        // on garde le contact saisi (optionnel)
+        // setBeneficiaire("");
+        // setAccountNumber("");
+        // setBeneficiaryId("");
+      }, 1200);
+    } catch (e) {
+      console.error(e);
       setMessage("Erreur réseau");
       setMessageType("error");
       setDisabled(false);
     }
   };
 
-  /* ----------------------------------
-     4️⃣ JSX
-  ---------------------------------- */
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
       {/* FORMULAIRE */}
@@ -532,22 +560,25 @@ function TransfertExterne() {
         </div>
 
         <div>
-          <label className="font-medium">Bénéficiaire</label>
+          <label className="font-medium">Nom bénéficiaire</label>
           <input
             value={beneficiaire}
             onChange={(e) => {
               setBeneficiaire(e.target.value);
-              setBeneficiaryId("");
+              setBeneficiaryId(""); // si tu modifies, ça redevient un nouveau contact
             }}
             className="w-full p-3 border rounded-xl"
           />
         </div>
 
         <div>
-          <label className="font-medium">Numéro de compte / Téléphone</label>
+          <label className="font-medium">Téléphone du bénéficiaire</label>
           <input
             value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
+            onChange={(e) => {
+              setAccountNumber(e.target.value);
+              setBeneficiaryId("");
+            }}
             className="w-full p-3 border rounded-xl"
           />
         </div>
@@ -565,7 +596,7 @@ function TransfertExterne() {
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-full bg-blue-900 text-white p-3 rounded-xl"
+          className="w-full bg-blue-900 text-white p-3 rounded-xl disabled:opacity-60"
         >
           Effectuer le transfert
         </button>
@@ -573,33 +604,53 @@ function TransfertExterne() {
 
       {/* CONTACTS */}
       <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow">
-        <h3 className="font-semibold mb-4">Contacts récents</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Contacts (bénéficiaires)</h3>
+          <button
+  type="button"
+  onClick={() => {
+    console.log("🔄 Rafraîchir cliqué");
+    fetchBeneficiaries();
+  }}
+  className="text-sm px-3 py-1 border rounded-lg"
+>
+  Rafraîchir
+</button>
+
+        </div>
+
         <div className="space-y-3">
-          {contacts.map((c) => (
-            <button
-              key={c._id}
-              onClick={() => {
-                setBeneficiaire(c.name);
-                setAccountNumber(c.accountNumber);
-                setBeneficiaryId(c._id);
-              }}
-              className="flex items-center gap-3 w-full text-left"
-            >
-              <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">
-                {c.initials}
-              </div>
-              <div>
-                <p className="font-medium">{c.name}</p>
-                <p className="text-sm text-gray-500">
-                  {c.accountNumber}
-                </p>
-              </div>
-            </button>
-          ))}
+          {contacts.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              Aucun contact pour l’instant. Fais un transfert vers un utilisateur existant,
+              et il sera stocké ici.
+            </p>
+          ) : (
+            contacts.map((c) => (
+              <button
+                key={c._id}
+                onClick={() => {
+                  setBeneficiaire(c.name);
+                  setAccountNumber(c.accountNumber);
+                  setBeneficiaryId(c._id);
+                }}
+                className="flex items-center gap-3 w-full text-left"
+              >
+                <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">
+                  {c.initials}
+                </div>
+                <div>
+                  <p className="font-medium">{c.name}</p>
+                  <p className="text-sm text-gray-500">{c.accountNumber}</p>
+                </div>
+              </button>
+            ))
+          )}
         </div>
       </div>
     </div>
   );
 }
+
 
 // export default TransfertExterne;

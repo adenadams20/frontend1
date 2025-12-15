@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";//ajouter
 
 
 export default function Login() {
@@ -15,6 +16,8 @@ export default function Login() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); //ajouter
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -119,20 +122,32 @@ export default function Login() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
-              Mot de passe
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Entrez votre mot de passe"
-              required
-              className="w-full px-4 py-2 border rounded-md focus:ring-blue-500"
-              value={form.password}
-              onChange={handleChange}
-            />
-          </div>
+  <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+    Mot de passe
+  </label>
+
+  <div className="relative">
+    <input
+      type={showPassword ? "text" : "password"}   // 👈 ici
+      id="password"
+      name="password"
+      placeholder="Entrez votre mot de passe"
+      required
+      className="w-full px-4 py-2 border rounded-md focus:ring-blue-500 pr-10"
+      value={form.password}
+      onChange={handleChange}
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+    >
+      {showPassword ? <FaEyeSlash /> : <FaEye />}
+    </button>
+  </div>
+</div>
+
 
           <p className="text-right mb-2">
             <Link to="/motdepassOublier" className="text-blue-600 hover:underline">
