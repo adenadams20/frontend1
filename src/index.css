@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* Mode sombre global */
+body.dark-mode {
+  background-color: #1a202c;
+  color: white;
+}
+
+/* Titres */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: white;
+}
+
+/* Paragraphes et spans */
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode label,
+body.dark-mode Link,
+body.dark-mode .sidebar-link {
+  color: white;
+}
+
+/* Inputs, selects, textareas */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #2d3748;
+  color: white;
+  border-color: #4a5568;
+}
+
+/* Boutons */
+body.dark-mode button {
+  background-color: #4a5568;
+  color: white;
+  border-color: #718096;
+}
+body .sidebar-link.logout{
+  color: #dc2626; /* red-600 */ ;
+}
+
+/* Cards et conteneurs */
+body.dark-mode .bg-white {
+  background-color: #2d3748 !important;
+}
+
+body.dark-mode .text-gray-800 {
+  color: white !important;
+}
+
+/* ----------------------------
+   SIDEBAR – MODE CLAIR
+-----------------------------*/
+
+/* Texte gris en mode clair */
+.sidebar-link {
+  color: #4b5563; /* gray-600 */
+}
+
+/* Hover bleu clair en mode clair */
+.sidebar-link:hover {
+  background-color: #5e8fd1; /* blue-100 */
+  color:  #082c8e /* toujours gris */
+}
+
+/* ----------------------------
+   SIDEBAR – MODE DARK
+-----------------------------*/
+
+/* Texte blanc en mode dark */
+.dark .sidebar-link {
+  color: #fffdfd;
+}
+
+/* Hover dark : fond bleu très foncé + texte bleu clair */
+.dark .sidebar-link:hover {
+  background-color: #1e3a8a; /* blue-900 */
+  color: #60a5fa; /* blue-400 */
+  
+}
+/* Mode clair */
+.sidebar-link.logout:hover {
+  background-color: #fee2e2; /* red-100 */
+  color: #dc2626; /* red-600 */
+}
+
+/* Mode dark */
+.dark .sidebar-link.logout:hover {
+  background-color: #b91c1c; /* red-700 */
+  color: #fca5a5; /* red-400 */
+}
