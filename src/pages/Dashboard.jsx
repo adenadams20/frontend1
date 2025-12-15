@@ -106,7 +106,7 @@ export default function Dashboard() {
           throw new Error(`Transactions fetch failed: ${resTrans.status} ${text}`);
         }
         const dataTrans = await resTrans.json();
-        // ensure array and map amounts to strings used by UI
+    
         const txs = Array.isArray(dataTrans)
           ? dataTrans.map((t) => ({
               id: t._id || t.id,
