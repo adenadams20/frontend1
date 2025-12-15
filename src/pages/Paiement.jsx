@@ -95,15 +95,20 @@ export default function Paiement() {
       return;
     }
 
-    const token = localStorage.getItem("token");
-    const accountId = localStorage.getItem("accountId"); // récupérer accountId depuis le localStorage
+// const token = localStorage.getItem("token");
 
-    if (!token || !accountId) {
-      setModalStatus("error");
-      setModalMessage("Vous devez être connecté pour effectuer un paiement.");
-      setShowModal(true);
-      return;
-    }
+// if (!token) {
+//   setModalMessage("Vous devez être connecté pour effectuer un paiement.");
+//   return;
+// }
+const token = localStorage.getItem("token");
+
+if (!token) {
+  setModalMessage("Vous devez être connecté pour effectuer un paiement.");
+  return;
+}
+
+
 
     setLoading(true);
 
@@ -117,14 +122,14 @@ export default function Paiement() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            accountId: accountId,
             serviceCode: formData.serviceCode,
-            serviceName: formData.service,       // ajouté pour correspondre au backend
+            serviceName: formData.service,
             billNumber: formData.billNumber,
             amount: Number(formData.amount),
-            currency: "XOF",                     // ajouté pour backend
-            description: formData.description,   // ajouté pour backend
+            currency: "XOF",
+            description: formData.description,
           }),
+
         }
       );
 
