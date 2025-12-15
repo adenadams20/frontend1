@@ -9,6 +9,8 @@ import {
    NORMALISATION DES TRANSACTIONS (ALIGNÉ BACKEND)
 ====================================================== */
 const normalizeTransaction = (tx) => {
+  if (!tx || !tx.type) return null; // <-- sécurité ajoutée
+
   const debitTypes = [
     "WITHDRAWAL",
     "TRANSFER_INTERNAL_DEBIT",
@@ -61,7 +63,7 @@ export default function Transactions() {
         const data = await res.json();
 
         const txs = Array.isArray(data?.transactions)
-          ? data.transactions.map(normalizeTransaction)
+          ? data.transactions.map(normalizeTransaction).filter(Boolean) // <-- filtre les null
           : [];
 
         setTransactions(txs);
@@ -163,10 +165,7 @@ export default function Transactions() {
           onClick={() => setDateAsc(!dateAsc)}
           className="flex items-center gap-2 px-5 py-2 bg-gray-100 rounded-xl"
         >
-          <CalendarDaysIcon className="w-5 h-5 focus:bg-gray-900" 
-           active={active === "date"}
-          color="gray"
-          onClick={() => setActive("date")}/>
+          <CalendarDaysIcon className="w-5 h-5" />
           Date
         </button>
 
