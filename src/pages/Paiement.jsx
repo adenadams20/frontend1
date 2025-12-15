@@ -155,7 +155,7 @@ export default function Paiement() {
   // 💄 UI
   // ================================
   return (
-    <div className="w-full mt-5 p-4 bg-gray-50">
+    <div className="w-full mt-15  bg-gray-50">
       <h1 className="font-semibold text-3xl mt-1">Paiement de factures</h1>
       <p className="mt-1 mb-7 text-gray-600">
         Payez vos factures et services en ligne

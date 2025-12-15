@@ -248,50 +248,100 @@ function TransfertInterne() {
 function TransfertExterne() {
   const [montant, setMontant] = useState("");
   const [beneficiaire, setBeneficiaire] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+
   const [success, setSuccess] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
+  const [currentAccount, setCurrentAccount] = useState(null);
+  const [users, setUsers] = useState([]);
+
   const quickValues = [50, 100, 200, 500];
 
-  // Contacts récents (modifiable)
-  const [contacts, setContacts] = useState([
-    { initials: "MD", name: "Marie Dubois", email: "marie@email.com" },
-    { initials: "PM", name: "Pierre Martin", email: "pierre@email.com" },
-  ]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  const handleTransfert = () => {
-    if (!montant || !beneficiaire)
-      return alert("Veuillez remplir tous les champs");
+    const fetchData = async () => {
+      try {
+        // 🔹 Compte courant
+        const accRes = await fetch("http://localhost:5000/api/accounts", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const accData = await accRes.json();
+        const accounts = accData.accounts || accData;
 
-    setDisabled(true);
-    setSuccess(true);
+        const courant = accounts.find(
+          (a) => a.type?.toUpperCase() === "COURANT"
+        );
+        setCurrentAccount(courant);
 
-    // 🔥 Ajouter automatiquement le nouveau bénéficiaire
-    const newContact = {
-      initials: beneficiaire
-        .split(" ")
-        .map((c) => c[0])
-        .join("")
-        .toUpperCase(),
-      name: beneficiaire,
-      email: "inconnu@email.com",
+        // 🔹 Utilisateurs enregistrés
+        const userRes = await fetch("http://localhost:5000/api/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const userData = await userRes.json();
+        setUsers(userData.users || userData);
+      } catch (err) {
+        console.error("Erreur chargement transfert externe", err);
+      }
     };
 
-    setContacts([newContact, ...contacts]);
+    fetchData();
+  }, []);
 
-    setTimeout(() => {
-      setSuccess(false);
+  const handleTransfert = async () => {
+    if (!montant || !selectedUser) {
+      return alert("Veuillez choisir un bénéficiaire et un montant");
+    }
+
+    setDisabled(true);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        "http://localhost:5000/api/transactions/transfer-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            toUserId: selectedUser._id,
+            amount: Number(montant),
+            description: "Transfert externe",
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Erreur transfert");
+        setDisabled(false);
+        return;
+      }
+
+      setSuccess(true);
+
+      setTimeout(() => {
+        setSuccess(false);
+        setDisabled(false);
+        setMontant("");
+        setBeneficiaire("");
+        setSelectedUser(null);
+      }, 2000);
+    } catch (err) {
+      alert("Erreur réseau");
       setDisabled(false);
-      setMontant("");
-      setBeneficiaire("");
-    }, 2000);
+    }
   };
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
-     
 
-      {/* Popup succès */}
+      {/* POPUP SUCCESS */}
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -304,34 +354,72 @@ function TransfertExterne() {
       {/* FORMULAIRE */}
       <div className="w-full lg:w-2/3 space-y-4 bg-white p-6 rounded-2xl shadow">
 
+        {/* COMPTE COURANT */}
         <div>
           <label className="font-medium">Depuis le compte</label>
           <div className="p-3 border border-gray-200 rounded-xl mt-1">
-            <p className="text-gray-500 text-sm">Compte courant</p>
+            {currentAccount ? (
+              <>
+                <p className="text-gray-500 text-sm">Compte courant</p>
+                <p className="font-medium">
+                  Solde : {currentAccount.balance} XOF
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-400">Chargement...</p>
+            )}
           </div>
         </div>
 
+        {/* BÉNÉFICIAIRE */}
         <div>
           <label className="font-medium">Bénéficiaire</label>
           <input
             type="text"
             value={beneficiaire}
-            onChange={(e) => setBeneficiaire(e.target.value)}
-            placeholder="Ex: Pierre Ndiaye"
+            onChange={(e) => {
+              setBeneficiaire(e.target.value);
+              setSelectedUser(null);
+            }}
+            placeholder="Nom ou numéro"
             disabled={disabled}
             className="w-full p-3 border border-gray-300 rounded-xl mt-1"
           />
+
+          {/* LISTE UTILISATEURS */}
+          {beneficiaire && (
+            <div className="border rounded-xl mt-2 max-h-48 overflow-y-auto">
+              {users
+                .filter(
+                  (u) =>
+                    u.name?.toLowerCase().includes(beneficiaire.toLowerCase()) ||
+                    u.phone?.includes(beneficiaire)
+                )
+                .map((u) => (
+                  <button
+                    key={u._id}
+                    onClick={() => {
+                      setSelectedUser(u);
+                      setBeneficiaire(`${u.name} — ${u.phone}`);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    <p className="font-medium">{u.name}</p>
+                    <p className="text-sm text-gray-500">{u.phone}</p>
+                  </button>
+                ))}
+            </div>
+          )}
         </div>
 
+        {/* MONTANT */}
         <div>
           <label className="font-medium">Montant</label>
-
           <div className="flex items-center mt-1">
             <input
               type="number"
               value={montant}
               onChange={(e) => setMontant(e.target.value)}
-              placeholder="0.00"
               disabled={disabled}
               className="w-full p-3 border border-gray-300 rounded-l-xl"
             />
@@ -363,24 +451,27 @@ function TransfertExterne() {
         </button>
       </div>
 
-      {/* CONTACTS RÉCENTS */}
+      {/* CONTACTS RÉCENTS (inchangé visuellement) */}
       <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow mt-4 lg:mt-0">
         <h3 className="font-semibold mb-4">Contacts récents</h3>
 
         <div className="space-y-4">
-          {contacts.map((c, i) => (
+          {users.slice(0, 5).map((u) => (
             <button
-              key={i}
-              onClick={() => setBeneficiaire(c.name)}
+              key={u._id}
+              onClick={() => {
+                setSelectedUser(u);
+                setBeneficiaire(`${u.name} — ${u.phone}`);
+              }}
               disabled={disabled}
               className="flex items-center gap-3 w-full text-left"
             >
               <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center font-medium">
-                {c.initials}
+                {u.name?.[0]}
               </div>
               <div>
-                <p className="font-medium">{c.name}</p>
-                <p className="text-sm text-gray-500">{c.email}</p>
+                <p className="font-medium">{u.name}</p>
+                <p className="text-sm text-gray-500">{u.phone}</p>
               </div>
             </button>
           ))}
