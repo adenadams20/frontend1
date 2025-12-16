@@ -8,17 +8,18 @@ import html2canvas from "html2canvas";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
+import ExportCSV from "../components/ExportCSV";
 
 export default function Paiement() {
   const [activeTab, setActiveTab] = useState("eau");
 
   // 🔹 Formulaire (temps réel)
   const [formData, setFormData] = useState({
-    service: "Eau",       // label pour l'UI
-    serviceCode: "EAU",   // code backend
-    billNumber: "",       // référence facturation
-    amount: "",           // montant
-    description: "",      // description facultative
+    service: "Eau", // label pour l'UI
+    serviceCode: "EAU", // code backend
+    billNumber: "", // référence facturation
+    amount: "", // montant
+    description: "", // description facultative
   });
 
   // 🔹 Reçu (figé après paiement)
@@ -73,16 +74,15 @@ export default function Paiement() {
   };
 
   // 🔹 Téléchargement PDF du reçu
-  const downloadReceiptPDF = async () => {
-    if (!receiptRef.current) return;
-    const canvas = await html2canvas(receiptRef.current);
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
-    pdf.save("recu-paiement.pdf");
-  };
+  const receiptCSVData = [
+    {
+      Service: receiptData.service,
+      Reference: receiptData.billNumber,
+      Montant: receiptData.amount,
+      Description: receiptData.description,
+      Total: receiptData.total,
+    },
+  ];
 
   // 🔹 Paiement avec Bearer Token
   const handlePayment = async (e) => {
@@ -95,20 +95,12 @@ export default function Paiement() {
       return;
     }
 
-// const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-// if (!token) {
-//   setModalMessage("Vous devez être connecté pour effectuer un paiement.");
-//   return;
-// }
-const token = localStorage.getItem("token");
-
-if (!token) {
-  setModalMessage("Vous devez être connecté pour effectuer un paiement.");
-  return;
-}
-
-
+    if (!token) {
+      setModalMessage("Vous devez être connecté pour effectuer un paiement.");
+      return;
+    }
 
     setLoading(true);
 
@@ -129,7 +121,6 @@ if (!token) {
             currency: "XOF",
             description: formData.description,
           }),
-
         }
       );
 
@@ -159,7 +150,6 @@ if (!token) {
         amount: "",
         description: "",
       });
-
     } catch (error) {
       setModalStatus("error");
       setModalMessage(error.message);
@@ -189,7 +179,11 @@ if (!token) {
               });
             }}
             className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${activeTab === t.id ? "bg-blue-900 text-white" : "bg-white hover:bg-gray-100"}`}
+              ${
+                activeTab === t.id
+                  ? "bg-blue-900 text-white"
+                  : "bg-white hover:bg-gray-100"
+              }`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -201,7 +195,11 @@ if (!token) {
         {/* FORMULAIRE */}
         <div className="md:w-2/3 bg-white shadow p-4 rounded-lg">
           <form onSubmit={handlePayment}>
-            <Select name="service" value={formData.service} onChange={handleChange}>
+            <Select
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+            >
               <option value="Eau">Eau</option>
               <option value="Électricité">Électricité</option>
               <option value="Internet">Internet</option>
@@ -240,7 +238,10 @@ if (!token) {
         </div>
 
         {/* 🧾 REÇU */}
-        <div ref={receiptRef} className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg">
+        <div
+          ref={receiptRef}
+          className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg"
+        >
           <p className="font-semibold mb-4">Récapitulatif</p>
           <div className="flex justify-between mb-2">
             <span>Service</span>
@@ -264,8 +265,13 @@ if (!token) {
             <span>{receiptData.total} XOF</span>
           </div>
           {receiptData.amount > 0 && (
-            <Button className="mt-4 w-full" onClick={downloadReceiptPDF}>
-              Télécharger le reçu (PDF)
+            // <Button className="mt-4 w-full" onClick={ExportCSV}>
+            //   <ExportCSV data={data} fileName="myData.csv" />Télécharger le reçu CSV
+            // </Button>
+            <Button className="mt-4 w-full">
+              <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">
+                Télécharger le reçu CSV
+              </ExportCSV>
             </Button>
           )}
         </div>
@@ -275,7 +281,11 @@ if (!token) {
       {showModal && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
           <div className="bg-white rounded-xl p-6 w-80 text-center">
-            <h2 className={`text-xl font-semibold mb-3 ${modalStatus === "success" ? "text-green-600" : "text-red-600"}`}>
+            <h2
+              className={`text-xl font-semibold mb-3 ${
+                modalStatus === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
             </h2>
             <p>{modalMessage}</p>
