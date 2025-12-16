@@ -9,33 +9,63 @@ import {
    NORMALISATION DES TRANSACTIONS (ALIGNÉ BACKEND)
 ====================================================== */
 const normalizeTransaction = (tx) => {
-  if (!tx || !tx.type) return null; // <-- sécurité ajoutée
+  if (!tx) return null;
 
+  // Types considérés comme des dépenses
   const debitTypes = [
     "WITHDRAWAL",
     "TRANSFER_INTERNAL_DEBIT",
     "TRANSFER_USER_DEBIT",
     "TRANSFER_EXTERNAL",
+    "TRANSFER_OUT",
+    "P2P_SEND",
+    "PAYMENT",
     "BILL_PAYMENT",
+    "BILL_PAY",
   ];
 
   const isDebit = debitTypes.includes(tx.type);
 
+  let label = tx.description || "";
+
+  if (!label) {
+    switch (tx.type) {
+      case "DEPOSIT":
+      case "TRANSFER_IN":
+      case "P2P_RECEIVE":
+        label = "Entrée";
+        break;
+
+      case "WITHDRAWAL":
+        label = "Retrait";
+        break;
+
+      case "TRANSFER_INTERNAL_DEBIT":
+      case "TRANSFER_USER_DEBIT":
+      case "TRANSFER_EXTERNAL":
+      case "TRANSFER_OUT":
+      case "P2P_SEND":
+        label = "Transfert";
+        break;
+
+      case "PAYMENT":
+      case "BILL_PAYMENT":
+      case "BILL_PAY":
+        label = tx.serviceName || "Paiement";
+        break;
+
+      default:
+        label = "Transaction";
+    }
+  }
+
   return {
     id: tx._id,
-    label:
-      tx.description ||
-      (tx.type === "DEPOSIT"
-        ? "Dépôt"
-        : tx.type === "WITHDRAWAL"
-        ? "Retrait"
-        : tx.type.includes("TRANSFER")
-        ? "Transfert"
-        : "Transaction"),
+    label,
     type: tx.type,
-    date: tx.createdAt || tx.date,
+    date: tx.createdAt || tx.date || new Date().toISOString(),
     status: tx.status || "SUCCESS",
-    signedAmount: isDebit ? -tx.amount : tx.amount,
+    signedAmount: isDebit ? -Number(tx.amount) : Number(tx.amount),
   };
 };
 
@@ -63,7 +93,7 @@ export default function Transactions() {
         const data = await res.json();
 
         const txs = Array.isArray(data?.transactions)
-          ? data.transactions.map(normalizeTransaction).filter(Boolean) // <-- filtre les null
+          ? data.transactions.map(normalizeTransaction).filter(Boolean)
           : [];
 
         setTransactions(txs);

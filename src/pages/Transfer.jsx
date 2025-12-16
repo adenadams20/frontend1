@@ -1,24 +1,22 @@
 import { useState, useEffect } from "react";
 
-export default function Transfert() {
+export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="w-full mx-auto bg-gray-50 px-4 sm:px-6 md:px-2 py-6 mt-15">
+    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
       <div className="mt-6">
-        <h1 className="text-2xl sm:text-3xl font-semibold mb-1">
-          Transfert d'argent
-        </h1>
-        <p className="mb-5 text-gray-600 text-sm sm:text-base">
+        <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600">
           Effectuez un transfert entre vos comptes ou vers un bénéficiaire
         </p>
       </div>
 
       {/* NAVTABS */}
       <div className="flex justify-center mb-6">
-        <div className="flex flex-col sm:flex-row w-full sm:w-auto bg-gray-100 gap-2 rounded-xl p-1">
+        <div className="flex bg-gray-100 gap-2 rounded-xl p-1">
           <button
             onClick={() => setActiveTab("interne")}
-            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
+            className={`px-6 py-5 rounded-xl ${
               activeTab === "interne"
                 ? "bg-blue-900 shadow font-medium text-white"
                 : "text-blue-600"
@@ -29,7 +27,7 @@ export default function Transfert() {
 
           <button
             onClick={() => setActiveTab("externe")}
-            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
+            className={`px-6 py-5 rounded-xl ${
               activeTab === "externe"
                 ? "bg-blue-900 shadow font-medium text-white"
                 : "text-blue-600"
@@ -40,7 +38,11 @@ export default function Transfert() {
         </div>
       </div>
 
-      {activeTab === "interne" ? <TransfertInterne /> : <TransfertExterne />}
+      {activeTab === "interne" ? (
+        <TransfertInterne onNewTransaction={onNewTransaction} />
+      ) : (
+        <TransfertExterne onNewTransaction={onNewTransaction} />
+      )}
     </div>
   );
 }
@@ -48,106 +50,47 @@ export default function Transfert() {
 /* ---------------------------------------------------
    🔵 TRANSFERT INTERNE
 --------------------------------------------------- */
-function TransfertInterne() {
+function TransfertInterne({ onNewTransaction }) {
   const [montant, setMontant] = useState("");
-  const [fromId, setFromId] = useState(""); // compte source
-  const [toId, setToId] = useState(""); // compte destination
+  const [fromId, setFromId] = useState("");
+  const [toId, setToId] = useState("");
   const [success, setSuccess] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
   const [accounts, setAccounts] = useState([]);
+  const quickValues = [5000, 10000, 20000, 50000];
 
-  // ✅ Message inline (remplace alert)
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // error | warning | success | info
-
-  const quickValues = [50, 100, 200, 500];
-
-  // Charger les comptes utilisateur
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        setMessage("");
-        setMessageType("");
-
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:5000/api/accounts", {
-          headers: {
-            Authorization: `Bearer ${token}`, // ✅ très important
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = await res.json();
-        if (!res.ok) {
-          console.log("Erreur récupération comptes :", data.message);
-          setMessage(data.message || "Erreur récupération comptes");
-          setMessageType("error");
-          return;
-        }
+        if (!res.ok) return console.log("Erreur récupération comptes :", data.message);
 
-        // 👇 adapte si ton back renvoie { accounts: [...] }
         const accs = Array.isArray(data) ? data : data.accounts || [];
         setAccounts(accs);
 
-        // ✅ on ne pré-sélectionne rien pour afficher "Sélectionner un compte"
-        setFromId("");
-        setToId("");
+        const courant = accs.find((a) => a.type?.toUpperCase() === "COURANT");
+        if (courant) setFromId(courant._id);
       } catch (err) {
         console.log("Erreur récupération comptes :", err);
-        setMessage("Erreur réseau lors de la récupération des comptes");
-        setMessageType("error");
       }
     };
-
     fetchAccounts();
   }, []);
 
-  // fonction handleTransfere
   const handleTransfert = async () => {
-    setMessage("");
-    setMessageType("");
-
-    const amt = Number(montant);
-
-    if (!fromId || !toId || Number.isNaN(amt) || amt <= 0) {
-      setMessage("Veuillez saisir un montant valide et choisir les deux comptes");
-      setMessageType("warning");
-      return;
-    }
-
-    if (fromId === toId) {
-      setMessage(
-        "Le compte source et le compte destination doivent être différents"
-      );
-      setMessageType("warning");
-      return;
-    }
+    if (!montant || !fromId || !toId)
+      return alert("Veuillez choisir les deux comptes et le montant");
+    if (fromId === toId) return alert("Le compte source et le compte destination doivent être différents");
 
     const source = accounts.find((a) => a._id === fromId);
     const dest = accounts.find((a) => a._id === toId);
-
-    if (!source || !dest) {
-      setMessage("Comptes introuvables");
-      setMessageType("error");
-      return;
-    }
-
-    // ✅ Optionnel UX : checks rapides (le BACK fera la vraie vérif)
-    if (String(source.status || "").toUpperCase() !== "ACTIVE") {
-      setMessage("Le compte source n'est pas actif");
-      setMessageType("error");
-      return;
-    }
-    if (String(dest.status || "").toUpperCase() !== "ACTIVE") {
-      setMessage("Le compte destination n'est pas actif");
-      setMessageType("error");
-      return;
-    }
-    if (source.balance < amt) {
-      setMessage("Solde insuffisant sur le compte source");
-      setMessageType("warning");
-      return;
-    }
+    if (!source || !dest) return alert("Comptes introuvables");
 
     setDisabled(true);
 
@@ -159,67 +102,47 @@ function TransfertInterne() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ fromId, toId, amount: amt }),
+        body: JSON.stringify({ fromId, toId, amount: Number(montant) }),
       });
 
       const data = await res.json();
-
       if (!res.ok) {
-        setMessage(data.message || "Erreur serveur");
-        setMessageType(res.status === 400 ? "warning" : "error");
+        alert(data.message || "Erreur serveur");
         setDisabled(false);
         return;
       }
 
-      setSuccess(true);
-      setMessage("Transfert interne réussi !");
-      setMessageType("success");
+      // ✅ Ajouter la transaction créée à Transactions
+      if (onNewTransaction && data.transaction) {
+        onNewTransaction(data.transaction);
+      }
 
+      setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
         setDisabled(false);
         setMontant("");
+        setFromId(source._id);
         setToId("");
-        setMessage("");
-        setMessageType("");
       }, 2000);
     } catch (err) {
-      setMessage("Erreur réseau");
-      setMessageType("error");
+      alert("Erreur réseau");
       setDisabled(false);
     }
   };
 
-  // Comptes destination = tous les comptes sauf le compte source sélectionné
   const destAccounts = accounts.filter((a) => a._id !== fromId);
 
   return (
-    <div className="relative space-y-6 bg-white p-4 sm:p-6 rounded-2xl shadow">
+    <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
-          <p className="text-blue-600 text-lg font-semibold mt-2">
-            Transfert interne réussi !
-          </p>
+          <p className="text-blue-600 text-lg font-semibold mt-2">Transfert interne réussi !</p>
         </div>
       )}
 
-      {/* ✅ Affichage inline (sans changer ton style global) */}
-      {message ? (
-        <div
-          className={`p-3 border rounded-xl ${
-            messageType === "success"
-              ? "bg-green-50 border-green-200 text-green-800"
-              : messageType === "warning"
-              ? "bg-yellow-50 border-yellow-200 text-yellow-800"
-              : "bg-red-50 border-red-200 text-red-800"
-          }`}
-        >
-          <p className="text-sm font-medium">{message}</p>
-        </div>
-      ) : null}
-
-      {/* Depuis le compte (source) */}
+      {/* Depuis le compte */}
       <div>
         <label className="font-medium">Depuis le compte</label>
         <select
@@ -228,21 +151,16 @@ function TransfertInterne() {
           onChange={(e) => setFromId(e.target.value)}
           disabled={disabled || accounts.length === 0}
         >
-          {!fromId && (
-            <option value="" disabled>
-              Sélectionner un compte
-            </option>
-          )}
-
+          <option value="">Sélectionner un compte</option>
           {accounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type}
+              {acc.type} — Solde : {acc.balance} XOF
             </option>
           ))}
         </select>
       </div>
 
-      {/* Vers le compte (destination) */}
+      {/* Vers le compte */}
       <div>
         <label className="font-medium">Vers le compte</label>
         <select
@@ -251,15 +169,10 @@ function TransfertInterne() {
           onChange={(e) => setToId(e.target.value)}
           disabled={disabled || destAccounts.length === 0}
         >
-          {!toId && (
-            <option value="" disabled>
-              Sélectionner un compte
-            </option>
-          )}
-
+          <option value="">Sélectionner un compte</option>
           {destAccounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type}
+              {acc.type} — Solde : {acc.balance} XOF
             </option>
           ))}
         </select>
@@ -277,9 +190,7 @@ function TransfertInterne() {
             disabled={disabled}
             className="w-full p-3 border border-gray-300 rounded-l-xl"
           />
-          <div className="p-3 border border-gray-300 rounded-r-xl bg-gray-100">
-            XOF
-          </div>
+          <div className="p-3 border border-gray-300 rounded-r-xl bg-gray-100">XOF</div>
         </div>
 
         <div className="flex gap-2 mt-2 flex-wrap">
@@ -287,7 +198,6 @@ function TransfertInterne() {
             <button
               key={v}
               disabled={disabled}
-              type="button"
               onClick={() => setMontant(v)}
               className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
             >
@@ -301,7 +211,7 @@ function TransfertInterne() {
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-full sm:w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600"
+          className="w-xl bg-blue-900 text-white p-3 rounded-xl font-medium hover:bg-blue-600"
         >
           Effectuer le transfert
         </button>
@@ -311,209 +221,117 @@ function TransfertInterne() {
 }
 
 /* ---------------------------------------------------
-   🟣 TRANSFERT EXTERNE (AVEC CONTACTS RÉCENTS)
+   🟣 TRANSFERT EXTERNE
 --------------------------------------------------- */
-function TransfertExterne() {
+function TransfertExterne({ onNewTransaction }) {
   const [montant, setMontant] = useState("");
   const [beneficiaire, setBeneficiaire] = useState("");
-  const [accountNumber, setAccountNumber] = useState(""); // chez toi = phone
-
+  const [accountNumber, setAccountNumber] = useState("");
   const [fromAccountId, setFromAccountId] = useState("");
   const [beneficiaryId, setBeneficiaryId] = useState("");
-
   const [contacts, setContacts] = useState([]);
-
   const [disabled, setDisabled] = useState(false);
   const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // success | warning | error
+  const [messageType, setMessageType] = useState("");
 
-  /* ----------------------------------
-     1️⃣ Charger le compte courant
-  ---------------------------------- */
   useEffect(() => {
     const fetchCourant = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const res = await fetch("http://localhost:5000/api/accounts", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         const data = await res.json();
         const accs = Array.isArray(data) ? data : data.accounts || [];
-
         const courant = accs.find((a) => a.type?.toUpperCase() === "COURANT");
         if (courant) setFromAccountId(courant._id);
       } catch (e) {
         console.error(e);
       }
     };
-
     fetchCourant();
-  }, []);
-
-  /* ----------------------------------
-     2️⃣ Charger les bénéficiaires stockés
-  ---------------------------------- */
-  const fetchBeneficiaries = async () => {
-  try {
-    setMessage("");
-    setMessageType("");
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setMessage("Token manquant. Veuillez vous reconnecter.");
-      setMessageType("error");
-      return;
-    }
-
-    const res = await fetch("http://localhost:5000/api/beneficiary", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    // ✅ si backend renvoie HTML (erreur) ou JSON => on gère proprement
-    let data = null;
-    const contentType = res.headers.get("content-type") || "";
-    if (contentType.includes("application/json")) {
-      data = await res.json();
-    } else {
-      const text = await res.text();
-      throw new Error(text || "Réponse non JSON (backend/route)");
-    }
-
-    if (!res.ok) {
-      const msg =
-        data?.message ||
-        (res.status === 401
-          ? "Session expirée. Reconnectez-vous."
-          : res.status === 404
-          ? "Route /api/beneficiaries introuvable (404)."
-          : "Erreur lors du chargement des bénéficiaires.");
-      setMessage(msg);
-      setMessageType("error");
-      return;
-    }
-
-    const list = data?.beneficiary || [];
-    const formatted = list.map((b) => ({
-      _id: b._id,
-      name: b.name,
-      initials: (b.name || "")
-        .split(" ")
-        .filter(Boolean)
-        .map((c) => c[0])
-        .join("")
-        .toUpperCase(),
-      accountNumber: b.accountNumber,
-    }));
-
-    setContacts(formatted);
-  } catch (err) {
-    console.error("fetchBeneficiaries error:", err);
-    setMessage("Erreur lors du rafraîchissement des contacts");
-    setMessageType("error");
-  }
-};
-
-
-  useEffect(() => {
     fetchBeneficiaries();
   }, []);
 
-  /* ----------------------------------
-     3️⃣ Transfert = créer/obtenir bénéficiaire interne puis transférer
-  ---------------------------------- */
+  const fetchBeneficiaries = async () => {
+    try {
+      setMessage("");
+      setMessageType("");
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:5000/api/beneficiary", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.message || "Erreur chargement bénéficiaires");
+      const list = data?.beneficiary || [];
+      setContacts(
+        list.map((b) => ({
+          _id: b._id,
+          name: b.name,
+          initials: (b.name || "")
+            .split(" ")
+            .filter(Boolean)
+            .map((c) => c[0])
+            .join("")
+            .toUpperCase(),
+          accountNumber: b.accountNumber,
+        }))
+      );
+    } catch (err) {
+      console.error(err);
+      setMessage("Erreur lors du rafraîchissement des contacts");
+      setMessageType("error");
+    }
+  };
+
   const handleTransfert = async () => {
     setMessage("");
     setMessageType("");
 
     const amt = Number(montant);
-
-    if (!fromAccountId) {
-      setMessage("Compte courant introuvable");
-      setMessageType("error");
-      return;
-    }
-
-    if (!accountNumber.trim()) {
-      setMessage("Veuillez saisir le numéro de téléphone du bénéficiaire");
-      setMessageType("warning");
-      return;
-    }
-
-    if (Number.isNaN(amt) || amt <= 0) {
-      setMessage("Montant invalide");
-      setMessageType("warning");
-      return;
-    }
+    if (!fromAccountId) return setMessage("Compte courant introuvable"), setMessageType("error");
+    if (!accountNumber.trim()) return setMessage("Veuillez saisir le numéro du bénéficiaire"), setMessageType("warning");
+    if (Number.isNaN(amt) || amt <= 0) return setMessage("Montant invalide"), setMessageType("warning");
 
     setDisabled(true);
 
     try {
       const token = localStorage.getItem("token");
-
-      // ✅ 1) si pas choisi dans contacts, on tente de le créer (INTERNAL uniquement côté backend)
       let finalBeneficiaryId = beneficiaryId;
 
+      // Créer bénéficiaire si nécessaire
       if (!finalBeneficiaryId) {
-        const resCreate = await fetch("http://localhost:5000/api/beneficiaries", {
+        const resCreate = await fetch("http://localhost:5000/api/beneficiary", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: (beneficiaire || "Bénéficiaire").trim(),
-            accountNumber: accountNumber.trim(), // chez toi = phone
-          }),
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ name: (beneficiaire || "Bénéficiaire").trim(), accountNumber: accountNumber.trim() }),
         });
-
         const dataCreate = await resCreate.json();
-
-        if (!resCreate.ok) {
-          // ex: 404 "Utilisateur bénéficiaire introuvable..."
-          setMessage(dataCreate?.message || "Impossible d'ajouter ce bénéficiaire");
-          setMessageType("error");
-          setDisabled(false);
-          return;
-        }
+        if (!resCreate.ok) return setMessage(dataCreate?.message || "Impossible d'ajouter ce bénéficiaire"), setMessageType("error"), setDisabled(false);
 
         finalBeneficiaryId = dataCreate?.beneficiary?._id;
         setBeneficiaryId(finalBeneficiaryId);
-
-        // ✅ rafraîchir la liste à droite (il sera stocké maintenant)
         await fetchBeneficiaries();
       }
 
-      // ✅ 2) effectuer le transfert
-      const resTransfer = await fetch(
-        "http://localhost:5000/api/transactions/transfer/beneficiary",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            fromAccountId,
-            beneficiaryId: finalBeneficiaryId,
-            amount: amt,
-            currency: "XOF",
-            idempotencyKey: `${Date.now()}-${Math.random()}`,
-          }),
-        }
-      );
+      // Transfert
+      const resTransfer = await fetch("http://localhost:5000/api/transactions/transfer/beneficiary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          fromAccountId,
+          beneficiaryId: finalBeneficiaryId,
+          amount: amt,
+          currency: "XOF",
+          idempotencyKey: `${Date.now()}-${Math.random()}`,
+        }),
+      });
 
       const dataTransfer = await resTransfer.json();
+      if (!resTransfer.ok) return setMessage(dataTransfer?.message || "Erreur transfert"), setMessageType("error"), setDisabled(false);
 
-      if (!resTransfer.ok) {
-        setMessage(dataTransfer?.message || "Erreur transfert");
-        setMessageType("error");
-        setDisabled(false);
-        return;
-      }
+      // ✅ Ajouter transaction à Transactions
+      if (onNewTransaction && dataTransfer.transaction) onNewTransaction(dataTransfer.transaction);
 
       setMessage(dataTransfer?.message || "Transfert effectué avec succès");
       setMessageType("success");
@@ -521,10 +339,6 @@ function TransfertExterne() {
       setTimeout(() => {
         setDisabled(false);
         setMontant("");
-        // on garde le contact saisi (optionnel)
-        // setBeneficiaire("");
-        // setAccountNumber("");
-        // setBeneficiaryId("");
       }, 1200);
     } catch (e) {
       console.error(e);
@@ -536,7 +350,7 @@ function TransfertExterne() {
 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
-      {/* FORMULAIRE */}
+      {/* Formulaire */}
       <div className="w-full lg:w-2/3 bg-white p-6 rounded-2xl shadow space-y-4">
         {message && (
           <div
@@ -554,9 +368,7 @@ function TransfertExterne() {
 
         <div>
           <label className="font-medium">Depuis le compte</label>
-          <div className="p-3 border rounded-xl text-sm text-gray-500">
-            Compte courant
-          </div>
+          <div className="p-3 border rounded-xl text-sm text-gray-500">Compte courant</div>
         </div>
 
         <div>
@@ -565,7 +377,7 @@ function TransfertExterne() {
             value={beneficiaire}
             onChange={(e) => {
               setBeneficiaire(e.target.value);
-              setBeneficiaryId(""); // si tu modifies, ça redevient un nouveau contact
+              setBeneficiaryId("");
             }}
             className="w-full p-3 border rounded-xl"
           />
@@ -602,28 +414,19 @@ function TransfertExterne() {
         </button>
       </div>
 
-      {/* CONTACTS */}
+      {/* Contacts */}
       <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold">Contacts (bénéficiaires)</h3>
-          <button
-  type="button"
-  onClick={() => {
-    console.log("🔄 Rafraîchir cliqué");
-    fetchBeneficiaries();
-  }}
-  className="text-sm px-3 py-1 border rounded-lg"
->
-  Rafraîchir
-</button>
-
+          <button type="button" onClick={fetchBeneficiaries} className="text-sm px-3 py-1 border rounded-lg">
+            Rafraîchir
+          </button>
         </div>
 
         <div className="space-y-3">
           {contacts.length === 0 ? (
             <p className="text-sm text-gray-500">
-              Aucun contact pour l’instant. Fais un transfert vers un utilisateur existant,
-              et il sera stocké ici.
+              Aucun contact pour l’instant. Fais un transfert vers un utilisateur existant, et il sera stocké ici.
             </p>
           ) : (
             contacts.map((c) => (
@@ -636,9 +439,7 @@ function TransfertExterne() {
                 }}
                 className="flex items-center gap-3 w-full text-left"
               >
-                <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">
-                  {c.initials}
-                </div>
+                <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">{c.initials}</div>
                 <div>
                   <p className="font-medium">{c.name}</p>
                   <p className="text-sm text-gray-500">{c.accountNumber}</p>
@@ -651,6 +452,3 @@ function TransfertExterne() {
     </div>
   );
 }
-
-
-// export default TransfertExterne;

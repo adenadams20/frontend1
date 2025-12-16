@@ -15,11 +15,11 @@ export default function Paiement() {
 
   // 🔹 Formulaire (temps réel)
   const [formData, setFormData] = useState({
-    service: "Eau", // label pour l'UI
-    serviceCode: "EAU", // code backend
-    billNumber: "", // référence facturation
-    amount: "", // montant
-    description: "", // description facultative
+    service: "Eau",
+    serviceCode: "EAU",
+    billNumber: "",
+    amount: "",
+    description: "",
   });
 
   // 🔹 Reçu (figé après paiement)
@@ -73,17 +73,6 @@ export default function Paiement() {
     }
   };
 
-  // 🔹 Téléchargement PDF du reçu
-  const receiptCSVData = [
-    {
-      Service: receiptData.service,
-      Reference: receiptData.billNumber,
-      Montant: receiptData.amount,
-      Description: receiptData.description,
-      Total: receiptData.total,
-    },
-  ];
-
   // 🔹 Paiement avec Bearer Token
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -98,7 +87,9 @@ export default function Paiement() {
     const token = localStorage.getItem("token");
 
     if (!token) {
+      setModalStatus("error");
       setModalMessage("Vous devez être connecté pour effectuer un paiement.");
+      setShowModal(true);
       return;
     }
 
@@ -159,6 +150,29 @@ export default function Paiement() {
     setLoading(false);
   };
 
+  // 🔹 Télécharger reçu PDF
+  const downloadPDF = async () => {
+    if (!receiptRef.current) return;
+    const canvas = await html2canvas(receiptRef.current);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save("recu-paiement.pdf");
+  };
+
+  const receiptCSVData = [
+    {
+      Service: receiptData.service,
+      Reference: receiptData.billNumber,
+      Montant: receiptData.amount,
+      Description: receiptData.description,
+      Total: receiptData.total,
+    },
+  ];
+
   // ================================
   // 💄 UI
   // ================================
@@ -168,9 +182,9 @@ export default function Paiement() {
 
       {/* ONGLET */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {services.map((s) => (
+        {tabs.map((t) => (
           <li
-            key={s.id}
+            key={t.id}
             onClick={() => {
               setActiveTab(t.id);
               setFormData({
@@ -182,11 +196,7 @@ export default function Paiement() {
               });
             }}
             className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${
-                activeTab === t.id
-                  ? "bg-blue-900 text-white"
-                  : "bg-white hover:bg-gray-100"
-              }`}
+              ${activeTab === t.id ? "bg-blue-900 text-white" : "bg-white hover:bg-gray-100"}`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -198,11 +208,7 @@ export default function Paiement() {
         {/* FORMULAIRE */}
         <div className="md:w-2/3 bg-white shadow p-4 rounded-lg">
           <form onSubmit={handlePayment}>
-            <Select
-              name="service"
-              value={formData.service}
-              onChange={handleChange}
-            >
+            <Select name="service" value={formData.service} onChange={handleChange}>
               <option value="Eau">Eau</option>
               <option value="Électricité">Électricité</option>
               <option value="Internet">Internet</option>
@@ -241,10 +247,7 @@ export default function Paiement() {
         </div>
 
         {/* 🧾 REÇU */}
-        <div
-          ref={receiptRef}
-          className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg"
-        >
+        <div ref={receiptRef} className="md:w-1/3 w-full bg-white shadow p-4 rounded-lg">
           <p className="font-semibold mb-4">Récapitulatif</p>
           <div className="flex justify-between mb-2">
             <span>Service</span>
@@ -267,15 +270,19 @@ export default function Paiement() {
             <span>Total</span>
             <span>{receiptData.total} XOF</span>
           </div>
+
           {receiptData.amount > 0 && (
-            // <Button className="mt-4 w-full" onClick={ExportCSV}>
-            //   <ExportCSV data={data} fileName="myData.csv" />Télécharger le reçu CSV
-            // </Button>
-            <Button className="mt-4 w-full">
-              <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">
-                Télécharger le reçu CSV
-              </ExportCSV>
-            </Button>
+            <div className="flex flex-col gap-2 mt-4">
+              <Button onClick={downloadPDF} className="w-full">
+                Télécharger le reçu PDF
+              </Button>
+
+              <Button className="w-full">
+                <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">
+                  Télécharger le reçu CSV
+                </ExportCSV>
+              </Button>
+            </div>
           )}
         </div>
       </div>
