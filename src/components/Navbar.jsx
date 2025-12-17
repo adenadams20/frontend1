@@ -7,6 +7,9 @@ export default function Navbar({ onSidebarToggle }) {
   const [open, setOpen] = useState(false);
   const { user, loadingAuth } = useAuth();
 
+  const BACKEND_URL =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+
   return (
     <nav className="w-min-full fixed top-0 w-full md:pr-69 bg-white z-50 text-black p-4 flex items-center justify-between shadow">
       <h1 className="text-xl font-bold">MyBank</h1>
@@ -20,11 +23,7 @@ export default function Navbar({ onSidebarToggle }) {
       </button>
 
       {/* Menu desktop + mobile */}
-      <div
-        className={`${
-          open ? "block mt-4" : "hidden"
-        } md:flex items-center gap-4`}
-      >
+      <div className={`${open ? "block mt-4" : "hidden"} md:flex items-center gap-4`}>
         {/* Barre de recherche */}
         <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 md:w-64 w-full">
           <Search size={20} className="mr-2 text-gray-500" />
@@ -46,23 +45,22 @@ export default function Navbar({ onSidebarToggle }) {
           <span className="absolute top-0 right-0 bg-red-500 rounded-full w-2 h-2"></span>
         </button>
 
-        {/*  PROFIL DYNAMIQUE */}
+        {/* PROFIL DYNAMIQUE */}
         <div className="flex items-center gap-2 text-gray-600">
           {/* Avatar dans la Navbar */}
-<div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-  {user?.avatarUrl ? (
-    <img
-      src={`http://localhost:5000${user.avatarUrl}`}
-      alt="avatar"
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    <span className="font-bold text-gray-600">
-      {user ? user.fullName?.charAt(0).toUpperCase() : "?"}
-    </span>
-  )}
-</div>
-
+          <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+            {user?.avatarUrl ? (
+              <img
+                src={`${BACKEND_URL}${user.avatarUrl}`}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="font-bold text-gray-600">
+                {user ? user.fullName?.charAt(0).toUpperCase() : "?"}
+              </span>
+            )}
+          </div>
 
           {/* Email ou état */}
           {loadingAuth ? (
