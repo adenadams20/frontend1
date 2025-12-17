@@ -1,21 +1,16 @@
 import React, { useState } from "react";
-
 import Sidebar from "./components/Sidebar.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Faq from "./pages/FAQ";
 import ConditiondUtilisation from './pages/ConditiondUtilisation'
-
-
 import Dashboard from "./pages/Dashboard.jsx";
 import Transactions from "./pages/Transactions";
 import Transfer from "./pages/Transfer.jsx";
-
 import Register from './pages/Register';
 import Login from './pages/Login';
 import MotdepassOublier from './pages/MotdepassOublier';
 import Paiement from './pages/Paiement';
 import Settings from './pages/Settings';
-
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
 

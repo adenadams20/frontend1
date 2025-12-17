@@ -49,19 +49,19 @@ export default function Navbar({ onSidebarToggle }) {
         {/*  PROFIL DYNAMIQUE */}
         <div className="flex items-center gap-2 text-gray-600">
           {/* Avatar dans la Navbar */}
-<div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-  {user?.avatarUrl ? (
-    <img
-      src={`http://localhost:5000${user.avatarUrl}`}
-      alt="avatar"
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    <span className="font-bold text-gray-600">
-      {user ? user.fullName?.charAt(0).toUpperCase() : "?"}
-    </span>
-  )}
-</div>
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+          {user?.avatarUrl ? (
+            <img
+              src={`http://localhost:5000${user.avatarUrl}`}
+              alt="avatar"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <span className="font-bold text-gray-600">
+              {user ? user.fullName?.charAt(0).toUpperCase() : "?"}
+            </span>
+          )}
+        </div>²²²²²²²²²²²²²
 
 
           {/* Email ou état */}
