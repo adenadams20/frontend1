@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X, Moon, Bell, Search } from "lucide-react";
 import Button from "./Button";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "lucide-react";
 
 export default function Navbar({ onSidebarToggle }) {
   const [open, setOpen] = useState(false);
@@ -26,14 +27,7 @@ export default function Navbar({ onSidebarToggle }) {
         } md:flex items-center gap-4`}
       >
         {/* Barre de recherche */}
-        <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 md:w-64 w-full">
-          <Search size={20} className="mr-2 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            className="bg-transparent focus:outline-none w-full"
-          />
-        </div>
+       
 
         {/* Icône lune */}
         <Button className="text-gray-600 hover:text-gray-900">
@@ -47,14 +41,16 @@ export default function Navbar({ onSidebarToggle }) {
         </button>
 
         {/*  PROFIL DYNAMIQUE */}
-        <div className="flex items-center gap-2 text-gray-600">
+        <div className="flex items-center shadow p-2 rounded-2xl bg-blue-800 gap-2 text-white"  >
           {/* Avatar dans la Navbar */}
-<div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+<div className="w-8 h-8 rounded-full overflow-hidden  bg-gray-200 flex items-center justify-center">
   {user?.avatarUrl ? (
     <img
       src={`http://localhost:5000${user.avatarUrl}`}
       alt="avatar"
       className="w-full h-full object-cover"
+      Link to="/settings"
+      
     />
   ) : (
     <span className="font-bold text-gray-600">

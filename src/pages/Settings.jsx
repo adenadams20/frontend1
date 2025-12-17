@@ -70,7 +70,7 @@ const SvgEyeSlash = (props) => (
 // --- Sous-composant : Toggle Switch avec Tailwind ---
 const ToggleSwitch = ({ label, description, isEnabled, onToggle }) => {
   return (
-    <div className="flex justify-between items-center mt-5 py-3 border-t border-gray-100">
+    <div className="flex justify-between items-center mt-20 py-3 border-t border-gray-100">
       <div>
         <div className="font-semibold text-gray-800">{label}</div>
         <div className="text-sm text-gray-500">{description}</div>
@@ -346,7 +346,7 @@ const handleAvatarChange = async (e) => {
   // };
 
   return (
-    <div className="min-h-screen mt-5 bg-gray-50 p-6 md:p-10">
+    <div className="min-h-screen mt-15 bg-gray-50 p-6 md:p-10">
       {/* En-tête */}
       <div className="mb-6 max-w-4xl mx-auto md:ml-0">
         <h1 className="text-3xl font-bold text-gray-800">Paramètres</h1>

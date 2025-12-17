@@ -12,8 +12,11 @@ import ExportCSV from "../components/ExportCSV";
 
 export default function Paiement() {
   const [activeTab, setActiveTab] = useState("eau");
+  const [fromAccountId, setFromAccountId] = useState("");
+  const [amount, setAmount] = useState("");
+  const [serviceCode, setServiceCode] = useState("EAU");
+  const [billNumber, setBillNumber] = useState("");
 
-  // 🔹 Formulaire (temps réel)
   const [formData, setFormData] = useState({
     service: "Eau",
     serviceCode: "EAU",
@@ -22,7 +25,6 @@ export default function Paiement() {
     description: "",
   });
 
-  // 🔹 Reçu (figé après paiement)
   const [receiptData, setReceiptData] = useState({
     service: "-",
     billNumber: "-",
@@ -58,7 +60,6 @@ export default function Paiement() {
     { id: "mobile", label: "Mobile", icon: PiDeviceMobileCamera },
   ];
 
-  // 🔹 Synchronisation dropdown / tabs
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "service") {
@@ -84,8 +85,7 @@ export default function Paiement() {
       return;
     }
 
-    const token = localStorage.getItem("token");
-
+    const token = localStorage.getItem("token"); // côté navigateur seulement
     if (!token) {
       setModalStatus("error");
       setModalMessage("Vous devez être connecté pour effectuer un paiement.");
@@ -105,22 +105,28 @@ export default function Paiement() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            serviceCode: formData.serviceCode,
-            serviceName: formData.service,
-            billNumber: formData.billNumber,
+            accountId: fromAccountId,
             amount: Number(formData.amount),
-            currency: "XOF",
-            description: formData.description,
+            serviceName: formData.service, // ton backend attend serviceName
+            billNumber: formData.billNumber.trim(),
+            description: formData.description || "-",
           }),
         }
       );
 
-      const data = await response.json();
+      // Si le serveur renvoie autre chose que JSON (erreur HTML), on le gère
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        const text = await response.text();
+        throw new Error(text || "Erreur inattendue du serveur");
+      }
+
       if (!response.ok) {
         throw new Error(data?.message || "Erreur lors du paiement.");
       }
 
-      // ✅ Reçu figé après succès
       setReceiptData({
         service: formData.service,
         billNumber: formData.billNumber,
@@ -173,12 +179,12 @@ export default function Paiement() {
     },
   ];
 
-  // ================================
-  // 💄 UI
-  // ================================
   return (
-    <div className="w-full mt-5 p-4 bg-gray-50">
+    <div className="w-full mt-16 p-4 bg-gray-50">
       <h1 className="font-semibold text-3xl mb-6">Paiement de factures</h1>
+      <p className="mb-5 text-gray-600">
+          Effectuez un paiement entre vos comptes ou vers un bénéficiaire
+        </p>
 
       {/* ONGLET */}
       <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -311,3 +317,4 @@ export default function Paiement() {
     </div>
   );
 }
+;
