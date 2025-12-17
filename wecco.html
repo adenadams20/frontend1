@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>WECCO - Banking App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ICONS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --gray-blue: white;
+  --gray-dark: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 100%, rgba(0, 212, 255, 1) 100%);
+  --orange:  blue;  
+  /* --orange-light:#FDBA74; */
+  color: white;
+  --white:#ffffff;
+  --bg:#f4f5f7;
+}
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,system-ui,sans-serif;}
+body{background: #24000c;background: linear-gradient(90deg, rgba(36, 0, 12, 0.47) 0%, rgba(9, 9, 121, 1) 0%, rgba(0, 212, 255, 1) 100%); color:white;} 
+
+/* LAYOUT */
+.app{display:flex; min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:260px;
+  background:var(--gray-dark);
+  --gray-dark: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 100%, rgba(0, 212, 255, 1) 100%);
+  color:white;
+  display:flex;
+  flex-direction:column;
+}
+.title1 {
+  color: white;
+}
+.logo{
+  padding:24px;
+  font-size:22px;
+  font-weight:800;
+  color:var(--orange);
+}
+.menu{flex:1;padding:12px;}
+.menu a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border-radius:10px;
+  color:#ddd;
+  text-decoration:none;
+  cursor:pointer;
+}
+.menu a.active,
+.menu a:hover{
+  background: green;
+  background: #24000c;background: linear-gradient(90deg, rgba(36, 0, 12, 0.47) 0%, rgba(9, 9, 121, 1) 0%, rgba(0, 212, 255, 1) 100%); color:white;
+  color:white;
+}
+.logout{padding:16px;border-top:1px solid rgba(255,255,255,.1);}
+
+/* CONTENT */
+.content{flex:1;display:flex;flex-direction:column;}
+
+/* NAVBAR */
+.navbar{
+  background: var(--gray-dark);
+  --gray-dark: linear-gradient(90deg,rgba(2, 0, 36, 0.696) 0%, rgba(9, 9, 121, 0.235) 100%, rgba(0, 212, 255, 1) 100%);
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+.nav-right{display:flex;align-items:center;gap:20px}
+.icon-btn{color:var(--gray-blue);cursor:pointer; font-size:18px;}
+.user{display:flex;align-items:center;gap:12px}
+.avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--orange);color:white;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;
+}
+
+/* MAIN */
+.main{padding:24px;overflow-y:auto;}
+.section{display:none;}
+.section.active{display:block;}
+h1{margin-bottom:6px;}
+.subtitle{color:var(--gray-blue);margin-bottom:24px;}
+
+/* CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px;}
+.card{
+background: #24000c;background: linear-gradient(90deg, rgba(36, 0, 12, 0.47) 0%, rgba(9, 9, 121, 1) 0%, rgba(0, 212, 255, 1) 100%); color:white;
+  
+  padding: 18px;
+  margin-top: 26px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  min-height: 130px;
+}
+
+.gradient-info{background: radial-gradient(circle, rgba(63, 220, 251, 1) 0%, rgba(127, 133, 240, 1) 80%);}
+
+.gradient-indigo{background: #24000c;background: linear-gradient(90deg, rgba(36, 0, 12, 0.47) 0%, rgba(9, 9, 121, 1) 0%, rgba(0, 212, 255, 1) 100%); color:white;}
+.gradient-green{background: #2A7B9B;background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 100%, rgba(237, 221, 83, 1) 100%); color:white;}
+
+
+
+/* ACTIONS */
+.actions{display:flex;gap:16px;margin-bottom:30px;}
+.action{
+  flex:1;
+  background-color: beige;
+  color: black;
+  padding:16px;
+  border-radius:14px;
+  text-align:center;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* TRANSACTIONS */
+.tab-btn{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  background:#2C343F;
+  color:white;
+  cursor:pointer;
+}
+.tab-btn.active{background:var(--orange);}
+.transactions-list .card{padding:14px;}
+
+/* FORM */
+.form{
+  max-width:500px;
+  background:white;
+  padding:24px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+.form input,.form select,.form textarea{
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border:1px solid #ddd;
+}
+.form button{
+  background:var(--orange);
+  color:white;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+} 
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">WECCO</div>
+  <nav class="menu">
+    <a class="active" onclick="show('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a onclick="show('transactions')"><i class="fa-solid fa-list"></i> Transactions</a>
+    <a onclick="show('transfert')"><i class="fa-solid fa-right-left"></i> Transfert</a>
+    <a onclick="show('payment')"><i class="fa-solid fa-credit-card"></i> Paiement</a>
+    <a onclick="show('settings')"><i class="fa-solid fa-gear"></i> Paramètres</a>
+    <a onclick="show('support')"><i class="fa-solid fa-headset"></i> Support</a>
+  </nav>
+  <div class="logout">
+    <a class="menu"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
+  </div>
+</aside>
+
+<!-- CONTENT -->
+<div class="content">
+
+<header class="navbar">
+  <h2 class="title1">WECCO</h2>
+  <div class="nav-right">
+    <i class="fa-regular fa-bell icon-btn"></i>
+    <i class="fa-regular fa-moon icon-btn"></i>
+    <div class="user">
+      <div class="avatar">J</div>
+      <div>
+        <strong class="title1">Jean Dupont</strong><br>
+        <small class="title1">setdrugyji@fghjkjlk</small>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="section active">
+  <h1 class="title1">Dashboard</h1>
+  <p class="subtitle">Vue d'ensemble de vos finances</p>
+
+  <div class="cards">
+    <div class="card gradient-blue">
+      <h3 class="title1">Solde Total</h3>
+      <strong class="title1">86 729,25 €</strong>
+      <p class="title1">+12.5% ce mois</p>
+    </div>
+  </div>
+
+  <div class="actions">
+    <div class="action">Transfert</div>
+    <div class="action">Paiement</div>
+    <div class="action">Historique</div>
+    <div class="action">Plus</div>
+  </div>
+
+  <h3>Mes Comptes</h3>
+  <div class="cards">
+    <div class="card gradient-info">**1234<br><strong>12 458,50 €</strong></div>
+    <div class="card gradient-indigo">**2234<br><strong>28 950,00 €</strong></div>
+    <div class="card gradient-green">**3234<br><strong>45 320,75 €</strong></div>
+  </div>
+</section>
+
+<!-- TRANSACTIONS -->
+<section id="transactions" class="section">
+  <h1 class="title1">Transactions</h1>
+  <p class="subtitle">Historique complet de vos transactions</p>
+
+  <!-- STATS CARDS BLANCHES -->
+  <div class="cards">
+    <div class="card">
+      <h3>Revenus ce mois</h3>
+      <strong class="green">+4 950 €</strong>
+    </div>
+    <div class="card">
+      <h3>Dépenses ce mois</h3>
+      <strong class="red">-489,86 €</strong>
+    </div>
+    <div class="card">
+      <h3>Total transactions</h3>
+      <strong>12</strong>
+    </div>
+  </div>
+
+  <!-- SEARCH + NAVTABS -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap;">
+    <input type="text" placeholder="Rechercher une transaction..." style="flex:1; padding:10px 12px; border-radius:12px; border:1px solid #ddd;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="tab-btn active" onclick="filterTransactions('all')">Toutes</button>
+      <button class="tab-btn" onclick="filterTransactions('revenu')">Revenus</button>
+      <button class="tab-btn" onclick="filterTransactions('depense')">Dépenses</button>
+      <button class="tab-btn" onclick="filterTransactions('montant')">Montant</button>
+      <button class="tab-btn" onclick="exportTransactions()">Export</button>
+    </div>
+  </div>
+
+  <!-- LISTE DES TRANSACTIONS -->
+  <div class="cards transactions-list">
+    <div class="card" data-type="revenu">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span>💰 Salaire Novembre</span>
+        <span class="green">+3 500,00 €</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--gray-blue); margin-top:6px;">
+        <span>Revenu</span>
+        <span>23/11/2025</span>
+        <span>Complété</span>
+      </div>
+    </div>
+
+    <div class="card" data-type="depense">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span>💡 EDF</span>
+        <span class="red">-89,00 €</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--gray-blue); margin-top:6px;">
+        <span>Factures</span>
+        <span>16/11/2025</span>
+        <span>Complété</span>
+      </div>
+    </div>
+    <!-- Ajoute les autres transactions de la même manière -->
+  </div>
+</section>
+
+<!-- TRANSFER -->
+<section id="transfert" class="section">
+  <h1>Transfert d'argent</h1>
+  <div class="form">
+    <input placeholder="Bénéficiaire ou IBAN">
+    <input placeholder="Montant €">
+    <textarea placeholder="Description"></textarea>
+    <button>Effectuer le transfert</button>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<section id="payment" class="section">
+  <h1>Paiement de factures</h1>
+  <div class="form">
+    <input placeholder="Fournisseur">
+    <input placeholder="Montant €">
+    <select><option>Catégorie</option></select>
+    <button>Payer maintenant</button>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="section">
+  <h1>Paramètres</h1>
+  <div class="form">
+    <input value="Jean Dupont">
+    <input value="setdrugyji@fghjkjlk">
+    <input value="+33 6 12 34 56 78">
+    <button>Enregistrer</button>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support" class="section">
+  <h1>Centre d'aide</h1>
+  <p>Téléphone : 01 23 45 67 89</p>
+  <p>Email : support@bankapp.com</p>
+</section>
+
+</main>
+</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+
+  document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('active'))
+  event.target.classList.add('active')
+}
+
+function filterTransactions(type){
+  document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const allCards = document.querySelectorAll('.transactions-list .card');
+  allCards.forEach(card=>{
+    if(type==='all'){
+      card.style.display='block';
+    } else if(type==='revenu' && card.dataset.type==='revenu'){
+      card.style.display='block';
+    } else if(type==='depense' && card.dataset.type==='depense'){
+      card.style.display='block';
+    } else if(type==='montant'){
+      card.style.display='block'; // tri montant à ajouter si souhaité
+    } else{
+      card.style.display='none';
+    }
+  });
+}
+function exportTransactions(){
+  alert("Export CSV / PDF (fonctionnalité simulée)");
+}
+</script>
+
+</body>
+</html>
