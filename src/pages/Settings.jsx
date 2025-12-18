@@ -182,35 +182,6 @@ const handleAvatarChange = async (e) => {
   }
 };
 
-
-// const handleAvatarChange = async (e) => {
-//   const file = e.target.files?.[0];
-//   if (!file) return;
-
-//   try {
-//     // Aperçu immédiat (optionnel mais recommandé)
-//     const previewUrl = URL.createObjectURL(file);
-//     setAvatarPreview(previewUrl);
-
-//     // ✅ RÉCUPÉRER LE RETOUR
-//     const data = await uploadAvatar(file, token);
-//     console.log("Upload avatar response:", data);
-
-//     // ✅ METTRE À JOUR LE CONTEXT GLOBAL
-//     updateUser({
-//       avatarUrl:
-//         data.avatarUrl ||
-//         data.user?.avatarUrl ||
-//         data.avatar ||
-//         data.user?.avatar,
-//     });
-//   } catch (err) {
-//     console.error("Erreur upload avatar :", err);
-//   }
-// };
-
-
-
   // 🔁 Pré-remplir les champs profil à partir du user connecté
   useEffect(() => {
     if (user) {

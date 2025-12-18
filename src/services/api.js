@@ -1,5 +1,4 @@
 // frontend1/src/services/api.js
-// ou frontend1/src/api.js selon ton import
 
 const BASE_URL = "http://localhost:5000/api";
 
@@ -29,8 +28,6 @@ async function get(endpoint, token = null) {
   if (!res.ok) throw new Error(result.message || "Erreur API");
   return result;
 }
-
-
 
 // 🔹 NOUVEAU : Fonction générique pour PUT
 async function put(endpoint, data, token = null) {
@@ -122,7 +119,6 @@ export async function uploadAvatar(file, token) {
 
   return data;
 }
-
 
 // 🔐 Changer le mot de passe de l'utilisateur connecté
 export async function changePassword({ currentPassword, newPassword }, token) {

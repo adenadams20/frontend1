@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
+//ajouter
+// import { Link, useNavigate } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi"; // icône logout
 
 export default function Sidebar() {
   const location = useLocation();
@@ -20,6 +23,15 @@ export default function Sidebar() {
     { to: "/settings", label: "Paramètres", icon: Settings },
     { to: "/faq", label: "Support", icon: HelpCircle },
   ];
+  //ajouter
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+  localStorage.removeItem("token"); // supprime le token
+  navigate("/login", { replace: true }); // remplace l'entrée actuelle dans l'historique
+};
+
+
 
   return (
     <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-gray-50 shadow-2xl h-screen p-6">
@@ -52,15 +64,15 @@ export default function Sidebar() {
 
         <div>
           <hr className="my-6 border-gray-300" />
-
-          <Link
-            to="/login"
-            className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 transition"
-          >
-            <LogOut /> Déconnexion
-          </Link>
+          <button
+          onClick={handleLogout}
+          className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 transition w-full"
+      >
+        <FiLogOut/> Déconnexion
+      </button>
         </div>
       </div>
     </aside>
   );
 }
+

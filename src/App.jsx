@@ -18,6 +18,9 @@ import Settings from './pages/Settings';
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
+//ajout
+import PrivateRoute from "./components/PrivateRoute";
+
 
 // Layout principal (Sidebar + Navbar)
 function Layout() {
@@ -59,7 +62,16 @@ function App() {
 
 
       {/* Pages AVEC layout */}
-      <Route element={<Layout />}>
+     {/* Pages protégées (avec sidebar + navbar) */}
+<Route
+  element={
+    <PrivateRoute>
+      <Layout />
+    </PrivateRoute>
+  }
+>
+
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
