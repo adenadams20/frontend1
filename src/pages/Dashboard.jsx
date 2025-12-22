@@ -171,7 +171,6 @@ export default function Dashboard() {
     { title: "Transfert", icon: ArrowsRightLeftIcon, color: "text-blue-600", link: "/transfer" },
     { title: "Paiement", icon: CreditCardIcon, color: "text-green-500", link: "/paiement" },
     { title: "Historique", icon: ClockIcon, color: "text-purple-500", link: "/transactions" },
-    { title: "Plus", icon: PlusIcon, color: "text-orange-400", link: "/plus" },
   ];
 
   if (loading) return <p className="p-6">Chargement...</p>;
@@ -198,7 +197,7 @@ export default function Dashboard() {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10l6 6L21 4"></path>
               </svg>
-              <span>+12.5% ce mois</span>
+             
             </div>
           </div>
           <div className="flex-1 mt-6 lg:mt-0">
@@ -211,7 +210,7 @@ export default function Dashboard() {
       <AccountsCards accounts={accounts} />
 
       {/* QUICK ACTIONS */}
-      <section className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 my-10">
+      <section className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 p-3 my-10">
         {cards.map((c) => (
           <a
             key={c.title}

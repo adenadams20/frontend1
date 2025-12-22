@@ -22,7 +22,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-gray-50 shadow-2xl h-screen p-6">
+    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-gray-100 shadow-2xl h-screen p-6">
       <div className="flex flex-col flex-grow justify-between">
         <div>
           <h2 className="text-2xl font-bold mb-8">Weethio</h2>

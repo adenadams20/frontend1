@@ -253,10 +253,7 @@ const cancelDelete = () => {
           Date
         </button>
 
-        <button className="flex items-center gap-2 px-5 py-2 bg-gray-100 rounded-xl">
-          <ArrowUpTrayIcon className="w-5 h-5" />
-          Export
-        </button>
+        
       </div>
 
       {/* TABLE */}
