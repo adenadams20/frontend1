@@ -67,7 +67,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4  border-y-5 border-purple-400">
+    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4 border-y-5 border-purple-400">
 
       <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
         

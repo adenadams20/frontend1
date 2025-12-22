@@ -15,6 +15,9 @@ import Login from './pages/Login';
 import MotdepassOublier from './pages/MotdepassOublier';
 import Paiement from './pages/Paiement';
 import Settings from './pages/Settings';
+import ChangementMdp from './pages/ChangementMdp'
+
+
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
@@ -56,6 +59,8 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/motdepassoublier" element={<MotdepassOublier />} />
       <Route path="/conditiondutilisation" element={<ConditiondUtilisation/>} /> 
+      <Route path="/ChangementMdp/:token" element={<ChangementMdp/>} />
+   
 
 
       {/* Pages AVEC layout */}
