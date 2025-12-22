@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lucide-react";
 import { Link, useLocation,useNavigate } from "react-router-dom";
 //ajouter
-// import { Link, useNavigate } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi"; // icône logout
 
 export default function Sidebar() {
@@ -61,7 +60,7 @@ export default function Sidebar() {
             })}
           </nav>
         </div>
-
+        {/* Ajouter */}
         <div>
           <hr className="my-6 border-gray-300" />
           <button

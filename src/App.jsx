@@ -45,8 +45,6 @@ function Layout() {
   );
 }
 
-
-
 function App() {
   return (
     <Routes>
@@ -60,18 +58,15 @@ function App() {
       <Route path="/motdepassoublier" element={<MotdepassOublier />} />
       <Route path="/conditiondutilisation" element={<ConditiondUtilisation/>} /> 
 
-
-      {/* Pages AVEC layout */}
-     {/* Pages protégées (avec sidebar + navbar) */}
-<Route
-  element={
-    <PrivateRoute>
-      <Layout />
-    </PrivateRoute>
-  }
->
-
-
+     
+     {/* ajouter Pages protégées (avec sidebar) */}
+      <Route
+        element={
+       <PrivateRoute>
+         <Layout />
+        </PrivateRoute>
+       }
+      > 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
@@ -79,7 +74,6 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/faq" element={<Faq />} />
       </Route>
-
     </Routes>
   );
 }

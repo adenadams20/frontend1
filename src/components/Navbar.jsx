@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X, Moon, Bell, Search } from "lucide-react";
 import Button from "./Button";
 import { useAuth } from "../context/AuthContext";
+import NavbarNotifications from "./NavbarNotifications"; //ajouter
 
 export default function Navbar({ onSidebarToggle }) {
   const [open, setOpen] = useState(false);
@@ -39,11 +40,13 @@ export default function Navbar({ onSidebarToggle }) {
           <Moon size={24} />
         </Button>
 
-        {/* Icône cloche */}
+        {/* Icône cloche
         <button className="relative text-gray-600 hover:text-gray-900">
           <Bell size={24} />
           <span className="absolute top-0 right-0 bg-red-500 rounded-full w-2 h-2"></span>
-        </button>
+        </button> */}
+        <NavbarNotifications backendUrl={BACKEND_URL} />
+
 
         {/* PROFIL DYNAMIQUE */}
         <div className="flex items-center gap-2 text-gray-600">

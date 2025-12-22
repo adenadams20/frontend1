@@ -1,5 +1,5 @@
 // frontend1/src/services/api.js
-
+import axios from "axios"; //ajouter
 const BASE_URL = "http://localhost:5000/api";
 
 // Fonction générique pour POST
@@ -135,6 +135,5 @@ export async function changePassword({ currentPassword, newPassword }, token) {
   if (!res.ok) throw new Error(result.message || "Erreur API");
   return result;
 }
-
 
 export { BASE_URL };
