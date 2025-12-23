@@ -258,7 +258,7 @@ function TransfertExterne({ onNewTransaction }) {
       setMessage("");
       setMessageType("");
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/beneficiary", {
+      const res = await fetch("http://localhost:5000/api/beneficiaries", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -372,7 +372,7 @@ function TransfertExterne({ onNewTransaction }) {
         </div>
 
         <div>
-          <label className="font-medium">Nom bénéficiaire (optionnel)</label>
+          <label className="font-medium">Nom bénéficiaire</label>
           <input
             value={beneficiaire}
             onChange={(e) => {
