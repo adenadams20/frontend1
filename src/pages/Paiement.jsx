@@ -105,12 +105,15 @@ export default function Paiement() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            accountId: fromAccountId,
+            accountId: fromAccountId, // assure-toi que cette variable est bien définie
             amount: Number(formData.amount),
-            serviceName: formData.service, // ton backend attend serviceName
+            serviceName: formData.service,
+            serviceCode: formData.serviceCode, // 🔹 AJOUTER ICI
             billNumber: formData.billNumber.trim(),
             description: formData.description || "-",
-          }),
+          })
+
+
         }
       );
 

@@ -70,6 +70,24 @@ export default function ChangementMdp() {
   return (
     <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4">
       <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
+                {/* Icône */}
+        <div className="flex justify-center mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-send w-6 h-6 text-blue-700"
+          >
+            <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+            <path d="M22 2 11 13" />
+          </svg>
+        </div>
         <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">
           Réinitialiser le mot de passe
         </h4>

@@ -258,7 +258,7 @@ function TransfertExterne({ onNewTransaction }) {
       setMessage("");
       setMessageType("");
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/beneficiary", {
+      const res = await fetch("http://localhost:5000/api/beneficiaries", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -301,7 +301,7 @@ function TransfertExterne({ onNewTransaction }) {
 
       // Créer bénéficiaire si nécessaire
       if (!finalBeneficiaryId) {
-        const resCreate = await fetch("http://localhost:5000/api/beneficiary", {
+        const resCreate = await fetch("http://localhost:5000/api/beneficiariesz", {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({ name: (beneficiaire || "Bénéficiaire").trim(), accountNumber: accountNumber.trim() }),
