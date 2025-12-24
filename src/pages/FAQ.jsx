@@ -29,32 +29,63 @@ export default function FAQ() {
     }));
   };
 
+  const [status, setStatus] = useState({
+    type: "", // "success" | "error" | "loading"
+    message: "",
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.name || !form.email || !form.subject || !form.message) {
-      alert("Veuillez remplir tous les champs");
+    setStatus({ type: "loading", message: "Envoi du message..." });
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setStatus({
+        type: "error",
+        message: "Vous devez être connecté pour contacter le support.",
+      });
       return;
     }
 
     try {
       const res = await fetch("http://localhost:5000/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          subject: form.subject,
+          message: form.message,
+        }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Erreur lors de l'envoi");
+        setStatus({
+          type: "error",
+          message: data.message || "Une erreur est survenue.",
+        });
         return;
       }
 
-      alert("Message envoyé avec succès ✅");
+      setStatus({
+        type: "success",
+        message: "Message envoyé avec succès. Notre équipe vous répondra.",
+      });
+
       setForm({ name: "", email: "", subject: "", message: "" });
+
+      // ⏱️ optionnel : masquer après 4s
+      setTimeout(() => setStatus({ type: "", message: "" }), 4000);
     } catch (err) {
-      alert("Erreur réseau");
+      setStatus({
+        type: "error",
+        message: "Erreur réseau. Veuillez réessayer.",
+      });
     }
   };
 
@@ -113,22 +144,17 @@ export default function FAQ() {
   const filteredQuestions = questions.filter((q) => {
     const matchCategory =
       activeCategory === "Toutes" || q.category === activeCategory;
-    const matchSearch = q.question
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchSearch = q.question.toLowerCase().includes(search.toLowerCase());
     return matchCategory && matchSearch;
   });
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
-
       {/* =========================
           HEADER
       ========================= */}
       <div className="text-center mb-14">
-        <h1 className="text-3xl font-semibold text-gray-900">
-          Centre d'aide
-        </h1>
+        <h1 className="text-3xl font-semibold text-gray-900">Centre d'aide</h1>
         <p className="text-gray-500 mt-2">
           Trouvez des réponses à vos questions ou contactez notre équipe
         </p>
@@ -172,7 +198,10 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Chat en direct</h2>
           <p className="text-gray-500 mt-1">Lun–Ven, 9h–18h</p>
-          <a href="/chat" className="text-blue-600 font-medium mt-3 inline-block">
+          <a
+            href="/chat"
+            className="text-blue-600 font-medium mt-3 inline-block"
+          >
             Démarrer le chat
           </a>
         </div>
@@ -218,22 +247,15 @@ export default function FAQ() {
         {/* Questions */}
         <div className="space-y-4">
           {filteredQuestions.map((item, idx) => (
-            <div
-              key={idx}
-              className="border border-gray-200 rounded-xl p-5"
-            >
+            <div key={idx} className="border border-gray-200 rounded-xl p-5">
               <div
                 className="flex justify-between items-center cursor-pointer gap-4"
-                onClick={() =>
-                  setOpenIndex(openIndex === idx ? null : idx)
-                }
+                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
               >
                 <span className="px-3 py-1 text-xs rounded-lg bg-gray-100">
                   {item.category}
                 </span>
-                <h3 className="text-lg font-medium flex-1">
-                  {item.question}
-                </h3>
+                <h3 className="text-lg font-medium flex-1">{item.question}</h3>
                 {openIndex === idx ? (
                   <ChevronUpIcon className="w-6 h-6" />
                 ) : (
@@ -294,9 +316,7 @@ export default function FAQ() {
           </div>
 
           <div>
-            <label className="block font-medium text-gray-700">
-              Message
-            </label>
+            <label className="block font-medium text-gray-700">Message</label>
             <textarea
               name="message"
               value={form.message}
@@ -305,6 +325,20 @@ export default function FAQ() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
             />
           </div>
+          {/* ajouter */}
+          {status.message && (
+            <div
+              className={`mt-4 text-sm rounded-md px-4 py-2 ${
+                status.type === "success"
+                  ? "bg-green-100 text-green-700"
+                  : status.type === "error"
+                  ? "bg-red-100 text-red-700"
+                  : "bg-blue-100 text-blue-700"
+              }`}
+            >
+              {status.message}
+            </div>
+          )}
 
           <Button type="submit" className="flex items-center gap-2">
             <PaperAirplaneIcon className="w-5 h-5 rotate-45" />
