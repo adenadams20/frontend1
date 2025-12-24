@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import {
   CalendarDaysIcon,
-  ArrowUpTrayIcon,
   MagnifyingGlassIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
-import { TrashIcon } from "@heroicons/react/24/outline";
-
 
 /* ======================================================
-   NORMALISATION DES TRANSACTIONS (ALIGNÉ BACKEND)
+   localStorage – IDS SUPPRIMÉS
+====================================================== */
+const getDeletedIds = () =>
+  JSON.parse(localStorage.getItem("deletedTransactionIds")) || [];
+
+const saveDeletedIds = (ids) =>
+  localStorage.setItem("deletedTransactionIds", JSON.stringify(ids));
+
+/* ======================================================
+   NORMALISATION TRANSACTION
 ====================================================== */
 const normalizeTransaction = (tx) => {
   if (!tx) return null;
 
-  // Types considérés comme des dépenses
   const debitTypes = [
     "WITHDRAWAL",
     "TRANSFER_INTERNAL_DEBIT",
@@ -37,11 +43,9 @@ const normalizeTransaction = (tx) => {
       case "P2P_RECEIVE":
         label = "Entrée";
         break;
-
       case "WITHDRAWAL":
         label = "Retrait";
         break;
-
       case "TRANSFER_INTERNAL_DEBIT":
       case "TRANSFER_USER_DEBIT":
       case "TRANSFER_EXTERNAL":
@@ -49,13 +53,11 @@ const normalizeTransaction = (tx) => {
       case "P2P_SEND":
         label = "Transfert";
         break;
-
       case "PAYMENT":
       case "BILL_PAYMENT":
       case "BILL_PAY":
         label = tx.serviceName || "Paiement";
         break;
-
       default:
         label = "Transaction";
     }
@@ -79,9 +81,13 @@ export default function Transactions() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [txToDelete, setTxToDelete] = useState(null);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [txToDelete, setTxToDelete] = useState(null);
+
+  /* Pagination */
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const token = localStorage.getItem("token");
 
@@ -96,9 +102,13 @@ const [txToDelete, setTxToDelete] = useState(null);
         if (!res.ok) throw new Error("Erreur chargement transactions");
 
         const data = await res.json();
+        const deletedIds = getDeletedIds();
 
         const txs = Array.isArray(data?.transactions)
-          ? data.transactions.map(normalizeTransaction).filter(Boolean)
+          ? data.transactions
+              .map(normalizeTransaction)
+              .filter(Boolean)
+              .filter((t) => !deletedIds.includes(t.id))
           : [];
 
         setTransactions(txs);
@@ -117,19 +127,12 @@ const [txToDelete, setTxToDelete] = useState(null);
   useEffect(() => {
     let result = [...transactions];
 
-    if (active === "revenus") {
-      result = result.filter((t) => t.signedAmount > 0);
-    }
-
-    if (active === "depenses") {
-      result = result.filter((t) => t.signedAmount < 0);
-    }
-
-    if (search) {
+    if (active === "revenus") result = result.filter((t) => t.signedAmount > 0);
+    if (active === "depenses") result = result.filter((t) => t.signedAmount < 0);
+    if (search)
       result = result.filter((t) =>
         t.label.toLowerCase().includes(search.toLowerCase())
       );
-    }
 
     result.sort((a, b) =>
       dateAsc
@@ -138,7 +141,31 @@ const [txToDelete, setTxToDelete] = useState(null);
     );
 
     setFiltered(result);
+    setCurrentPage(1); // reset page quand filtre change
   }, [active, dateAsc, search, transactions]);
+
+  /* ================= SUPPRESSION ================= */
+  const handleDelete = (id) => {
+    setTxToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    const deletedIds = getDeletedIds();
+    saveDeletedIds([...deletedIds, txToDelete]);
+
+    const updated = transactions.filter((t) => t.id !== txToDelete);
+    setTransactions(updated);
+    setFiltered(updated);
+
+    setShowDeleteModal(false);
+    setTxToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setTxToDelete(null);
+  };
 
   /* ================= STATS ================= */
   const totalRevenus = transactions
@@ -149,67 +176,51 @@ const [txToDelete, setTxToDelete] = useState(null);
     .filter((t) => t.signedAmount < 0)
     .reduce((sum, t) => sum + Math.abs(t.signedAmount), 0);
 
+  /* ================= PAGINATION ================= */
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentTransactions = filtered.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+
   if (loading) return <p className="p-6">Chargement...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
-const handleDelete = (id) => {
-  setTxToDelete(id);
-  setShowDeleteModal(true);
-};
-const confirmDelete = () => {
-  setTransactions((prev) => prev.filter((t) => t.id !== txToDelete));
-  setFiltered((prev) => prev.filter((t) => t.id !== txToDelete));
-
-  setShowDeleteModal(false);
-  setTxToDelete(null);
-};
-
-const cancelDelete = () => {
-  setShowDeleteModal(false);
-  setTxToDelete(null);
-};
-
-
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen mt-15 bg-yellow-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-4">
       {showDeleteModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn">
-      <h2 className="text-xl font-semibold mb-4">
-        Supprimer la transaction
-      </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Supprimer la transaction
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Êtes-vous sûr de vouloir supprimer cette transaction ?
+            </p>
 
-      <p className="text-gray-600 mb-6">
-        Êtes-vous sûr de vouloir supprimer cette transaction ?
-        Cette action est irréversible.
-      </p>
-
-      <div className="flex justify-end gap-3">
-        <button
-          onClick={cancelDelete}
-          className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200"
-        >
-          Annuler
-        </button>
-
-        <button
-          onClick={confirmDelete}
-          className="px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700"
-        >
-          Supprimer
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 rounded-xl bg-gray-100"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 rounded-xl bg-red-600 text-white"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <h1 className="text-3xl font-bold">Transactions</h1>
-      <p className="text-gray-600">Historique de vos opérations</p>
 
       {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        <StatCard title="Revenus" value={totalRevenus} color="green"  />
+        <StatCard title="Revenus" value={totalRevenus} color="green" />
         <StatCard title="Dépenses" value={totalDepenses} color="red" />
         <StatCard title="Total transactions" value={transactions.length} />
       </div>
@@ -252,66 +263,78 @@ const cancelDelete = () => {
           <CalendarDaysIcon className="w-5 h-5" />
           Date
         </button>
-
-        
       </div>
 
       {/* TABLE */}
       <div className="bg-white p-6 rounded-2xl shadow mt-6 overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            
-
-            <tr className="border-b text-gray-600">
-              
-              <th className="py-3">Transaction</th>
-              <th className="py-3">Date</th>
-              <th className="py-3">Statut</th>
-              <th className="py-3 text-right">Montant</th>
-              <th className="py-3 text-right">Action</th>
+        <table className="w-full text-left border-collapse">
+          <thead className="text-gray-500">
+            <tr>
+              <th className="py-4 font-medium">Transaction</th>
+              <th className="py-4 font-medium">Date</th>
+              <th className="py-4 font-medium">Statut</th>
+              <th className="py-4 text-right font-medium">Montant</th>
+              <th className="py-4 text-right font-medium">Action</th>
             </tr>
           </thead>
-          <tbody>
-            {filtered.map((t) => (
-              <tr key={t.id} className="border-b last:border-none">
-  <td className="py-3">{t.label}</td>
-  <td className="py-3">
-    {new Date(t.date).toLocaleDateString()}
-  </td>
-  <td className="py-3">
-    <span className="bg-green-100 text-green-700 px-3 rounded-full">
-      {t.status}
-    </span>
-  </td>
-  <td
-    className={`py-3 text-right font-semibold ${
-      t.signedAmount > 0 ? "text-green-600" : "text-red-600"
-    }`}
-  >
-    {t.signedAmount > 0 ? "+" : "-"}
-    {Math.abs(t.signedAmount).toLocaleString()} XOF
-  </td>
 
-  {/* ICONE SUPPRESSION */}
-  <td className="py-3 text-right">
-    <button
-      onClick={() => handleDelete(t.id)}
-      className="text-red-500 hover:text-red-700"
-      title="Supprimer"
-    >
-      <TrashIcon className="w-5 h-5" />
-    </button>
-  </td>
-</tr>
-
+          <tbody className="divide-y divide-gray-100">
+            {currentTransactions.map((t) => (
+              <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                <td className="py-4">{t.label}</td>
+                <td className="py-4">{new Date(t.date).toLocaleDateString()}</td>
+                <td className="py-4">
+                  <span className="bg-green-100 text-green-700 px-3 rounded-full">
+                    {t.status}
+                  </span>
+                </td>
+                <td
+                  className={`py-4 text-right font-semibold ${
+                    t.signedAmount > 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {t.signedAmount > 0 ? "+" : "-"}
+                  {Math.abs(t.signedAmount).toLocaleString()} XOF
+                </td>
+                <td className="py-4 text-right">
+                  <button
+                    onClick={() => handleDelete(t.id)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Supprimer"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </td>
+              </tr>
             ))}
+
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan="5" className="py-8 text-center text-gray-400">
+                  Aucune transaction trouvée
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 
-        {filtered.length === 0 && (
-          <p className="text-center text-gray-500 mt-6">
-            Aucune transaction trouvée
-          </p>
+        {/* PAGINATION */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-4 gap-2">
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -319,10 +342,9 @@ const cancelDelete = () => {
 }
 
 /* ================= COMPOSANTS ================= */
-
 function StatCard({ title, value, color }) {
   return (
-    <div className="bg-white p-4 rounded-2xl shadow ">
+    <div className="bg-white p-4 rounded-2xl shadow">
       <p className="text-gray-600">{title}</p>
       <p
         className={`text-3xl font-semibold mt-2 ${
