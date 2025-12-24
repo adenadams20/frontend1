@@ -181,7 +181,7 @@ export default function Paiement() {
   ];
 
   return (
-    <div className="w-full mt-16 p-4 z-0 bg-yellow-100">
+    <div className="w-full mt-18 p-4 z-0 bg-yellow-100">
       <h1 className="font-semibold text-3xl mb-6">Paiement de factures</h1>
       <p className="mb-5 text-gray-600">
           Effectuez un paiement entre vos comptes ou vers un bénéficiaire

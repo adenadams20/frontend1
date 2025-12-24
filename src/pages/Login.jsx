@@ -67,9 +67,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4 border-y-5 border-purple-400">
+    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 border">
 
-      <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
+      <div className="w-full max-w-md bg-[#022b53] p-6 sm:p-8 rounded-xl shadow-lg">
         
         {/* Icône */}
         <div className="flex justify-center mb-4">
@@ -83,14 +83,14 @@ export default function Login() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-send w-6 h-6 text-blue-700"
+            className="lucide lucide-send w-6 h-6 text-yellow-100"
           >
             <path d="m22 2-7 20-4-9-9-4 20-7Z" />
             <path d="M22 2 11 13" />
           </svg>
         </div>
 
-        <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">
+        <h4 className="text-2xl font-bold text-yellow-100 text-center mb-6">
           Connexion
         </h4>
 
@@ -103,7 +103,7 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
 
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="email" className="block text-yellow-100 font-medium mb-2">
               Email
             </label>
             <input
@@ -112,14 +112,14 @@ export default function Login() {
               name="email"
               placeholder="Entrez votre Email"
               required
-              className="w-full px-4 py-2 border rounded-md focus:ring-blue-500"
+              className="w-full px-4 bg-white py-2 border rounded-md focus:ring-blue-500"
               value={form.email}
               onChange={handleChange}
             />
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="password" className="block text-yellow-100 font-medium mb-2">
               Mot de passe
             </label>
             <input
@@ -128,31 +128,31 @@ export default function Login() {
               name="password"
               placeholder="Entrez votre mot de passe"
               required
-              className="w-full px-4 py-2 border rounded-md focus:ring-blue-500"
+              className="w-full px-4 py-2 border bg-white rounded-md focus:ring-blue-500"
               value={form.password}
               onChange={handleChange}
             />
           </div>
 
           <p className="text-right mb-2">
-            <Link to="/motdepassOublier" className="text-blue-600 hover:underline">
+            <Link to="/motdepassOublier" className="text-blue-300 hover:underline">
               Mot de passe oublié ?
             </Link>
           </p>
 
           <button
             type="submit"
-            className="w-full bg-[#312c85] text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-yellow-100 text-[#022b53] py-2 rounded-md hover:bg-blue-300 transition"
             disabled={loading}
           >
             {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>
 
-        <div className="text-center mt-6 text-gray-700">
+        <div className="text-center mt-6 text-gray-950">
           <p>
             Vous n’avez pas de compte ?{" "}
-            <Link to="/register" className="text-blue-600 hover:underline">
+            <Link to="/register" className="text-blue-300 hover:underline">
               Inscrivez-vous
             </Link>
           </p>

@@ -62,22 +62,22 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4 border-y-5 border-purple-400">
+    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 ">
   
-  <div className="w-full max-w-md bg-purple-200 p-6 sm:p-8 rounded-xl shadow-lg">
+  <div className="w-full max-w-md bg-[#022b53] p-6 sm:p-8 rounded-xl shadow-lg">
 
     {/* Icon */}
     <div className="flex justify-center mb-4">
       <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
         viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        className="lucide lucide-send w-6 h-6 text-blue-700">
+        className="lucide lucide-send w-9 h-10 text-yellow-100">
         <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path>
         <path d="m21.854 2.147-10.94 10.939"></path>
       </svg>
     </div>
 
-    <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">Inscription</h4>
+    <h4 className="text-2xl font-bold text-yellow-100 text-center mb-6">Inscription</h4>
 
     {error && (
       <div className="text-red-700 mb-4 text-center font-medium text-sm sm:text-base">
@@ -88,7 +88,7 @@ export default function Register() {
     <form onSubmit={handleSubmit}>
       {/* Nom complet */}
       <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Nom complet</label>
+        <label className="block text-yellow-100 font-medium mb-1 sm:mb-2">Nom complet</label>
         <input
           type="text"
           name="fullName"
@@ -96,13 +96,13 @@ export default function Register() {
           onChange={handleChange}
           placeholder="Entrez votre prénom et nom"
           required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+          className="w-full px-3 py-2 bg-yellow-50 border rounded-md text-sm sm:text-base"
         />
       </div>
 
       {/* Email */}
       <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Email</label>
+        <label className="block text-yellow-100 font-medium mb-1 sm:mb-2">Email</label>
         <input
           type="email"
           name="email"
@@ -110,26 +110,26 @@ export default function Register() {
           onChange={handleChange}
           placeholder="Entrez votre email"
           required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+          className="w-full px-3 py-2 border bg-yellow-50 rounded-md text-sm sm:text-base"
         />
       </div>
 
       {/* Téléphone */}
       <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Téléphone</label>
+        <label className="block text-yellow-100 font-medium mb-1 sm:mb-2">Téléphone</label>
         <input
           type="text"
           name="phone"
           value={form.phone}
           onChange={handleChange}
           placeholder="Entrez votre numéro"
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+          className="w-full px-3 py-2 border bg-yellow-50 rounded-md text-sm sm:text-base"
         />
       </div>
 
       {/* Mot de passe */}
       <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Mot de passe</label>
+        <label className="block text-yellow-100 font-medium mb-1 sm:mb-2">Mot de passe</label>
         <input
           type="password"
           name="password"
@@ -137,13 +137,13 @@ export default function Register() {
           onChange={handleChange}
           placeholder="Entrez votre mot de passe"
           required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+          className="w-full -yellow-100 px-3 py-2 border bg-yellow-50 rounded-md text-sm sm:text-base"
         />
       </div>
 
       {/* Confirmation */}
       <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-1 sm:mb-2">Confirmation</label>
+        <label className="block text-yellow-100 font-medium mb-1 sm:mb-2">Confirmation</label>
         <input
           type="password"
           name="confirmPassword"
@@ -151,23 +151,23 @@ export default function Register() {
           onChange={handleChange}
           placeholder="Confirmez votre mot de passe"
           required
-          className="w-full px-3 py-2 border rounded-md text-sm sm:text-base"
+          className="w-full px-3 py-2 border bg-yellow-50 rounded-md text-sm sm:text-base"
         />
       </div>
 
       <button
         type="submit"
-        className="w-full bg-[#312c85] text-white py-2 rounded-md hover:bg-blue-700 transition text-sm sm:text-base"
+        className="w-full bg-yellow-100 text-[#022b53] py-2 rounded-md hover:bg-blue-300 transition text-sm sm:text-base"
         disabled={loading}
       >
         {loading ? "Création du compte..." : "S'inscrire"}
       </button>
     </form>
 
-    <div className="text-center mt-6 text-gray-700 text-sm sm:text-base">
+    <div className="text-center mt-6 text-yellow-100 text-sm sm:text-base">
       <p>
         Déjà inscrit ?{" "}
-        <Link to="/login" className="text-blue-600 hover:underline">
+        <Link to="/login" className="text-blue-300 hover:underline">
           Se connecter
         </Link>
       </p>
@@ -176,7 +176,7 @@ export default function Register() {
 
       <p>
         En vous inscrivant, vous acceptez{" "}
-        <Link to="/ConditionUtilisation" className="text-blue-600 hover:underline">
+        <Link to="/ConditionUtilisation" className="text-blue-300 hover:underline">
           nos Conditions générales, notre Politique de confidentialité
         </Link>{" "}
         et notre Politique d’utilisation des cookies.

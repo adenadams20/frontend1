@@ -92,7 +92,7 @@ export default function NavbarNotifications({ backendUrl }) {
       <button
         type="button"
         onClick={() => setOpenDropdown((v) => !v)}
-        className="relative text-gray-600 hover:text-gray-900"
+        className="relative text-yellow-100 hover:text-gray-900"
         aria-label="Notifications"
       >
         <Bell size={24} />

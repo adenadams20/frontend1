@@ -40,9 +40,9 @@ export default function MotdepassOublier() {
   };
 
   return (
-    <div className="min-h-screen bg-[#312c85] flex justify-center items-center px-4 border-y-5 border-purple-400">
+    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 ">
       
-      <div className="w-full max-w-md bg-purple-200 p-8 rounded-xl shadow-lg">
+      <div className="w-full max-w-md bg-[#022b53] p-8 rounded-xl shadow-lg">
 
         <div className="flex justify-center mb-4">
           <svg
@@ -55,14 +55,14 @@ export default function MotdepassOublier() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-send w-6 h-6 text-blue-700"
+            className="lucide lucide-send w-9 h-10 text-yellow-100"
           >
             <path d="m22 2-7 20-4-9-9-4 20-7Z" />
             <path d="M22 2 11 13" />
           </svg>
         </div>
 
-        <h4 className="text-2xl font-bold text-[#312c85] text-center mb-6">
+        <h4 className="text-2xl font-bold text-yellow-100 text-center mb-6">
           Réinitialisation du mot de passe
         </h4>
 
@@ -85,7 +85,7 @@ export default function MotdepassOublier() {
               type="email"
               placeholder="Entrez votre Email"
               required
-              className="w-full px-4 py-2 border rounded-md"
+              className="w-full px-4 py-2 border rounded-md bg-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -93,25 +93,25 @@ export default function MotdepassOublier() {
 
           <button
             type="submit"
-            className="w-full bg-[#312c85] text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-yellow-100 text-[#022b53] py-2 rounded-md hover:bg-blue-300 transition"
             disabled={loading}
           >
             {loading ? "Envoi..." : "Réinitialiser le mot de passe"}
           </button>
         </form>
 
-        <div className="text-center mt-6 text-gray-700">
+        <div className="text-center mt-6 text-gray-950">
 
           <p>
             Vous n’avez pas de compte ?
-            <Link to="/register" className="text-blue-600 hover:underline">
+            <Link to="/register" className="text-blue-300 hover:underline">
               {" "}Inscrivez-vous
             </Link>
           </p>
 
           <p>
             Déjà inscrit ?
-            <Link to="/login" className="text-blue-600 hover:underline">
+            <Link to="/login" className="text-blue-300 hover:underline">
               {" "}Se connecter
             </Link>
           </p>
