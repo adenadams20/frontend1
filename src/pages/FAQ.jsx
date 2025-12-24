@@ -60,7 +60,7 @@ export default function FAQ() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
+    <div className="min-h-screen bg-yellow-100 py-12 mt-10 px-4 w-full ml-auto">
 
       {/* HEADER */}
       <div className="text-center mb-14">
@@ -80,7 +80,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Téléphone</h2>
           <p className="text-gray-500 mt-1">Disponible 24h/24, 7j/7</p>
-          <a href="tel:0123456789" className="text-blue-600 font-medium mt-3 inline-block">
+          <a href="tel:0123456789" className="text-[#022b53] font-medium mt-3 inline-block">
             01 23 45 67 89
           </a>
         </div>
@@ -92,7 +92,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Email</h2>
           <p className="text-gray-500 mt-1">Réponse sous 24h</p>
-          <a href="mailto:support@bankapp.com" className="text-blue-600 font-medium mt-3 inline-block">
+          <a href="mailto:support@bankapp.com" className="text-[#022b53] font-medium mt-3 inline-block">
             support@bankapp.com
           </a>
         </div>
@@ -100,11 +100,11 @@ export default function FAQ() {
         {/* Chat */}
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center">
           <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center">
-            <ChatBubbleLeftRightIcon className="w-8 h-8 text-purple-600" />
+            <ChatBubbleLeftRightIcon className="w-8 h-8 text-[#022b53]" />
           </div>
           <h2 className="text-lg font-semibold">Chat en direct</h2>
           <p className="text-gray-500 mt-1">Lun–Ven, 9h–18h</p>
-          <a href="/chat" className="text-blue-600 font-medium mt-3 inline-block">
+          <a href="/chat" className="text-[#022b53] font-medium mt-3 inline-block">
             Démarrer le chat
           </a>
         </div>
@@ -136,7 +136,7 @@ export default function FAQ() {
               onClick={() => setActiveCategory(cat)}
               className={`px-5 py-2 rounded-xl text-sm transition ${
                 activeCategory === cat
-                  ? "bg-blue-900 text-white"
+                  ? "bg-[#022b53] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >

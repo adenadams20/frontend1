@@ -10,6 +10,7 @@ import InputField from "../components/InputField";
 import Select from "../components/Select";
 import ExportCSV from "../components/ExportCSV";
 
+
 export default function Paiement() {
   const [activeTab, setActiveTab] = useState("eau");
   const [fromAccountId, setFromAccountId] = useState("");
@@ -180,7 +181,7 @@ export default function Paiement() {
   ];
 
   return (
-    <div className="w-full mt-16 p-4 bg-gray-50">
+    <div className="w-full mt-16 p-4 z-0 bg-yellow-100">
       <h1 className="font-semibold text-3xl mb-6">Paiement de factures</h1>
       <p className="mb-5 text-gray-600">
           Effectuez un paiement entre vos comptes ou vers un bénéficiaire
@@ -202,7 +203,7 @@ export default function Paiement() {
               });
             }}
             className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${activeTab === t.id ? "bg-blue-900 text-white" : "bg-white hover:bg-gray-100"}`}
+              ${activeTab === t.id ? "bg-[#022b53] text-yellow-100" : "bg-white text-[#022b53] hover:bg-gray-100"}`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -246,7 +247,7 @@ export default function Paiement() {
               placeholder="Description (facultatif)"
             />
 
-            <Button type="submit" className="mt-4 w-full" disabled={loading}>
+            <Button type="submit" className="mt-4 w-full hover:text-[#022b53]" disabled={loading}>
               {loading ? "Paiement..." : "Payer maintenant"}
             </Button>
           </form>
@@ -305,12 +306,12 @@ export default function Paiement() {
               {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
             </h2>
             <p>{modalMessage}</p>
-            <button
+            <Button
               onClick={() => setShowModal(false)}
               className="mt-6 bg-blue-900 text-white px-4 py-2 rounded-lg w-full"
             >
               Fermer
-            </button>
+            </Button>
           </div>
         </div>
       )}

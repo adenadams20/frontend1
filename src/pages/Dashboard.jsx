@@ -57,17 +57,17 @@ export default function Dashboard() {
       courant: {
         name: "Compte Courant",
         icon: CreditCardIcon,
-        gradient: "from-blue-500 to-indigo-600",
+        gradient: "from-indigo-600 to-blue-900",
       },
       epargne: {
         name: "Compte Épargne",
         icon: BanknotesIcon,
-        gradient: "from-green-500 to-teal-600",
+        gradient: " from-purple-700 to-pink-600  ",
       },
       business: {
         name: "Compte Business",
         icon: BriefcaseIcon,
-        gradient: "from-purple-500 to-pink-600",
+        gradient: "from-red-500 to-red-700",
       },
     };
 
@@ -180,13 +180,13 @@ export default function Dashboard() {
   const totalBalance = accounts.reduce((sum, acc) => sum + (acc.amountRaw || 0), 0);
 
   return (
-    <div className="min-h-screen mt-20 bg-gray-50 px-3 md:p-2">
+    <div className="min-h-screen mt-18 bg-yellow-100 px-3 md:p-2">
       {/* HEADER */}
       <h1 className="text-2xl md:text-3xl font-semibold">Dashboard</h1>
       <p className="text-gray-600 mb-10">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
-      <section className="bg-gradient-to-r from-blue-500 to-indigo-600 w-full text-white rounded-2xl p-6 md:p-8 shadow-md mb-10">
+      <section className="bg-gradient-to-r from-blue-950 to-blue-800 w-full text-white rounded-2xl p-6 md:p-8 shadow-md mb-10">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
             <p className="text-sm opacity-90">Solde Total</p>

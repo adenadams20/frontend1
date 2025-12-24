@@ -172,7 +172,7 @@ const cancelDelete = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen mt-15 bg-gray-50 p-4">
+    <div className="min-h-screen mt-15 bg-yellow-100 p-4">
       {showDeleteModal && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn">

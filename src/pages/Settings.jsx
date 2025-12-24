@@ -242,7 +242,7 @@ const handleAvatarChange = async (e) => {
   
 
   return (
-    <div className="min-h-screen mt-5 bg-gray-50 p-6 md:p-10">
+    <div className="min-h-screen mt-8 bg-yellow-100 p-6 md:p-10">
       {/* En-tête */}
       <div className="mb-6 max-w-4xl mx-auto md:ml-0">
         <h1 className="text-3xl font-bold text-gray-800">Paramètres</h1>
@@ -257,8 +257,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 ${
               activeTab === "profil"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : " text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("profil")}
           >
@@ -269,8 +269,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "securite"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("securite")}
           >
@@ -281,8 +281,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "notifications"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("notifications")}
           >
@@ -293,8 +293,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "apparence"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("apparence")}
           >
@@ -348,7 +348,7 @@ const handleAvatarChange = async (e) => {
     <button
       type="button"
       onClick={() => document.getElementById("avatarInput").click()}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
+      className="bg-[#022b53] hover:bg-blue-700 text-yellow-100 px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
     >
       Changer la photo
     </button>
@@ -368,7 +368,7 @@ const handleAvatarChange = async (e) => {
                     <input
                       type="text"
                       id="full_name"
-                      className="text-gray-800 border border-gray-300 rounded-xl block w-full px-4 py-3 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                      className="text-[#022b53] border border-gray-300 rounded-xl block w-full px-4 py-3 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                       placeholder="Nom complet"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
@@ -416,7 +416,7 @@ const handleAvatarChange = async (e) => {
                       ${
                         success
                           ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
-                          : "bg-blue-600 hover:bg-blue-700 text-white mt-5 shadow-lg"
+                          : "bg-[#022b53] hover:bg-blue-700 text-yellow-100 mt-5 shadow-lg"
                       }`}
                     disabled={saveLoading}
                   >
