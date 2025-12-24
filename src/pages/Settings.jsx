@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { updateUser } from "../services/api.js";
+// import { updateUser } from "../services/api.js";
 import { uploadAvatar } from "../services/api";
 import { changePassword } from "../services/api";
 import PasswordInput from "../components/PasswordInput.jsx";
+
+import { useLocation } from "react-router-dom";
+
 import axios from "axios"; //ajouter
 // SVG pour FaUser (Profil)
 const SvgUser = (props) => (
@@ -95,6 +98,16 @@ export default function Settings() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [twoFactorAuthEnabled, setTwoFactorAuthEnabled] = useState(false);
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+
+  //ajouter
+  const location = useLocation();
+
+useEffect(() => {
+  if (location.state?.tab) {
+    setActiveTab(location.state.tab); // ex: "profil"
+  }
+}, [location.state]);
+
 
   //  FONCTION changer mot de passe
   const handlePasswordChangeSubmit = async (e) => {
