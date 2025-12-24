@@ -135,5 +135,4 @@ export async function changePassword({ currentPassword, newPassword }, token) {
   if (!res.ok) throw new Error(result.message || "Erreur API");
   return result;
 }
-
 export { BASE_URL };
