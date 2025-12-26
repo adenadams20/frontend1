@@ -15,13 +15,18 @@ export default function Sidebar() {
   }, [activePath]);
 
   const links = [
-    { to: "/dashboard", label: "Dashboard", icon: Home },
-    { to: "/transactions", label: "Transactions", icon: CreditCard },
-    { to: "/transfer", label: "Transfert", icon: Send },
-    { to: "/paiement", label: "Paiement", icon: Wallet },
-    { to: "/settings", label: "Paramètres", icon: Settings },
-    { to: "/faq", label: "Support", icon: HelpCircle },
-  ];
+  { to: "/dashboard", label: "Dashboard", icon: Home },
+  { to: "/transactions", label: "Transactions", icon: CreditCard },
+  { to: "/transfer", label: "Transfert", icon: Send },
+  { to: "/paiement", label: "Paiement", icon: Wallet },
+
+  // ✅ AJOUT ICI
+  { to: "/cards", label: "Carte", icon: CreditCard },
+
+  { to: "/settings", label: "Paramètres", icon: Settings },
+  { to: "/faq", label: "Support", icon: HelpCircle },
+];
+
   //ajouter
   const navigate = useNavigate();
 

@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import MotdepassOublier from './pages/MotdepassOublier';
 import Paiement from './pages/Paiement';
 import Settings from './pages/Settings';
+import Cards from "./pages/Cards";
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
@@ -68,6 +69,7 @@ function App() {
        }
       > 
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cards" element={<Cards />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
