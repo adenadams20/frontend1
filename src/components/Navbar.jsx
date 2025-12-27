@@ -38,9 +38,9 @@ export default function Navbar({ onSidebarToggle }) {
         
 
         {/* Icône lune */}
-        <Button className="text-yellow-100 hover:text-gray-900">
+        <button className="text-white hover:text-gray-300">
           <Moon size={24} />
-        </Button>
+        </button>
 
         <NavbarNotifications backendUrl={BACKEND_URL}
         className="text-yellow-100 hover:text-gray-900" />
@@ -49,7 +49,7 @@ export default function Navbar({ onSidebarToggle }) {
         <button
           type="button"
           onClick={goToProfile}
-          className="flex items-center gap-2 text-[#022b53] bg-yellow-100 hover:text-gray-900 hover:bg-blue-300 px-2 py-1 rounded-lg transition"
+          className="flex items-center gap-2 text-white hover:text-gray-300 px-2 py-1 rounded-lg transition"
         >
           {/* Avatar */}
           <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">

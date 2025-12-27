@@ -255,11 +255,11 @@ const handleAvatarChange = async (e) => {
   
 
   return (
-    <div className="min-h-screen mt-5 bg-yellow-100 p-6 md:p-10">
+    <div className="min-h-screen mt-18 bg-gray-50  w-full">
       {/* En-tête */}
-      <div className="mb-6 max-w-4xl mx-auto md:ml-0">
-        <h1 className="text-3xl font-bold text-gray-800">Paramètres</h1>
-        <p className="text-gray-500">Gérez vos préférences et sécurité</p>
+      <div className="mb-6 max-w-5xl mx-auto md:ml-0">
+        <h1 className="text-3xl font-bold text-gray-800 text-center">Paramètres</h1>
+        <p className="text-gray-500 text-center">Gérez vos préférences et sécurité</p>
       </div>
 
       <div className="flex flex-col md:flex-row max-w-4xl mx-auto gap-6">
@@ -282,8 +282,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "securite"
-                ? "bg-[#022b53] text-yellow-100 shadow-md"
-                : "text-[#022b53] hover:bg-gray-100"
+                ? "bg-[#022b53] text-white shadow-md"
+                : "text-[#022b53] hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("securite")}
           >
@@ -294,8 +294,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "notifications"
-                ? "bg-[#022b53] text-yellow-100 shadow-md"
-                : "text-[#022b53] hover:bg-gray-100"
+                ? "bg-[#022b53] text-white shadow-md"
+                : "text-[#022b53] hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("notifications")}
           >
@@ -306,8 +306,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "apparence"
-                ? "bg-[#022b53] text-yellow-100 shadow-md"
-                : "text-[#022b53] hover:bg-gray-100"
+                ? "bg-[#022b53] text-white shadow-md"
+                : "text-[#022b53] hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("apparence")}
           >
@@ -484,7 +484,7 @@ const handleAvatarChange = async (e) => {
                 <button
                   type="submit"
                   disabled={isSubmittingPassword}
-                  className="w-full sm:w-auto mt-4 px-6 py-2 bg-[#022b53] text-yellow-100 hover:text-[#022b53] font-medium rounded-xl hover:bg-gray-300 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 ease-in-out shadow-md"
+                  className="w-full sm:w-auto mt-4 px-6 py-2 bg-[#022b53] text-white font-medium rounded-xl hover:bg-gray-300 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 ease-in-out shadow-md"
                 >
                   {isSubmittingPassword ? "Mise à jour..." : "Mettre à jour le mot de passe"}
                 </button>

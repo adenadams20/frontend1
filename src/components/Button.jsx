@@ -15,7 +15,7 @@ export default function Button({
       disabled={disabled || loading}
       className={`
         px-4 py-2 rounded-xl font-semibold transition duration-150 
-        ${disabled ? "bg-gray-400 cursor-not-allowed" : "bg-[#022b53] text-yellow-100  hover:bg-yellow-100 "}
+        ${disabled ? "bg-gray-400 cursor-not-allowed" : "bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-white"}
         ${loading ? "opacity-70" : ""}
         ${className}
       `}

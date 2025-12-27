@@ -33,12 +33,12 @@ export default function Sidebar() {
 
 
   return (
-    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-yellow-100 shadow-2xl h-screen p-6">
+    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-gray-50 shadow-2xl h-screen p-6">
       <div className="flex flex-col flex-grow justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#022b53] mb-8">WECCO</h2>
+          <h2 className="text-2xl font-bold mb-8">WECCO</h2>
 
-          <nav className="flex flex-col text-gray-900">
+          <nav className="flex flex-col text-gray-700">
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = activePath === link.to;
@@ -50,8 +50,8 @@ export default function Sidebar() {
                   onClick={() => setActivePath(link.to)}
                   className={`flex items-center gap-3 py-3 px-2 rounded-lg transition
                     ${isActive
-                      ? "bg-[#022b50] text-amber-100 font-semibold"
-                      : "hover:bg-[#0d496b] text-[#022b53]"
+                      ? "bg-[#022b53] text-white"
+                      : " text-[#022b53] "
                     }`}
                 >
                   <Icon /> {link.label}
@@ -62,10 +62,10 @@ export default function Sidebar() {
         </div>
         {/* Ajouter */}
         <div>
-          <hr className="my-6 border-[#022b53]" />
+          <hr className="my-6 border-gray-300" />
           <button
           onClick={handleLogout}
-          className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-500 transition w-full"
+          className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 transition w-full"
       >
         <FiLogOut/> Déconnexion
       </button>

@@ -57,17 +57,17 @@ export default function Dashboard() {
       courant: {
         name: "Compte Courant",
         icon: CreditCardIcon,
-        gradient: "from-indigo-600 to-blue-900",
+        gradient: " from-blue-500 to-indigo-600",
       },
       epargne: {
         name: "Compte Épargne",
         icon: BanknotesIcon,
-        gradient: " from-purple-700 to-pink-600  ",
+        gradient: "from-indigo-500 to-blue-950",
       },
       business: {
         name: "Compte Business",
         icon: BriefcaseIcon,
-        gradient: "from-red-500 to-red-700",
+        gradient: "from-[#022b53] to-indigo-950",
       },
     };
 
@@ -180,10 +180,10 @@ export default function Dashboard() {
   const totalBalance = accounts.reduce((sum, acc) => sum + (acc.amountRaw || 0), 0);
 
   return (
-    <div className="min-h-screen mt-20 bg-yellow-100 px-3 md:p-2">
+    <div className="min-h-screen mt-20 bg-gray-50 px-3 md:p-2">
       {/* HEADER */}
-      <h1 className="text-2xl md:text-3xl font-semibold">Dashboard</h1>
-      <p className="text-gray-600 mb-10">Vue d'ensemble de vos finances</p>
+      <h1 className="text-2xl md:text-3xl font-semibold text-center">Dashboard</h1>
+      <p className="text-gray-600 mb-10 text-center">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
       <section className="bg-gradient-to-r from-blue-950 to-blue-800 w-full text-white rounded-2xl p-6 md:p-8 shadow-md mb-10">

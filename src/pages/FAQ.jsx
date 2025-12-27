@@ -149,7 +149,7 @@ export default function FAQ() {
   });
 
   return (
-    <div className="min-h-screen bg-yellow-100 py-12 mt-10 px-4 w-full ml-auto">
+    <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
       {/* =========================
           HEADER
       ========================= */}

@@ -62,7 +62,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 ">
+    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 border-y-5 ">
   
   <div className="w-full max-w-md bg-[#022b53] p-6 sm:p-8 rounded-xl shadow-lg">
 

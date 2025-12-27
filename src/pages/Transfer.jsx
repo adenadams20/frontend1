@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="p-6 mt-15 bg-yellow-100 w-full md:p-2 mx-auto">
+    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
       <div className="mt-6">
         <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
         <p className="mb-5 text-gray-600">
@@ -18,8 +18,8 @@ export default function Transfert({ onNewTransaction }) {
             onClick={() => setActiveTab("interne")}
             className={`px-6 py-5 rounded-xl ${
               activeTab === "interne"
-                ? "bg-[#022b53]  shadow font-medium text-yellow-100"
-                : "text-[#022b53]"
+                ? "bg-[#022b53]  shadow font-medium text-white"
+                : "text-[#022b53] font-bold"
             }`}
           >
             Transfert interne
@@ -29,7 +29,7 @@ export default function Transfert({ onNewTransaction }) {
             onClick={() => setActiveTab("externe")}
             className={`px-6 py-5 rounded-xl ${
               activeTab === "externe"
-                ? "bg-[#022b53] font-medium text-yellow-100"
+                ? "bg-[#022b53] font-medium text-white"
                 : "text-[#022b53] font-bold"
             }`}
           >
@@ -211,7 +211,7 @@ function TransfertInterne({ onNewTransaction }) {
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-xl bg-[#022b53] text-white hover:bg-yellow-100 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
+          className="w-xl bg-[#022b53] text-white hover:bg-gray-300 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
         >
           Effectuer le transfert
         </button>
@@ -408,7 +408,7 @@ function TransfertExterne({ onNewTransaction }) {
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-full bg-[#022b53] text-white hover:bg-yellow-100 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
+          className="w-full bg-[#022b53] text-white hover:bg-gray-300 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
         >
           Effectuer le transfert
         </button>
@@ -439,7 +439,7 @@ function TransfertExterne({ onNewTransaction }) {
                 }}
                 className="flex items-center gap-3 w-full text-left"
               >
-                <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">{c.initials}</div>
+                <div className="w-10 h-10 bg-[#022b53] text-white rounded-full flex items-center justify-center">{c.initials}</div>
                 <div>
                   <p className="font-medium">{c.name}</p>
                   <p className="text-sm text-gray-500">{c.accountNumber}</p>
