@@ -40,7 +40,7 @@ export default function MotdepassOublier() {
   };
 
   return (
-    <div className="min-h-screen bg-yellow-100 flex justify-center items-center px-4 ">
+    <div className="min-h-screen bg-gray-300 flex justify-center items-center px-4 ">
       
       <div className="w-full max-w-md bg-[#022b53] p-8 rounded-xl shadow-lg">
 
@@ -55,14 +55,14 @@ export default function MotdepassOublier() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-send w-9 h-10 text-yellow-100"
+            className="lucide lucide-send w-9 h-10 text-white"
           >
             <path d="m22 2-7 20-4-9-9-4 20-7Z" />
             <path d="M22 2 11 13" />
           </svg>
         </div>
 
-        <h4 className="text-2xl font-bold text-yellow-100 text-center mb-6">
+        <h4 className="text-2xl font-bold text-white text-center mb-6">
           Réinitialisation du mot de passe
         </h4>
 
@@ -85,7 +85,7 @@ export default function MotdepassOublier() {
               type="email"
               placeholder="Entrez votre Email"
               required
-              className="w-full px-4 py-2 border rounded-md bg-white"
+              className="w-full px-4 py-2 border rounded-md bg-gray-100"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -93,25 +93,25 @@ export default function MotdepassOublier() {
 
           <button
             type="submit"
-            className="w-full bg-yellow-100 text-[#022b53] py-2 rounded-md hover:bg-blue-300 transition"
+            className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-gray-900 transition"
             disabled={loading}
           >
             {loading ? "Envoi..." : "Réinitialiser le mot de passe"}
           </button>
         </form>
 
-        <div className="text-center mt-6 text-gray-950">
+        <div className="text-center mt-6 text-gray-50">
 
           <p>
             Vous n’avez pas de compte ?
-            <Link to="/register" className="text-blue-300 hover:underline">
+            <Link to="/register" className="text-blue-400 hover:underline">
               {" "}Inscrivez-vous
             </Link>
           </p>
 
           <p>
             Déjà inscrit ?
-            <Link to="/login" className="text-blue-300 hover:underline">
+            <Link to="/login" className="text-blue-400 hover:underline">
               {" "}Se connecter
             </Link>
           </p>

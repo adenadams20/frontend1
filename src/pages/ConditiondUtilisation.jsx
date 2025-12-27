@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 
 export default function PrivacyPage() {
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-purple-200">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-300">
 
       {/* Sidebar */}
       <aside
         className="
           w-full md:w-72 
-          bg-[#312c85] text-white p-6 
+          bg-[#022b53] text-white p-6 
           border-b md:border-b-0 md:border-r border-gray-300
           md:h-screen md:fixed md:left-0 md:top-0 
         "
       >
         <Link to="/register">
-          <button className="flex items-center gap-2 px-4 py-2 border mb-10 border-white rounded-lg hover:bg-purple-400 transition">
+          <button className="flex items-center gap-2 px-4 py-2 border mb-10 border-white rounded-lg hover:bg-gray-900 transition">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="w-5 h-5"

@@ -270,8 +270,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 ${
               activeTab === "profil"
-                ? "bg-[#022b53] text-yellow-100 shadow-md"
-                : "text-[#022b53] hover:bg-gray-100"
+                ? "bg-[#022b53] text-white shadow-md"
+                : "text-[#022b53] hover:bg-gray-300"
             }`}
             onClick={() => setActiveTab("profil")}
           >
@@ -361,7 +361,7 @@ const handleAvatarChange = async (e) => {
     <button
       type="button"
       onClick={() => document.getElementById("avatarInput").click()}
-      className="bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-yellow-100 px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
+      className="bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-white px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
     >
       Changer la photo
     </button>
@@ -429,7 +429,7 @@ const handleAvatarChange = async (e) => {
                       ${
                         success
                           ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
-                          : "bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-yellow-100 mt-5 shadow-lg"
+                          : "bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-white mt-5 shadow-lg"
                       }`}
                     disabled={saveLoading}
                   >

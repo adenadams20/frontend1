@@ -87,7 +87,7 @@ export default function Transactions() {
 
   /* Pagination */
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 17;
 
   const token = localStorage.getItem("token");
 
@@ -187,7 +187,7 @@ export default function Transactions() {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-gray-50 mt-20 p-4">
+    <div className="min-h-screen bg-gray-50 mt-20 p-2">
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -216,10 +216,10 @@ export default function Transactions() {
         </div>
       )}
 
-      <h1 className="text-3xl font-bold">Transactions</h1>
+      <h1 className="text-3xl font-bold text-center">Transactions</h1>
 
       {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         <StatCard title="Revenus" value={totalRevenus} color="green" />
         <StatCard title="Dépenses" value={totalDepenses} color="red" />
         <StatCard title="Total transactions" value={transactions.length} />
@@ -266,7 +266,7 @@ export default function Transactions() {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white p-6 rounded-2xl shadow mt-6 overflow-x-auto">
+      <div className="bg-white p-6 rounded-2xl shadow mt-6 ">
         <table className="w-full text-left border-collapse">
           <thead className="text-gray-500">
             <tr>

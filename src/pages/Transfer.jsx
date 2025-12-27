@@ -5,8 +5,8 @@ export default function Transfert({ onNewTransaction }) {
   return (
     <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
       <div className="mt-6">
-        <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
-        <p className="mb-5 text-gray-600">
+        <h1 className="text-3xl font-semibold mb-1 text-center">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600 text-center">
           Effectuez un transfert entre vos comptes ou vers un bénéficiaire
         </p>
       </div>
@@ -134,7 +134,7 @@ function TransfertInterne({ onNewTransaction }) {
   const destAccounts = accounts.filter((a) => a._id !== fromId);
 
   return (
-    <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
+    <div className="relative space-y-6 bg-white p-4 rounded-2xl shadow">
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
