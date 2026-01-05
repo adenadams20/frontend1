@@ -1,12 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
   const navigate = useNavigate();
-
-   const { login } = useAuth(); // ⬅️ on vient chercher login() du contexte
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -15,6 +14,7 @@ export default function Login() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -46,19 +46,8 @@ export default function Login() {
         return;
       }
 
-      // localStorage.setItem("token", data.token);
-      // localStorage.setItem("user", JSON.stringify(data.user));
-      
-       // ✅ on informe le contexte qu'on est connecté
-      // data.token et data.user viennent du backend
       login(data.token, data.user);
-
       navigate("/dashboard");
-
-      // ✅ Forcer un rechargement pour que Navbar relise le token
-      // window.location.reload();
-
-
     } catch (err) {
       setError("Erreur de connexion au serveur.");
     }
@@ -67,8 +56,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen  bg-gray-300  flex justify-center items-center px-4 border">
-
+    <div className="min-h-screen bg-gray-300 flex justify-center items-center px-4">
       <div className="w-full max-w-md bg-[#022b53] p-6 sm:p-8 rounded-xl shadow-lg">
         
         {/* Icône */}
@@ -83,7 +71,7 @@ export default function Login() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="lucide lucide-send w-6 h-6 text-white"
+            className="text-white"
           >
             <path d="m22 2-7 20-4-9-9-4 20-7Z" />
             <path d="M22 2 11 13" />
@@ -95,46 +83,56 @@ export default function Login() {
         </h4>
 
         {error && (
-          <div className="text-red-700 text-center mb-4 font-medium">
+          <div className="text-red-500 text-center mb-4 font-medium">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit}>
-
+          {/* Email */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-white font-medium mb-2">
+            <label className="block text-white font-medium mb-2">
               Email
             </label>
             <input
               type="email"
-              id="email"
               name="email"
-              placeholder="Entrez votre Email"
-              required
-              className="w-full px-4 bg-gray-100 py-2 border rounded-md focus:ring-blue-500"
+              placeholder="Entrez votre email"
+              className="w-full px-4 py-2 rounded-md bg-gray-100"
               value={form.email}
               onChange={handleChange}
+              required
             />
           </div>
 
+          {/* Mot de passe */}
           <div className="mb-4">
-            <label htmlFor="password" className="block text-white font-medium mb-2">
+            <label className="block text-white font-medium mb-2">
               Mot de passe
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Entrez votre mot de passe"
-              required
-              className="w-full px-4 py-2 border bg-gray-100 rounded-md focus:ring-blue-500"
-              value={form.password}
-              onChange={handleChange}
-            />
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Entrez votre mot de passe"
+                className="w-full px-4 py-2 rounded-md bg-gray-100 pr-10"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-3 flex items-center text-gray-600"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
-          <p className="text-right mb-2">
+          <p className="text-right mb-3">
             <Link to="/motdepassOublier" className="text-blue-400 hover:underline">
               Mot de passe oublié ?
             </Link>
@@ -142,14 +140,14 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-gray-900 h transition"
             disabled={loading}
+            className="w-full bg-blue-700 text-white py-2 rounded-md hover:bg-gray-900 transition"
           >
             {loading ? "Connexion..." : "Se connecter"}
           </button>
         </form>
 
-        <div className="text-center mt-6 text-gray-50">
+        <div className="text-center mt-6 text-white">
           <p>
             Vous n’avez pas de compte ?{" "}
             <Link to="/register" className="text-blue-400 hover:underline">
@@ -157,7 +155,6 @@ export default function Login() {
             </Link>
           </p>
         </div>
-
       </div>
     </div>
   );

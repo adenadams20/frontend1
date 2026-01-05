@@ -1,6 +1,5 @@
 // frontend1/src/services/api.js
-// ou frontend1/src/api.js selon ton import
-
+import axios from "axios"; //ajouter
 const BASE_URL = "http://localhost:5000/api";
 
 // Fonction générique pour POST
@@ -29,8 +28,6 @@ async function get(endpoint, token = null) {
   if (!res.ok) throw new Error(result.message || "Erreur API");
   return result;
 }
-
-
 
 // 🔹 NOUVEAU : Fonction générique pour PUT
 async function put(endpoint, data, token = null) {
@@ -88,22 +85,39 @@ export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 }
+
 // funcion d upload pour la photo
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 export async function uploadAvatar(file, token) {
   const formData = new FormData();
-  formData.append("avatar", file);
+  formData.append("avatar", file); // doit matcher upload.single("avatar")
 
-  const res = await fetch(`${BASE_URL}/profile/avatar`, {
+  const res = await fetch(`${API_URL}/profile/avatar`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      // ❌ surtout PAS Content-Type ici
+      
     },
     body: formData,
   });
 
-  const result = await res.json();
-  if (!res.ok) throw new Error(result.message);
-  return result;
+  // ✅ Si le serveur renvoie HTML (DOCTYPE), on l'affiche pour comprendre
+  const contentType = res.headers.get("content-type") || "";
+  const raw = await res.text();
+
+  if (!contentType.includes("application/json")) {
+    console.error("Réponse non JSON :", raw.slice(0, 300));
+    throw new Error(
+      `Le serveur a renvoyé du HTML (status ${res.status}). Vérifie l'URL backend/route.`
+    );
+  }
+
+  const data = JSON.parse(raw);
+  if (!res.ok) throw new Error(data?.message || "Erreur upload avatar");
+
+  return data;
 }
 
 // 🔐 Changer le mot de passe de l'utilisateur connecté
@@ -121,6 +135,4 @@ export async function changePassword({ currentPassword, newPassword }, token) {
   if (!res.ok) throw new Error(result.message || "Erreur API");
   return result;
 }
-
-
 export { BASE_URL };

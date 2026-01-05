@@ -11,12 +11,13 @@ export default function Transfert({ onNewTransaction }) {
         </p>
       </div>
 
+
       {/* NAVTABS */}
       <div className="flex justify-center mb-6">
         <div className="flex bg-transparent gap-2 rounded-xl p-1">
           <button
             onClick={() => setActiveTab("interne")}
-            className={`px-6 py-5 rounded-xl ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
               activeTab === "interne"
                 ? "bg-[#022b53]  shadow font-medium text-white"
                 : "text-[#022b53] font-bold"
@@ -27,7 +28,7 @@ export default function Transfert({ onNewTransaction }) {
 
           <button
             onClick={() => setActiveTab("externe")}
-            className={`px-6 py-5 rounded-xl ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
               activeTab === "externe"
                 ? "bg-[#022b53] font-medium text-white"
                 : "text-[#022b53] font-bold"
@@ -63,6 +64,9 @@ function TransfertInterne({ onNewTransaction }) {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
+        setMessage("");
+        setMessageType("");
+
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:5000/api/accounts", {
           headers: { Authorization: `Bearer ${token}` },
@@ -78,11 +82,14 @@ function TransfertInterne({ onNewTransaction }) {
         if (courant) setFromId(courant._id);
       } catch (err) {
         console.log("Erreur récupération comptes :", err);
+        setMessage("Erreur réseau lors de la récupération des comptes");
+        setMessageType("error");
       }
     };
     fetchAccounts();
   }, []);
 
+  // fonction handleTransfere
   const handleTransfert = async () => {
     if (!montant || !fromId || !toId)
       return alert("Veuillez choisir les deux comptes et le montant");
@@ -107,7 +114,8 @@ function TransfertInterne({ onNewTransaction }) {
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.message || "Erreur serveur");
+        setMessage(data.message || "Erreur serveur");
+        setMessageType(res.status === 400 ? "warning" : "error");
         setDisabled(false);
         return;
       }
@@ -124,14 +132,20 @@ function TransfertInterne({ onNewTransaction }) {
         setMontant("");
         setFromId(source._id);
         setToId("");
+        setMessage("");
+        setMessageType("");
       }, 2000);
     } catch (err) {
-      alert("Erreur réseau");
+      setMessage("Erreur réseau");
+      setMessageType("error");
       setDisabled(false);
     }
   };
 
   const destAccounts = accounts.filter((a) => a._id !== fromId);
+
+  // Comptes destination = tous les comptes sauf le compte source sélectionné
+  // const destAccounts = accounts.filter((a) => a._id !== fromId);
 
   return (
     <div className="relative space-y-6 bg-white p-4 rounded-2xl shadow">
@@ -151,10 +165,15 @@ function TransfertInterne({ onNewTransaction }) {
           onChange={(e) => setFromId(e.target.value)}
           disabled={disabled || accounts.length === 0}
         >
-          <option value="">Sélectionner un compte</option>
+          {!fromId && (
+            <option value="" disabled>
+              Sélectionner un compte
+            </option>
+          )}
+
           {accounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type} — Solde : {acc.balance} XOF
+              {acc.type}
             </option>
           ))}
         </select>
@@ -169,15 +188,21 @@ function TransfertInterne({ onNewTransaction }) {
           onChange={(e) => setToId(e.target.value)}
           disabled={disabled || destAccounts.length === 0}
         >
-          <option value="">Sélectionner un compte</option>
+          {!toId && (
+            <option value="" disabled>
+              Sélectionner un compte
+            </option>
+          )}
+
           {destAccounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type} — Solde : {acc.balance} XOF
+              {acc.type}
             </option>
           ))}
         </select>
       </div>
 
+      {/* Montant */}
       {/* Montant */}
       <div>
         <label className="font-medium">Montant</label>
@@ -198,6 +223,7 @@ function TransfertInterne({ onNewTransaction }) {
             <button
               key={v}
               disabled={disabled}
+              type="button"
               onClick={() => setMontant(v)}
               className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
             >
@@ -346,8 +372,8 @@ function TransfertExterne({ onNewTransaction }) {
       setMessageType("error");
       setDisabled(false);
     }
-  };
-
+    }
+ 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
       {/* Formulaire */}
@@ -373,6 +399,7 @@ function TransfertExterne({ onNewTransaction }) {
 
         <div>
           <label className="font-medium">Nom bénéficiaire</label>
+          <label className="font-medium">Nom bénéficiaire</label>
           <input
             value={beneficiaire}
             onChange={(e) => {
@@ -397,6 +424,12 @@ function TransfertExterne({ onNewTransaction }) {
 
         <div>
           <label className="font-medium">Montant</label>
+          <input
+            type="number"
+            value={montant}
+            onChange={(e) => setMontant(e.target.value)}
+            className="w-full p-3 border rounded-xl"
+          />
           <input
             type="number"
             value={montant}

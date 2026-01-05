@@ -18,9 +18,13 @@ import Settings from './pages/Settings';
 import ChangementMdp from './pages/ChangementMdp'
 
 
+import Cards from "./pages/Cards";
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
+//ajout
+import PrivateRoute from "./components/PrivateRoute";
+
 
 // Layout principal (Sidebar + Navbar)
 function Layout() {
@@ -45,8 +49,6 @@ function Layout() {
   );
 }
 
-
-
 function App() {
   return (
     <Routes>
@@ -62,17 +64,23 @@ function App() {
       <Route path="/ChangementMdp/:token" element={<ChangementMdp/>} />
    
 
-
-      {/* Pages AVEC layout */}
-      <Route element={<Layout />}>
+     
+     {/* ajouter Pages protégées (avec sidebar) */}
+      <Route
+        element={
+       <PrivateRoute>
+         <Layout />
+        </PrivateRoute>
+       }
+      > 
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cards" element={<Cards />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/faq" element={<Faq />} />
       </Route>
-
     </Routes>
   );
 }

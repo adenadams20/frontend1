@@ -173,7 +173,7 @@ export default function FAQ() {
           <p className="text-gray-500 mt-1">Disponible 24h/24</p>
           <a
             href="tel:775333945"
-            className="text-[#022b53] font-medium mt-3 inline-block"
+            className="text-blue-600 font-medium mt-3 inline-block"
           >
             77 533 39 45
           </a>
@@ -186,7 +186,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Email</h2>
           <p className="text-gray-500 mt-1">Réponse sous 24h</p>
-          <span className="text-[#022b53] font-medium mt-3 inline-block">
+          <span className="text-blue-600 font-medium mt-3 inline-block">
             collefall118@gmail.com
           </span>
         </div>
@@ -200,7 +200,7 @@ export default function FAQ() {
           <p className="text-gray-500 mt-1">Lun–Ven, 9h–18h</p>
           <a
             href="/chat"
-            className="text-[#022b53] font-medium mt-3 inline-block"
+            className="text-blue-600 font-medium mt-3 inline-block"
           >
             Démarrer le chat
           </a>
@@ -291,7 +291,6 @@ export default function FAQ() {
                 value={form.name}
                 onChange={handleChange}
                 type="text"
-                className="border"
               />
             </div>
 

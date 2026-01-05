@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";//ajouter
+
 
 export default function Register() {
   const navigate = useNavigate();
@@ -14,6 +16,9 @@ export default function Register() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+const [showConfirmPassword, setShowConfirmPassword] = useState(false); //ajouter
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
