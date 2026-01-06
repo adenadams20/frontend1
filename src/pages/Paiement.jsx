@@ -5,11 +5,11 @@ import { FaWifi } from "react-icons/fa";
 import { PiDeviceMobileCamera } from "react-icons/pi";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
 import ExportCSV from "../components/ExportCSV";
-import { API_URL } from '../services/api';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 
 export default function Paiement() {
@@ -281,9 +281,9 @@ export default function Paiement() {
 
           {receiptData.amount > 0 && (
             <div className="flex flex-col gap-2 mt-4">
-              <Button onClick={downloadPDF} className="w-full">
+              {/* <Button onClick={downloadPDF} className="w-full">
                 Télécharger le reçu PDF
-              </Button>
+              </Button> */}
 
               <Button className="w-full">
                 <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">

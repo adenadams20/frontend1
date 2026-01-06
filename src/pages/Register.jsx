@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";//ajouter
-import { API_URL } from '../services/api'; 
 
 export default function Register() {
   const navigate = useNavigate();

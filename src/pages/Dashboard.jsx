@@ -20,8 +20,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { API_URL } from '../services/api';
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 /**
  * Dashboard (version optimisée)
  * - récupère transactions, comptes et charts depuis le backend

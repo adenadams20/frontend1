@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import InputField from "../components/InputField";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 
 export default function FAQ() {
   /* =========================
@@ -340,10 +340,10 @@ export default function FAQ() {
             </div>
           )}
 
-          <Button type="submit" className="flex items-center gap-2">
+          <button type="submit" className="flex items-center gap-2">
             <PaperAirplaneIcon className="w-5 h-5 rotate-45" />
             Envoyer le message
-          </Button>
+          </button>
         </form>
       </div>
     </div>

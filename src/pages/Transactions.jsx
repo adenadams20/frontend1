@@ -4,8 +4,7 @@ import {
   MagnifyingGlassIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { API_URL } from '../services/api';
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 /* ======================================================
    localStorage – IDS SUPPRIMÉS

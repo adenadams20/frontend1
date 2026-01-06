@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X, Moon, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // ✅ AJOUT
-import Button from "./Button";
+// import Button from "./Button";
 import { useAuth } from "../context/AuthContext";
 import NavbarNotifications from "./NavbarNotifications";
 
