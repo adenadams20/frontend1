@@ -1,7 +1,7 @@
 // frontend1/src/services/api.js
 import axios from "axios"; //ajouter
 const BASE_URL = "http://localhost:5000/api";
-
+export const API_URL = import.meta.env.VITE_API_URL;
 // Fonction générique pour POST
 async function post(endpoint, data, token = null) {
   const headers = { "Content-Type": "application/json" };
