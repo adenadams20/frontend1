@@ -20,6 +20,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { API_URL } from '../services/api';
 
 /**
  * Dashboard (version optimisée)
@@ -98,7 +99,7 @@ export default function Dashboard() {
 
       try {
         // transactions
-        const resTrans = await fetch("http://localhost:5000/api/transactions", {
+        const resTrans = await fetch(`${API_URL}/api/transactions`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!resTrans.ok) {
@@ -122,7 +123,7 @@ export default function Dashboard() {
         setTransactions(txs);
 
         // accounts
-        const resAcc = await fetch("http://localhost:5000/api/accounts", {
+        const resAcc = await fetch(`${API_URL}/api/accounts`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!resAcc.ok) {
@@ -136,7 +137,7 @@ export default function Dashboard() {
         setAccounts(mappedAccounts);
 
         // charts
-        const resCharts = await fetch("http://localhost:5000/api/charts", {
+        const resCharts = await fetch(`${API_URL}/api/charts`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!resCharts.ok) {

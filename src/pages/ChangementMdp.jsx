@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { API_URL } from '../services/api';
 
 export default function ChangementMdp() {
 
@@ -43,7 +44,7 @@ export default function ChangementMdp() {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/ChangementMdp/${token}`, {
+      const res = await fetch(`${API_URL}/ChangementMdp/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password: form.password }),

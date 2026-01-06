@@ -9,6 +9,7 @@ import Button from "../components/Button";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
 import ExportCSV from "../components/ExportCSV";
+import { API_URL } from '../services/api';
 
 
 export default function Paiement() {
@@ -98,7 +99,7 @@ export default function Paiement() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/transactions/bill-payment",
+        `${API_URL}/api/transactions/bill-payment`,
         {
           method: "POST",
           headers: {

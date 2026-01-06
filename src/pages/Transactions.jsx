@@ -4,6 +4,8 @@ import {
   MagnifyingGlassIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+import { API_URL } from '../services/api';
+
 
 /* ======================================================
    localStorage – IDS SUPPRIMÉS
@@ -95,7 +97,7 @@ export default function Transactions() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/transactions", {
+        const res = await fetch(`${API_URL}/api/transactions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

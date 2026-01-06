@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { API_URL } from '../services/api';
+
 
 export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
@@ -68,7 +70,7 @@ function TransfertInterne({ onNewTransaction }) {
         setMessageType("");
 
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/accounts", {
+        const res = await fetch(`${API_URL}/api/accounts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -103,7 +105,7 @@ function TransfertInterne({ onNewTransaction }) {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/transactions/transfer", {
+      const res = await fetch(`${API_URL}/api/transactions/transfer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -264,7 +266,7 @@ function TransfertExterne({ onNewTransaction }) {
     const fetchCourant = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/accounts", {
+        const res = await fetch(`${API_URL}/api/accounts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -284,7 +286,7 @@ function TransfertExterne({ onNewTransaction }) {
       setMessage("");
       setMessageType("");
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/beneficiaries", {
+      const res = await fetch(`${API_URL}/api/beneficiaries`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -327,7 +329,7 @@ function TransfertExterne({ onNewTransaction }) {
 
       // Créer bénéficiaire si nécessaire
       if (!finalBeneficiaryId) {
-        const resCreate = await fetch("http://localhost:5000/api/beneficiary", {
+        const resCreate = await fetch(`${API_URL}/api/beneficiary`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({ name: (beneficiaire || "Bénéficiaire").trim(), accountNumber: accountNumber.trim() }),
@@ -341,7 +343,7 @@ function TransfertExterne({ onNewTransaction }) {
       }
 
       // Transfert
-      const resTransfer = await fetch("http://localhost:5000/api/transactions/transfer/beneficiary", {
+      const resTransfer = await fetch(`${API_URL}/api/transactions/transfer/beneficiary`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
