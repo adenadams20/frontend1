@@ -248,9 +248,9 @@ export default function Paiement() {
               placeholder="Description (facultatif)"
             />
 
-            <Button type="submit" className="mt-4 w-full hover:text-[#022b53]" disabled={loading}>
+            <button type="submit" className="mt-4 w-full hover:text-[#022b53]" disabled={loading}>
               {loading ? "Paiement..." : "Payer maintenant"}
-            </Button>
+            </button>
           </form>
         </div>
 
@@ -281,15 +281,15 @@ export default function Paiement() {
 
           {receiptData.amount > 0 && (
             <div className="flex flex-col gap-2 mt-4">
-              {/* <Button onClick={downloadPDF} className="w-full">
+              { <button onClick={downloadPDF} className="w-full">
                 Télécharger le reçu PDF
-              </Button> */}
+              </button>}
 
-              <Button className="w-full">
+              <button className="w-full">
                 <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">
                   Télécharger le reçu CSV
                 </ExportCSV>
-              </Button>
+              </button>
             </div>
           )}
         </div>
@@ -307,12 +307,12 @@ export default function Paiement() {
               {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
             </h2>
             <p>{modalMessage}</p>
-            <Button
+            <button
               onClick={() => setShowModal(false)}
               className="mt-6 bg-[#022b53] text-white px-4 py-2 rounded-lg w-full"
             >
               Fermer
-            </Button>
+            </button>
           </div>
         </div>
       )}

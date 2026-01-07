@@ -17,7 +17,7 @@ export default function Cards() {
   const [editLimits, setEditLimits] = useState(false);
   const [limitsForm, setLimitsForm] = useState({ daily: "", monthly: "" });
 
-  const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const token = localStorage.getItem("token");
 
   const showStatus = (type, message, autoHide = true) => {
@@ -39,7 +39,7 @@ export default function Cards() {
   const fetchCard = async () => {
     try {
       setLoadingCard(true);
-      const res = await fetch(`${API}/cards/my`, { headers });
+      const res = await fetch(`${API_URL}/api/cards/my`, { headers });
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
@@ -90,7 +90,7 @@ export default function Cards() {
       setActionLoading(true);
       showStatus("loading", "Création...", false);
 
-      const res = await fetch(`${API}/cards/create`, {
+      const res = await fetch(`${API_URL}/api/cards/create`, {
         method: "POST",
         headers,
       });
@@ -115,7 +115,7 @@ export default function Cards() {
       setActionLoading(true);
       showStatus("loading", "Mise à jour...", false);
 
-      const res = await fetch(`${API}/cards/${card._id}/freeze`, {
+      const res = await fetch(`${API_URL}/api/cards/${card._id}/freeze`, {
         method: "PATCH",
         headers,
       });
@@ -147,7 +147,7 @@ export default function Cards() {
       setActionLoading(true);
       showStatus("loading", "Blocage...", false);
 
-      const res = await fetch(`${API}/cards/${card._id}/block`, {
+      const res = await fetch(`${API_URL}/api/cards/${card._id}/block`, {
         method: "PATCH",
         headers,
       });
@@ -193,7 +193,7 @@ export default function Cards() {
       setActionLoading(true);
       showStatus("loading", "Enregistrement limites...", false);
 
-      const res = await fetch(`${API}/cards/${card._id}/limits`, {
+      const res = await fetch(`${API_URL}/api/cards/${card._id}/limits`, {
         method: "PATCH",
         headers,
         body: JSON.stringify({ daily, monthly }),

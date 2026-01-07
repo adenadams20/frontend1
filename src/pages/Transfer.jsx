@@ -62,7 +62,13 @@ function TransfertInterne({ onNewTransaction }) {
   const [disabled, setDisabled] = useState(false);
 
   const [accounts, setAccounts] = useState([]);
+
+  // ✅ AJOUT OBLIGATOIRE
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
   const quickValues = [5000, 10000, 20000, 50000];
+
 
   useEffect(() => {
     const fetchAccounts = async () => {
