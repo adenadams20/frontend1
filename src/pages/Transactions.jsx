@@ -4,6 +4,7 @@ import {
   MagnifyingGlassIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 /* ======================================================
    localStorage – IDS SUPPRIMÉS
@@ -87,7 +88,7 @@ export default function Transactions() {
 
   /* Pagination */
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 17;
 
   const token = localStorage.getItem("token");
 
@@ -95,7 +96,7 @@ export default function Transactions() {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/transactions", {
+        const res = await fetch(`${API_URL}/api/transactions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -187,7 +188,7 @@ export default function Transactions() {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen bg-yellow-100 mt-20 p-4">
+    <div className="min-h-screen bg-gray-50 mt-20 p-2">
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
@@ -216,10 +217,10 @@ export default function Transactions() {
         </div>
       )}
 
-      <h1 className="text-3xl font-bold">Transactions</h1>
+      <h1 className="text-3xl font-bold text-center">Transactions</h1>
 
       {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
         <StatCard title="Revenus" value={totalRevenus} color="green" />
         <StatCard title="Dépenses" value={totalDepenses} color="red" />
         <StatCard title="Total transactions" value={transactions.length} />
@@ -258,7 +259,7 @@ export default function Transactions() {
 
         <button
           onClick={() => setDateAsc(!dateAsc)}
-          className="flex items-center gap-2 px-5 py-2 bg-gray-100 rounded-xl"
+          className="flex items-center gap-2 px-5 py-2 bg-gray-100 focus:bg-gray-400 rounded-xl"
         >
           <CalendarDaysIcon className="w-5 h-5" />
           Date
@@ -266,7 +267,7 @@ export default function Transactions() {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white p-6 rounded-2xl shadow mt-6 overflow-x-auto">
+      <div className="bg-white p-6 rounded-2xl shadow mt-6 ">
         <table className="w-full text-left border-collapse">
           <thead className="text-gray-500">
             <tr>
@@ -284,7 +285,7 @@ export default function Transactions() {
                 <td className="py-4">{t.label}</td>
                 <td className="py-4">{new Date(t.date).toLocaleDateString()}</td>
                 <td className="py-4">
-                  <span className="bg-green-100 text-green-700 px-3 rounded-full">
+                  <span className="bg-green-600 text-white px-3 rounded-full">
                     {t.status}
                   </span>
                 </td>
@@ -327,7 +328,7 @@ export default function Transactions() {
                 onClick={() => setCurrentPage(i + 1)}
                 className={`px-3 py-1 rounded ${
                   currentPage === i + 1
-                    ? "bg-blue-600 text-white"
+                    ? "bg-[#022b53] text-white"
                     : "bg-gray-100 text-gray-700"
                 }`}
               >
@@ -374,7 +375,7 @@ function FilterBtn({ children, active, onClick, color }) {
       onClick={onClick}
       className={`px-5 py-2 rounded-xl ${
         active
-          ? colors[color] || "bg-blue-600 text-white"
+          ? colors[color] || "bg-[#022b53] text-white"
           : "bg-gray-100 text-gray-700"
       }`}
     >

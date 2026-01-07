@@ -1,25 +1,29 @@
 import { useState, useEffect } from "react";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+
 
 export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="p-6 mt-15 bg-yellow-100 w-full md:p-2 mx-auto">
+    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
       <div className="mt-6">
-        <h1 className="text-3xl font-semibold mb-1">Transfert d'argent</h1>
-        <p className="mb-5 text-gray-600">
+        <h1 className="text-3xl font-semibold mb-1 text-center">Transfert d'argent</h1>
+        <p className="mb-5 text-gray-600 text-center">
           Effectuez un transfert entre vos comptes ou vers un bénéficiaire
         </p>
       </div>
+
 
       {/* NAVTABS */}
       <div className="flex justify-center mb-6">
         <div className="flex bg-transparent gap-2 rounded-xl p-1">
           <button
             onClick={() => setActiveTab("interne")}
-            className={`px-6 py-5 rounded-xl ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
               activeTab === "interne"
-                ? "bg-[#022b53]  shadow font-medium text-yellow-100"
-                : "text-[#022b53]"
+                ? "bg-[#022b53]  shadow font-medium text-white"
+                : "text-[#022b53] font-bold"
             }`}
           >
             Transfert interne
@@ -27,9 +31,9 @@ export default function Transfert({ onNewTransaction }) {
 
           <button
             onClick={() => setActiveTab("externe")}
-            className={`px-6 py-5 rounded-xl ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-5 rounded-xl ${
               activeTab === "externe"
-                ? "bg-[#022b53] font-medium text-yellow-100"
+                ? "bg-[#022b53] font-medium text-white"
                 : "text-[#022b53] font-bold"
             }`}
           >
@@ -58,13 +62,22 @@ function TransfertInterne({ onNewTransaction }) {
   const [disabled, setDisabled] = useState(false);
 
   const [accounts, setAccounts] = useState([]);
+
+  // ✅ AJOUT OBLIGATOIRE
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
   const quickValues = [5000, 10000, 20000, 50000];
+
 
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
+        setMessage("");
+        setMessageType("");
+
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/accounts", {
+        const res = await fetch(`${API_URL}/api/accounts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -78,11 +91,14 @@ function TransfertInterne({ onNewTransaction }) {
         if (courant) setFromId(courant._id);
       } catch (err) {
         console.log("Erreur récupération comptes :", err);
+        setMessage("Erreur réseau lors de la récupération des comptes");
+        setMessageType("error");
       }
     };
     fetchAccounts();
   }, []);
 
+  // fonction handleTransfere
   const handleTransfert = async () => {
     if (!montant || !fromId || !toId)
       return alert("Veuillez choisir les deux comptes et le montant");
@@ -96,7 +112,7 @@ function TransfertInterne({ onNewTransaction }) {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/transactions/transfer", {
+      const res = await fetch(`${API_URL}/api/transactions/transfer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,7 +123,8 @@ function TransfertInterne({ onNewTransaction }) {
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.message || "Erreur serveur");
+        setMessage(data.message || "Erreur serveur");
+        setMessageType(res.status === 400 ? "warning" : "error");
         setDisabled(false);
         return;
       }
@@ -124,17 +141,23 @@ function TransfertInterne({ onNewTransaction }) {
         setMontant("");
         setFromId(source._id);
         setToId("");
+        setMessage("");
+        setMessageType("");
       }, 2000);
     } catch (err) {
-      alert("Erreur réseau");
+      setMessage("Erreur réseau");
+      setMessageType("error");
       setDisabled(false);
     }
   };
 
   const destAccounts = accounts.filter((a) => a._id !== fromId);
 
+  // Comptes destination = tous les comptes sauf le compte source sélectionné
+  // const destAccounts = accounts.filter((a) => a._id !== fromId);
+
   return (
-    <div className="relative space-y-6 bg-white p-6 rounded-2xl shadow">
+    <div className="relative space-y-6 bg-white p-4 rounded-2xl shadow">
       {success && (
         <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center rounded-2xl z-10">
           <div className="text-blue-600 text-5xl">✔</div>
@@ -151,10 +174,15 @@ function TransfertInterne({ onNewTransaction }) {
           onChange={(e) => setFromId(e.target.value)}
           disabled={disabled || accounts.length === 0}
         >
-          <option value="">Sélectionner un compte</option>
+          {!fromId && (
+            <option value="" disabled>
+              Sélectionner un compte
+            </option>
+          )}
+
           {accounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type} — Solde : {acc.balance} XOF
+              {acc.type}
             </option>
           ))}
         </select>
@@ -169,15 +197,21 @@ function TransfertInterne({ onNewTransaction }) {
           onChange={(e) => setToId(e.target.value)}
           disabled={disabled || destAccounts.length === 0}
         >
-          <option value="">Sélectionner un compte</option>
+          {!toId && (
+            <option value="" disabled>
+              Sélectionner un compte
+            </option>
+          )}
+
           {destAccounts.map((acc) => (
             <option key={acc._id} value={acc._id}>
-              {acc.type} — Solde : {acc.balance} XOF
+              {acc.type}
             </option>
           ))}
         </select>
       </div>
 
+      {/* Montant */}
       {/* Montant */}
       <div>
         <label className="font-medium">Montant</label>
@@ -198,6 +232,7 @@ function TransfertInterne({ onNewTransaction }) {
             <button
               key={v}
               disabled={disabled}
+              type="button"
               onClick={() => setMontant(v)}
               className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-xl text-sm"
             >
@@ -211,7 +246,7 @@ function TransfertInterne({ onNewTransaction }) {
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-xl bg-[#022b53] text-white hover:bg-yellow-100 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
+          className="w-xl bg-[#022b53] text-white hover:bg-gray-300 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
         >
           Effectuer le transfert
         </button>
@@ -238,7 +273,7 @@ function TransfertExterne({ onNewTransaction }) {
     const fetchCourant = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/api/accounts", {
+        const res = await fetch(`${API_URL}/api/accounts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -258,7 +293,7 @@ function TransfertExterne({ onNewTransaction }) {
       setMessage("");
       setMessageType("");
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/beneficiaries", {
+      const res = await fetch(`${API_URL}/api/beneficiaries`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -301,7 +336,11 @@ function TransfertExterne({ onNewTransaction }) {
 
       // Créer bénéficiaire si nécessaire
       if (!finalBeneficiaryId) {
+<<<<<<< HEAD
         const resCreate = await fetch("http://localhost:5000/api/beneficiariesz", {
+=======
+        const resCreate = await fetch(`${API_URL}/api/beneficiary`, {
+>>>>>>> e6410e1cdb73a38ffd7923ad13e9d6aadbbf7984
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({ name: (beneficiaire || "Bénéficiaire").trim(), accountNumber: accountNumber.trim() }),
@@ -315,7 +354,7 @@ function TransfertExterne({ onNewTransaction }) {
       }
 
       // Transfert
-      const resTransfer = await fetch("http://localhost:5000/api/transactions/transfer/beneficiary", {
+      const resTransfer = await fetch(`${API_URL}/api/transactions/transfer/beneficiary`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -346,8 +385,8 @@ function TransfertExterne({ onNewTransaction }) {
       setMessageType("error");
       setDisabled(false);
     }
-  };
-
+    }
+ 
   return (
     <div className="relative flex flex-col lg:flex-row gap-6">
       {/* Formulaire */}
@@ -372,6 +411,7 @@ function TransfertExterne({ onNewTransaction }) {
         </div>
 
         <div>
+          <label className="font-medium">Nom bénéficiaire</label>
           <label className="font-medium">Nom bénéficiaire</label>
           <input
             value={beneficiaire}
@@ -403,12 +443,18 @@ function TransfertExterne({ onNewTransaction }) {
             onChange={(e) => setMontant(e.target.value)}
             className="w-full p-3 border rounded-xl"
           />
+          <input
+            type="number"
+            value={montant}
+            onChange={(e) => setMontant(e.target.value)}
+            className="w-full p-3 border rounded-xl"
+          />
         </div>
 
         <button
           onClick={handleTransfert}
           disabled={disabled}
-          className="w-full bg-[#022b53] text-white hover:bg-yellow-100 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
+          className="w-full bg-[#022b53] text-white hover:bg-gray-300 hover:text-[#022b53] p-3 rounded-xl disabled:opacity-60"
         >
           Effectuer le transfert
         </button>
@@ -439,7 +485,7 @@ function TransfertExterne({ onNewTransaction }) {
                 }}
                 className="flex items-center gap-3 w-full text-left"
               >
-                <div className="w-10 h-10 bg-blue-900 text-white rounded-full flex items-center justify-center">{c.initials}</div>
+                <div className="w-10 h-10 bg-[#022b53] text-white rounded-full flex items-center justify-center">{c.initials}</div>
                 <div>
                   <p className="font-medium">{c.name}</p>
                   <p className="text-sm text-gray-500">{c.accountNumber}</p>

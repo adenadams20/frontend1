@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   PhoneIcon,
   EnvelopeIcon,
@@ -9,7 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import InputField from "../components/InputField";
-import Button from "../components/Button";
+// import Button from "../components/Button";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function FAQ() {
   /* =========================
@@ -50,7 +51,7 @@ export default function FAQ() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
+      const res = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +80,6 @@ export default function FAQ() {
 
       setForm({ name: "", email: "", subject: "", message: "" });
 
-      // ⏱️ optionnel : masquer après 4s
       setTimeout(() => setStatus({ type: "", message: "" }), 4000);
     } catch (err) {
       setStatus({
@@ -148,8 +148,58 @@ export default function FAQ() {
     return matchCategory && matchSearch;
   });
 
+  /* =========================
+     🔹 ELFSIGHT AI CHATBOT
+  ========================= */
+  useEffect(() => {
+    const scriptId = "elfsight-platform";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://elfsightcdn.com/platform.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    // cacher la bulle (souvent injectée dans <body>)
+    const hideBubble = () => {
+      const toolbar =
+        document.querySelector(".eapps-widget-toolbar") ||
+        document.querySelector('[class*="eapps-widget-toolbar"]');
+      if (toolbar) toolbar.style.display = "none";
+    };
+
+    const t = setInterval(hideBubble, 300);
+    setTimeout(() => clearInterval(t), 8000);
+
+    return () => clearInterval(t);
+  }, []);
+
+  const openElfsightChat = () => {
+    const start = Date.now();
+
+    const interval = setInterval(() => {
+      // bouton d'ouverture du chat (selon widget)
+      const btn =
+        document.querySelector('[aria-label*="chat" i]') ||
+        document.querySelector('[class*="eapps-widget-toolbar"] button') ||
+        document.querySelector('button[class*="eapps"]');
+
+      if (btn && typeof btn.click === "function") {
+        btn.click();
+        clearInterval(interval);
+        return;
+      }
+
+      if (Date.now() - start > 10000) {
+        clearInterval(interval);
+        console.warn("Elfsight: bouton d’ouverture introuvable.");
+      }
+    }, 250);
+  };
+
   return (
-    <div className="min-h-screen bg-yellow-100 py-12 mt-10 px-4 w-full ml-auto">
+    <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
       {/* =========================
           HEADER
       ========================= */}
@@ -173,7 +223,7 @@ export default function FAQ() {
           <p className="text-gray-500 mt-1">Disponible 24h/24</p>
           <a
             href="tel:775333945"
-            className="text-[#022b53] font-medium mt-3 inline-block"
+            className="text-blue-600 font-medium mt-3 inline-block"
           >
             77 533 39 45
           </a>
@@ -186,7 +236,7 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Email</h2>
           <p className="text-gray-500 mt-1">Réponse sous 24h</p>
-          <span className="text-[#022b53] font-medium mt-3 inline-block">
+          <span className="text-blue-600 font-medium mt-3 inline-block">
             collefall118@gmail.com
           </span>
         </div>
@@ -198,12 +248,14 @@ export default function FAQ() {
           </div>
           <h2 className="text-lg font-semibold">Chat en direct</h2>
           <p className="text-gray-500 mt-1">Lun–Ven, 9h–18h</p>
-          <a
-            href="/chat"
-            className="text-[#022b53] font-medium mt-3 inline-block"
+
+          <button
+            type="button"
+            onClick={openElfsightChat}
+            className="text-blue-600 font-medium mt-3 inline-block cursor-pointer"
           >
             Démarrer le chat
-          </a>
+          </button>
         </div>
       </div>
 
@@ -215,7 +267,6 @@ export default function FAQ() {
           Questions fréquentes (FAQ)
         </h2>
 
-        {/* Recherche */}
         <div className="relative mb-6">
           <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-4 top-3" />
           <input
@@ -227,7 +278,6 @@ export default function FAQ() {
           />
         </div>
 
-        {/* Catégories */}
         <div className="flex flex-wrap gap-3 mb-8">
           {categories.map((cat) => (
             <button
@@ -244,7 +294,6 @@ export default function FAQ() {
           ))}
         </div>
 
-        {/* Questions */}
         <div className="space-y-4">
           {filteredQuestions.map((item, idx) => (
             <div key={idx} className="border border-gray-200 rounded-xl p-5">
@@ -291,7 +340,6 @@ export default function FAQ() {
                 value={form.name}
                 onChange={handleChange}
                 type="text"
-                className="border"
               />
             </div>
 
@@ -326,7 +374,7 @@ export default function FAQ() {
               className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1"
             />
           </div>
-          {/* ajouter */}
+
           {status.message && (
             <div
               className={`mt-4 text-sm rounded-md px-4 py-2 ${
@@ -341,11 +389,17 @@ export default function FAQ() {
             </div>
           )}
 
-          <Button type="submit" className="flex items-center gap-2">
+          <button type="submit" className="flex items-center bg-[#022b53] p-3 rounded-lg hover:bg-gray-300 hover:text-[#022b53] text-white gap-2">
             <PaperAirplaneIcon className="w-5 h-5 rotate-45" />
             Envoyer le message
-          </Button>
+          </button>
         </form>
+
+        {/* Elfsight AI Chatbot | WECCO */}
+        <div
+          className="elfsight-app-c7dc3468-685e-4584-9632-5ad651802e75"
+          data-elfsight-app-lazy
+        />
       </div>
     </div>
   );

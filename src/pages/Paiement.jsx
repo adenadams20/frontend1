@@ -5,10 +5,11 @@ import { FaWifi } from "react-icons/fa";
 import { PiDeviceMobileCamera } from "react-icons/pi";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import Button from "../components/Button";
+// import Button from "../components/Button";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
 import ExportCSV from "../components/ExportCSV";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 
 export default function Paiement() {
@@ -98,7 +99,7 @@ export default function Paiement() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/transactions/bill-payment",
+        `${API_URL}/api/transactions/bill-payment`,
         {
           method: "POST",
           headers: {
@@ -184,9 +185,9 @@ export default function Paiement() {
   ];
 
   return (
-    <div className="w-full mt-18 p-4 z-0 bg-yellow-100">
-      <h1 className="font-semibold text-3xl mb-6">Paiement de factures</h1>
-      <p className="mb-5 text-gray-600">
+    <div className="w-full mt-16 p-4 z-0 bg-gray-50">
+      <h1 className="font-semibold text-3xl text-center mb-6">Paiement de factures</h1>
+      <p className="mb-5 text-gray-600 text-center">
           Effectuez un paiement entre vos comptes ou vers un bénéficiaire
         </p>
 
@@ -206,7 +207,7 @@ export default function Paiement() {
               });
             }}
             className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${activeTab === t.id ? "bg-[#022b53] text-yellow-100" : "bg-white text-[#022b53] hover:bg-gray-100"}`}
+              ${activeTab === t.id ? "bg-[#022b53] text-white" : "bg-white text-[#022b53] hover:bg-gray-100"}`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -250,9 +251,9 @@ export default function Paiement() {
               placeholder="Description (facultatif)"
             />
 
-            <Button type="submit" className="mt-4 w-full hover:text-[#022b53]" disabled={loading}>
+            <button type="submit" className="mt-4 w-full p-2 bg-[#022b53] text-white rounded-lg hover:bg-gray-300 hover:text-[#022b53]" disabled={loading}>
               {loading ? "Paiement..." : "Payer maintenant"}
-            </Button>
+            </button>
           </form>
         </div>
 
@@ -283,15 +284,15 @@ export default function Paiement() {
 
           {receiptData.amount > 0 && (
             <div className="flex flex-col gap-2 mt-4">
-              <Button onClick={downloadPDF} className="w-full">
+              { <button onClick={downloadPDF} className="w-full">
                 Télécharger le reçu PDF
-              </Button>
+              </button>}
 
-              <Button className="w-full">
+              <button className="w-full">
                 <ExportCSV data={receiptCSVData} fileName="recu-paiement.csv">
                   Télécharger le reçu CSV
                 </ExportCSV>
-              </Button>
+              </button>
             </div>
           )}
         </div>
@@ -309,12 +310,12 @@ export default function Paiement() {
               {modalStatus === "success" ? "Paiement réussi" : "Erreur"}
             </h2>
             <p>{modalMessage}</p>
-            <Button
+            <button
               onClick={() => setShowModal(false)}
-              className="mt-6 bg-blue-900 text-white px-4 py-2 rounded-lg w-full"
+              className="mt-6 bg-[#022b53] text-white px-4 py-2 rounded-lg w-full"
             >
               Fermer
-            </Button>
+            </button>
           </div>
         </div>
       )}

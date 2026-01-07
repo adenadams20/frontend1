@@ -18,24 +18,27 @@ import Settings from './pages/Settings';
 import ChangementMdp from './pages/ChangementMdp'
 
 
+import Cards from "./pages/Cards";
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import "./index.css";
+//ajout
+import PrivateRoute from "./components/PrivateRoute";
+
 
 // Layout principal (Sidebar + Navbar)
 function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex relative z-0">
+    <div className="flex relative  z-0">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       />
 
       <div className="flex-1 md:ml-64">
-        <Navbar onSidebarToggle={() => setSidebarOpen(true)} />
-
+<Navbar onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         <div className=" pt-0">
           <Outlet />
         </div>
@@ -44,8 +47,6 @@ function Layout() {
     </div>
   );
 }
-
-
 
 function App() {
   return (
@@ -62,17 +63,23 @@ function App() {
       <Route path="/ChangementMdp/:token" element={<ChangementMdp/>} />
    
 
-
-      {/* Pages AVEC layout */}
-      <Route element={<Layout />}>
+     
+     {/* ajouter Pages protégées (avec sidebar) */}
+      <Route
+        element={
+       <PrivateRoute>
+         <Layout />
+        </PrivateRoute>
+       }
+      > 
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cards" element={<Cards />} />
         <Route path="/transactions" element={<Transactions />} />
         <Route path="/transfer" element={<Transfer />} />
         <Route path="/paiement" element={<Paiement />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/faq" element={<Faq />} />
       </Route>
-
     </Routes>
   );
 }

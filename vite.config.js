@@ -7,4 +7,10 @@ export default defineConfig({
   
   base: "/",   // <--- ajoute ton nom de repo ici !
   plugins: [react(), tailwindcss()],
+
+   server: {
+    proxy: {
+      "/api": "http://localhost:5000",
+    },
+  },
 })
