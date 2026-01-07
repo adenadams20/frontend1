@@ -51,7 +51,7 @@ export default function Sidebar({ open, onClose }) {
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed top-0 left-0 h-screen w-64 bg-gray-50 shadow-2xl z-50 p-6
+          fixed top-0 left-0 h-full w-64 bg-gray-50 shadow-2xl z-50 p-6
           transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0

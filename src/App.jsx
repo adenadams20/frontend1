@@ -31,7 +31,7 @@ function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex relative z-0">
+    <div className="flex relative  z-0">
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
