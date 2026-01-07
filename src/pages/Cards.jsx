@@ -243,9 +243,9 @@ export default function Cards() {
           {actionLoading ? "Création..." : "Créer ma carte"}
         </button>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 items-start">
+        <div className="flex flex-col gap-6 items-center">
           {/* ✅ Carte dynamique recto/verso */}
-          <div className="w-full max-w-sm">
+          <div className="w-full md:w-[70%] max-w-none">
             {/* container flip */}
             <div
               className="relative w-full h-[280px] sm:h-[300px]"
@@ -454,11 +454,11 @@ export default function Cards() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full md:w-[70%]">
             <button
               onClick={toggleFreeze}
               disabled={blocked || actionLoading}
-              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+              className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-300 hover:text-[#022b53] disabled:opacity-50"
             >
               {actionLoading
                 ? "Veuillez patienter..."
@@ -474,10 +474,11 @@ export default function Cards() {
             >
               {actionLoading ? "Veuillez patienter..." : "Bloquer la carte"}
             </button>
-
           </div>
         </div>
+       
       )}
     </div>
   );
 }
+

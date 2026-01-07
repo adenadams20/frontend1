@@ -38,8 +38,7 @@ function Layout() {
       />
 
       <div className="flex-1 md:ml-64">
-        <Navbar onSidebarToggle={() => setSidebarOpen(true)} />
-
+<Navbar onSidebarToggle={() => setSidebarOpen(!sidebarOpen)} />
         <div className=" pt-0">
           <Outlet />
         </div>

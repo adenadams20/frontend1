@@ -248,7 +248,7 @@ export default function Paiement() {
               placeholder="Description (facultatif)"
             />
 
-            <button type="submit" className="mt-4 w-full hover:text-[#022b53]" disabled={loading}>
+            <button type="submit" className="mt-4 w-full p-2 bg-[#022b53] text-white rounded-lg hover:bg-gray-300 hover:text-[#022b53]" disabled={loading}>
               {loading ? "Paiement..." : "Payer maintenant"}
             </button>
           </form>
