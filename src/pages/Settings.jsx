@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { updateUser } from "../services/api.js";
+// import { updateUser } from "../services/api.js";
 import { uploadAvatar } from "../services/api";
 import { changePassword } from "../services/api";
 import PasswordInput from "../components/PasswordInput.jsx";
+
+import { useLocation } from "react-router-dom";
+
 import axios from "axios"; //ajouter
 // SVG pour FaUser (Profil)
 const SvgUser = (props) => (
@@ -95,6 +98,16 @@ export default function Settings() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [twoFactorAuthEnabled, setTwoFactorAuthEnabled] = useState(false);
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+
+  //ajouter
+  const location = useLocation();
+
+useEffect(() => {
+  if (location.state?.tab) {
+    setActiveTab(location.state.tab); // ex: "profil"
+  }
+}, [location.state]);
+
 
   //  FONCTION changer mot de passe
   const handlePasswordChangeSubmit = async (e) => {
@@ -242,7 +255,7 @@ const handleAvatarChange = async (e) => {
   
 
   return (
-    <div className="min-h-screen mt-5 bg-gray-50 p-6 md:p-10">
+    <div className="min-h-screen mt-5 bg-yellow-100 p-6 md:p-10">
       {/* En-tête */}
       <div className="mb-6 max-w-4xl mx-auto md:ml-0">
         <h1 className="text-3xl font-bold text-gray-800">Paramètres</h1>
@@ -257,8 +270,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 ${
               activeTab === "profil"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("profil")}
           >
@@ -269,8 +282,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "securite"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("securite")}
           >
@@ -281,8 +294,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "notifications"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("notifications")}
           >
@@ -293,8 +306,8 @@ const handleAvatarChange = async (e) => {
           <div
             className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition duration-150 mt-1 ${
               activeTab === "apparence"
-                ? "bg-blue-300 text-blue-500 shadow-md"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-[#022b53] text-yellow-100 shadow-md"
+                : "text-[#022b53] hover:bg-gray-100"
             }`}
             onClick={() => setActiveTab("apparence")}
           >
@@ -348,7 +361,7 @@ const handleAvatarChange = async (e) => {
     <button
       type="button"
       onClick={() => document.getElementById("avatarInput").click()}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
+      className="bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-yellow-100 px-4 py-2 rounded-full text-sm font-medium transition duration-150 shadow-md"
     >
       Changer la photo
     </button>
@@ -416,7 +429,7 @@ const handleAvatarChange = async (e) => {
                       ${
                         success
                           ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
-                          : "bg-blue-600 hover:bg-blue-700 text-white mt-5 shadow-lg"
+                          : "bg-[#022b53] hover:bg-gray-300 hover:text-[#022b53] text-yellow-100 mt-5 shadow-lg"
                       }`}
                     disabled={saveLoading}
                   >
@@ -471,7 +484,7 @@ const handleAvatarChange = async (e) => {
                 <button
                   type="submit"
                   disabled={isSubmittingPassword}
-                  className="w-full sm:w-auto mt-4 px-6 py-2 bg-blue-900 text-white font-medium rounded-xl hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 ease-in-out shadow-md"
+                  className="w-full sm:w-auto mt-4 px-6 py-2 bg-[#022b53] text-yellow-100 hover:text-[#022b53] font-medium rounded-xl hover:bg-gray-300 disabled:opacity-60 disabled:cursor-not-allowed transition duration-150 ease-in-out shadow-md"
                 >
                   {isSubmittingPassword ? "Mise à jour..." : "Mettre à jour le mot de passe"}
                 </button>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Home, CreditCard, Send, Wallet, Settings, HelpCircle, LogOut } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation,useNavigate } from "react-router-dom";
+//ajouter
+import { FiLogOut } from "react-icons/fi"; // icône logout
 
 export default function Sidebar() {
   const location = useLocation();
@@ -20,14 +22,23 @@ export default function Sidebar() {
     { to: "/settings", label: "Paramètres", icon: Settings },
     { to: "/faq", label: "Support", icon: HelpCircle },
   ];
+  //ajouter
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+  localStorage.removeItem("token"); // supprime le token
+  navigate("/login", { replace: true }); // remplace l'entrée actuelle dans l'historique
+};
+
+
 
   return (
-    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-gray-100 shadow-2xl h-screen p-6">
+    <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 z-50 bg-yellow-100 shadow-2xl h-screen p-6">
       <div className="flex flex-col flex-grow justify-between">
         <div>
-          <h2 className="text-2xl font-bold mb-8">Weethio</h2>
+          <h2 className="text-2xl font-bold text-[#022b53] mb-8">WECCO</h2>
 
-          <nav className="flex flex-col text-gray-700">
+          <nav className="flex flex-col text-gray-900">
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = activePath === link.to;
@@ -39,8 +50,8 @@ export default function Sidebar() {
                   onClick={() => setActivePath(link.to)}
                   className={`flex items-center gap-3 py-3 px-2 rounded-lg transition
                     ${isActive
-                      ? "bg-blue-900 text-white"
-                      : "hover:bg-blue-200 text-gray-700"
+                      ? "bg-[#022b50] text-amber-100 font-semibold"
+                      : "hover:bg-[#0d496b] text-[#022b53]"
                     }`}
                 >
                   <Icon /> {link.label}
@@ -49,16 +60,15 @@ export default function Sidebar() {
             })}
           </nav>
         </div>
-
+        {/* Ajouter */}
         <div>
-          <hr className="my-6 border-gray-300" />
-
-          <Link
-            to="/login"
-            className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-100 transition"
-          >
-            <LogOut /> Déconnexion
-          </Link>
+          <hr className="my-6 border-[#022b53]" />
+          <button
+          onClick={handleLogout}
+          className="flex items-center text-red-600 gap-3 py-3 px-2 rounded-lg hover:bg-red-500 transition w-full"
+      >
+        <FiLogOut/> Déconnexion
+      </button>
         </div>
       </div>
     </aside>

@@ -13,7 +13,7 @@ export default function InputField({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`w-full p-3 border-blue-900 border rounded-lg outline-none ${className}`}
+      className={`w-full p-3 border border-[#022b53] rounded-lg outline-none ${className}`}
     />
   );
 }
