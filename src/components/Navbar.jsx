@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Menu, Moon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import NavbarNotifications from "./NavbarNotifications";
@@ -7,6 +7,23 @@ import NavbarNotifications from "./NavbarNotifications";
 export default function Navbar({ onSidebarToggle }) {
   const { user, loadingAuth } = useAuth();
   const navigate = useNavigate();
+
+  // 🌙 MODE SOMBRE (AJOUT)
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (darkMode) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
 
   const BACKEND_URL =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -21,20 +38,23 @@ export default function Navbar({ onSidebarToggle }) {
 
         <div>
           {/* 🔥 TOGGLE SIDEBAR (MOBILE) */}
-        <button
-          onClick={onSidebarToggle}
-          className="md:hidden"
-        >
-          <Menu size={28} />
-        </button>
+          <button
+            onClick={onSidebarToggle}
+            className="md:hidden"
+          >
+            <Menu size={28} />
+          </button>
         </div>
 
         {/* ACTIONS NAVBAR */}
-        <div className="flex items-center justify-end  gap-4">
+        <div className="flex items-center justify-end gap-4">
 
-          {/* DARK MODE (optionnel) */}
-          <button className="hover:text-gray-300">
-            <Moon size={24} />
+          {/* 🌙 DARK MODE (AJOUT FONCTIONNEL) */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="hover:text-gray-300"
+          >
+            {darkMode ? <Sun size={24} /> : <Moon size={24} />}
           </button>
 
           {/* NOTIFICATIONS */}

@@ -199,13 +199,13 @@ export default function FAQ() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 mt-10 px-4 w-full ml-auto">
+    <div className="min-h-screen  py-12 mt-10 px-4 w-full ml-auto">
       {/* =========================
           HEADER
       ========================= */}
       <div className="text-center mb-14">
-        <h1 className="text-3xl font-semibold text-gray-900">Centre d'aide</h1>
-        <p className="text-gray-500 mt-2">
+        <h1 className="text-3xl font-semibold ">Centre d'aide</h1>
+        <p className=" mt-2">
           Trouvez des réponses à vos questions ou contactez notre équipe
         </p>
       </div>

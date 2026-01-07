@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
+    <div className="p-6 mt-15  w-full md:p-2 mx-auto">
       <div className="mt-6">
         <h1 className="text-3xl font-semibold mb-1 text-center">Transfert d'argent</h1>
         <p className="mb-5 text-gray-600 text-center">
