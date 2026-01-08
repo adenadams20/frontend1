@@ -48,10 +48,13 @@ export default function Navbar({ onSidebarToggle }) {
             <Menu size={28} />
           </button>
 
-          <div className=" flex justify-start  md:ml-20 sm:hidden md:block ml-4 z-20 shadow">
+          <div className="    md:ml-5 sm:hidden md:block md:flex flex-row justify- items-center z-20 shadow">
           {/* LOGO */}
-          <img src={logo} alt="WECCO" className="w-15 h-15 rounded-full " />
-        </div>
+               <img src={logo} alt="WECCO" className="w-15 h-15 rounded-full " />
+               <div>
+                 <h2 className="text-2xl font-bold ml-1 sm:block text-gray-100">WECCO</h2>
+                </div>
+         </div>
         </div>
 
         
