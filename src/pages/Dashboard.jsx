@@ -180,9 +180,9 @@ export default function Dashboard() {
   const totalBalance = accounts.reduce((sum, acc) => sum + (acc.amountRaw || 0), 0);
 
   return (
-    <div className="min-h-screen mt-20  px-3 md:p-2">
+    <div className="min-h-screen mt-25  px-3 md:p-2">
       {/* HEADER */}
-      <h1 className="text-2xl md:text-3xl font-semibold text-center">Dashboard</h1>
+      <h1 className=" text-3xl font-semibold text-center">Dashboard</h1>
       <p className=" mb-10 text-center">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
