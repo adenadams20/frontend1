@@ -268,9 +268,7 @@ export default function Dashboard() {
     <div className="min-h-screen mt-25  px-3 md:p-2">
       {/* HEADER */}
 
-      <h1 className="text-2xl md:text-3xl font-semibold text-center">
-        Dashboard
-      </h1>
+    
 
       <h1 className=" text-3xl font-semibold text-center">Dashboard</h1>
 
