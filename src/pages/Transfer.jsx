@@ -408,7 +408,7 @@ function TransfertExterne({ onNewTransaction }) {
 
         <div>
           <label className="font-medium">Nom bénéficiaire</label>
-          <label className="font-medium">Nom bénéficiaire</label>
+    
           <input
             value={beneficiaire}
             onChange={(e) => {
@@ -439,12 +439,7 @@ function TransfertExterne({ onNewTransaction }) {
             onChange={(e) => setMontant(e.target.value)}
             className="w-full p-3 border rounded-xl"
           />
-          <input
-            type="number"
-            value={montant}
-            onChange={(e) => setMontant(e.target.value)}
-            className="w-full p-3 border rounded-xl"
-          />
+
         </div>
 
         <button

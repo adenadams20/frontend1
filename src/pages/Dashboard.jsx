@@ -340,11 +340,11 @@ function AccountsCards({ accounts }) {
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-semibold mb-6">Mes Comptes</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {accounts.map((acc, i) => {
           const IconComp = acc.icon || CreditCardIcon;
           return (
-            <div key={i} className={`p-6 rounded-2xl text-white bg-gradient-to-r ${acc.gradient} shadow-lg`}>
+            <div key={i} className={`p-6 rounded-2xl text-white sm:hover:scale-102  bg-gradient-to-r ${acc.gradient} shadow-lg`}>
               <div className="flex justify-between mb-10">
                 <IconComp className="w-10 h-10 text-white" />
                 <span className="opacity-80">{acc.number}</span>

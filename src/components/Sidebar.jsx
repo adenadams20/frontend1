@@ -25,9 +25,9 @@ export default function Sidebar({ open, onClose }) {
 
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: Home },
-    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/transfer", label: "Transfert", icon: Send },
     { to: "/paiement", label: "Paiement", icon: Wallet },
+    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/cards", label: "Carte", icon: CreditCard },
     { to: "/settings", label: "Paramètres", icon: Settings },
     { to: "/faq", label: "Support", icon: HelpCircle },

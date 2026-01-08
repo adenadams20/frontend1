@@ -237,7 +237,7 @@ export default function FAQ() {
           <h2 className="text-lg font-semibold">Email</h2>
           <p className="text-gray-500 mt-1">Réponse sous 24h</p>
           <span className="text-blue-600 font-medium mt-3 inline-block">
-            collefall118@gmail.com
+            Weccosupport@gmail.com
           </span>
         </div>
 
@@ -354,7 +354,7 @@ export default function FAQ() {
             </div>
 
             <div className="col-span-2">
-              <label className="block font-medium text-gray-700">Sujet</label>
+              <label className="block font-medium text-gray-700">Object </label>
               <InputField
                 name="subject"
                 value={form.subject}
