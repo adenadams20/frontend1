@@ -3,6 +3,9 @@ import { Menu, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import NavbarNotifications from "./NavbarNotifications";
+import logo from "../assets/img/WECCOO.jpeg";
+
+
 
 export default function Navbar({ onSidebarToggle }) {
   const { user, loadingAuth } = useAuth();
@@ -34,7 +37,7 @@ export default function Navbar({ onSidebarToggle }) {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#022b53] text-white shadow">
-      <div className="flex items-center justify-between p-4 md:ml-64 md:pl-0">
+      <div className="flex items-center  p-2 md:ml-64 md:pl-0">
 
         <div>
           {/* 🔥 TOGGLE SIDEBAR (MOBILE) */}
@@ -44,6 +47,11 @@ export default function Navbar({ onSidebarToggle }) {
           >
             <Menu size={28} />
           </button>
+        </div>
+
+        <div className="flex-1 flex justify-center md:justify-start md:ml-2">
+          {/* LOGO */}
+          <img src={logo} alt="WECCO" className="w-20 h-20 rounded-full" />
         </div>
 
         {/* ACTIONS NAVBAR */}

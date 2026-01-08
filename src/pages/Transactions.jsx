@@ -188,7 +188,7 @@ export default function Transactions() {
 
   /* ================= UI ================= */
   return (
-    <div className="min-h-screen  mt-20 p-2">
+    <div className="min-h-screen  mt-25 p-2">
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">

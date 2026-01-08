@@ -185,9 +185,7 @@ tr:nth-child(even) {
   @apply bg-gray-800;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 /* ================================
    🌙 MODE SOMBRE GLOBAL
