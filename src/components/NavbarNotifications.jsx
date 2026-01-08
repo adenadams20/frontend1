@@ -107,7 +107,7 @@ export default function NavbarNotifications({ backendUrl }) {
 
       {/* Dropdown */}
       {openDropdown && (
-        <div className="absolute right-0 mt-2 w-80 bg-white border shadow-lg rounded-lg z-50">
+        <div className="absolute dark:bg-gray-800 dark:border-gray-700 right-0 mt-2 w-80 border shadow-lg rounded-lg z-50">
           <div className="px-3 py-2 border-b flex items-center justify-between">
             <span className="font-semibold text-sm">Notifications</span>
             {unreadCount > 0 && (

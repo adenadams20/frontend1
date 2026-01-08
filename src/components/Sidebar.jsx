@@ -25,9 +25,9 @@ export default function Sidebar({ open, onClose }) {
 
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: Home },
-    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/transfer", label: "Transfert", icon: Send },
     { to: "/paiement", label: "Paiement", icon: Wallet },
+    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/cards", label: "Carte", icon: CreditCard },
     { to: "/settings", label: "Paramètres", icon: Settings },
     { to: "/faq", label: "Support", icon: HelpCircle },
@@ -51,7 +51,7 @@ export default function Sidebar({ open, onClose }) {
       {/* SIDEBAR */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 bg-gray-50 shadow-2xl z-50 p-6
+          fixed top-0 left-0 h-full w-64 dark:bg-gray-100 shadow-2xl z-50 p-6
           transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0

@@ -2,3 +2,306 @@
 @plugin "daisyui" {
   themes: "light";
 }
+* {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+
+
+/* -------------------------
+   MODE SOMBRE GLOBAL
+-------------------------- */
+
+body {
+  @apply bg-gray-100 text-[#02353] transition-colors duration-300;
+}
+
+.dark body {
+  @apply bg-gray-600 text-gray-900; 
+}
+
+/* NAVBAR */
+.dark nav {
+  @apply bg-[#011a33] text-white;
+}
+
+/* SIDEBAR */
+.dark aside {
+  @apply bg-[#011a33] ;
+}
+
+/* LIENS SIDEBAR */
+.dark aside a {
+  @apply text-gray-300 hover:bg-[#111a33];
+}
+
+.dark aside a:hover {
+  @apply bg-gray-400 text-gray-900 ;
+}
+
+/* CARDS / CONTAINERS */
+.dark .card,
+.dark .box {
+  @apply bg-gray-900 text-gray-100 border-gray-900;
+}
+
+/* INPUTS */
+.dark input,
+.dark select,
+.dark textarea {
+  @apply bg-gray-800 text-white border-gray-600;
+}
+
+.dark input::placeholder {
+  @apply text-gray-400;
+}
+
+/* BOUTONS */
+.dark button {
+  @apply border-gray-600;
+}
+
+/* OVERLAY */
+.dark .overlay {
+  @apply bg-black/70;
+}
+
+/* MODALES */
+.dark .modal-box {
+  @apply bg-gray-900 text-white;
+}
+.dark .modal-action button {
+  @apply border-gray-600;
+}
+
+/* TABLEAUX */
+.dark table {
+  @apply bg-gray-900 text-white;
+}
+.dark th,
+.dark td {
+  @apply border-gray-700;
+}
+.dark th {
+  @apply bg-gray-800;
+}
+.dark tr:nth-child(even) {
+  @apply bg-gray-800;
+}
+.dark tr:hover {
+  @apply bg-gray-700;
+}
+/* SELECTEURS DAISYUI */
+.dark .select select {
+  @apply bg-gray-800 text-white border-gray-600;
+}
+.dark .select select:focus {
+  @apply ring-1 ring-[#023053];
+}
+.dark .select .dropdown-content {
+  @apply bg-gray-900 text-white border-gray-700;
+}
+.dark .select .dropdown-content li:hover {
+  @apply bg-gray-700;
+}
+/* ALERTES */
+.dark .alert {
+  @apply bg-gray-800 text-white border-gray-700;
+}
+.dark .alert .btn {
+  @apply border-gray-600;
+
+}
+/* TOASTS */
+.dark .toast {
+  @apply bg-gray-800 text-white border-gray-700;
+}
+/* TABS */
+.dark .tabs .tab {
+  @apply text-gray-300;
+}
+.dark .tabs .tab.tab-active {
+  @apply bg-gray-700 text-white border-gray-600;
+}
+/* BADGES */
+.dark .badge {
+  @apply bg-gray-700 text-white;
+}
+/* PROGRESS BAR */
+.dark .progress {
+  @apply bg-gray-700;
+}
+.dark .progress::-webkit-progress-bar {
+  @apply bg-gray-700;
+}
+.dark .progress::-webkit-progress-value {
+  @apply bg-blue-600;
+}
+/* SWITCH */
+.dark .switch input:checked + .toggle {
+  @apply bg-blue-600;
+}
+/* PAGINATION */
+.dark .pagination .btn {
+  @apply bg-gray-800 text-white border-gray-700;
+}
+.dark .pagination .btn.btn-active {
+  @apply bg-blue-600 text-white border-blue-600;
+}
+
+/* -------------------------
+   STYLES GLOBAUX
+-------------------------- */
+a {
+  @apply text-[#011a33]  hover:text-[#02354] focus:text-white;
+  
+}
+
+input,
+select,
+textarea {
+  @apply border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#023053];
+}
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold;
+}
+table {
+  @apply w-full border-collapse;
+}
+th, td {
+  @apply border border-gray-300 px-4 py-2 text-left;
+}
+th {
+  @apply bg-gray-200;
+}
+
+tr:nth-child(even) {
+  @apply bg-gray-100;
+}
+.dark tr:hover {
+  @apply bg-gray-400;
+}
+.dark .div {
+  @apply bg-gray-800;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================
+   🌙 MODE SOMBRE GLOBAL
+================================ */
+
+/* Fond général */
+.dark body {
+  background-color: #0f172a; /* slate-900 */
+  color: #e5e7eb; /* gray-200 */
+}
+
+/* ================================
+   📦 CARTES / CONTAINERS
+================================ */
+.dark .bg-white {
+  background-color: #020617 !important; /* slate-950 */
+}
+
+.dark .shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* ================================
+   📝 TEXTES
+================================ */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark label {
+  color: #f8fafc; /* slate-50 */
+}
+
+.dark p {
+  color: #cbd5f5; /* slate-300 */
+}
+
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+/* ================================
+   🧾 INPUTS / SELECT / FORMS
+================================ */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: #020617;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+.dark input::placeholder {
+  color: #94a3b8;
+}
+
+.dark input:disabled,
+.dark select:disabled {
+  opacity: 0.6;
+}
+
+/* ================================
+   🔘 BOUTONS
+================================ */
+.dark button {
+  border-color: #334155;
+}
+
+.dark button:hover {
+  background-color: #1e293b;
+}
+
+/* Boutons rapides (5000 XOF etc.) */
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #334155 !important;
+}
+
+/* ================================
+   🟢 / 🟡 / 🔴 MESSAGES
+================================ */
+.dark .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+}
+
+.dark .bg-yellow-50 {
+  background-color: rgba(234, 179, 8, 0.15);
+  color: #fde68a;
+}
+
+.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #fecaca;
+}
+
+/* ================================
+   📇 CONTACTS / AVATARS
+================================ */
+.dark .rounded-full.bg-\[\#022b53\] {
+  background-color: #2563eb;
+}
+.dark .dropdown-content {
+  background-color: #0f172a;
+  border-color: #334155;
+}
+.dark .dropdown-content li:hover {
+  background-color: #1e293b;
+}
+
+

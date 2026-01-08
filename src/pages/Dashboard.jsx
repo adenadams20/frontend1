@@ -180,10 +180,10 @@ export default function Dashboard() {
   const totalBalance = accounts.reduce((sum, acc) => sum + (acc.amountRaw || 0), 0);
 
   return (
-    <div className="min-h-screen mt-20 bg-gray-50 px-3 md:p-2">
+    <div className="min-h-screen mt-20  px-3 md:p-2">
       {/* HEADER */}
       <h1 className="text-2xl md:text-3xl font-semibold text-center">Dashboard</h1>
-      <p className="text-gray-600 mb-10 text-center">Vue d'ensemble de vos finances</p>
+      <p className=" mb-10 text-center">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
       <section className="bg-gradient-to-r from-blue-950 to-blue-800 w-full text-white rounded-2xl p-6 md:p-8 shadow-md mb-10">
@@ -340,11 +340,11 @@ function AccountsCards({ accounts }) {
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-semibold mb-6">Mes Comptes</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {accounts.map((acc, i) => {
           const IconComp = acc.icon || CreditCardIcon;
           return (
-            <div key={i} className={`p-6 rounded-2xl text-white bg-gradient-to-r ${acc.gradient} shadow-lg`}>
+            <div key={i} className={`p-6 rounded-2xl text-white sm:hover:scale-102  bg-gradient-to-r ${acc.gradient} shadow-lg`}>
               <div className="flex justify-between mb-10">
                 <IconComp className="w-10 h-10 text-white" />
                 <span className="opacity-80">{acc.number}</span>

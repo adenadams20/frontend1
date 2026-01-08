@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 export default function Transfert({ onNewTransaction }) {
   const [activeTab, setActiveTab] = useState("interne"); // interne | externe
   return (
-    <div className="p-6 mt-15 bg-gray-50 w-full md:p-2 mx-auto">
+    <div className="p-6 mt-15  w-full md:p-2 mx-auto">
       <div className="mt-6">
         <h1 className="text-3xl font-semibold mb-1 text-center">Transfert d'argent</h1>
         <p className="mb-5 text-gray-600 text-center">
@@ -336,11 +336,7 @@ function TransfertExterne({ onNewTransaction }) {
 
       // Créer bénéficiaire si nécessaire
       if (!finalBeneficiaryId) {
-<<<<<<< HEAD
-        const resCreate = await fetch("http://localhost:5000/api/beneficiariesz", {
-=======
         const resCreate = await fetch(`${API_URL}/api/beneficiary`, {
->>>>>>> e6410e1cdb73a38ffd7923ad13e9d6aadbbf7984
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
           body: JSON.stringify({ name: (beneficiaire || "Bénéficiaire").trim(), accountNumber: accountNumber.trim() }),
@@ -412,7 +408,7 @@ function TransfertExterne({ onNewTransaction }) {
 
         <div>
           <label className="font-medium">Nom bénéficiaire</label>
-          <label className="font-medium">Nom bénéficiaire</label>
+    
           <input
             value={beneficiaire}
             onChange={(e) => {
@@ -443,12 +439,7 @@ function TransfertExterne({ onNewTransaction }) {
             onChange={(e) => setMontant(e.target.value)}
             className="w-full p-3 border rounded-xl"
           />
-          <input
-            type="number"
-            value={montant}
-            onChange={(e) => setMontant(e.target.value)}
-            className="w-full p-3 border rounded-xl"
-          />
+
         </div>
 
         <button

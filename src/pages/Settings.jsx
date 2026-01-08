@@ -254,7 +254,7 @@ export default function Settings() {
 
 
   return (
-    <div className="min-h-screen mt-18 bg-gray-50  w-full">
+    <div className="min-h-screen mt-18   w-full">
       {/* En-tête */}
       <div className="mb-6 max-w-5xl mx-auto md:ml-0">
         <h1 className="text-3xl font-bold text-gray-800 text-center">Paramètres</h1>

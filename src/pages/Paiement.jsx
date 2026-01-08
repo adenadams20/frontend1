@@ -185,7 +185,7 @@ export default function Paiement() {
   ];
 
   return (
-    <div className="w-full mt-16 p-4 z-0 bg-gray-50">
+    <div className="w-full mt-16 p-4 z-0 ">
       <h1 className="font-semibold text-3xl text-center mb-6">Paiement de factures</h1>
       <p className="mb-5 text-gray-600 text-center">
           Effectuez un paiement entre vos comptes ou vers un bénéficiaire
@@ -206,8 +206,8 @@ export default function Paiement() {
                 description: "",
               });
             }}
-            className={`cursor-pointer text-center shadow p-5 rounded-xl transition
-              ${activeTab === t.id ? "bg-[#022b53] text-white" : "bg-white text-[#022b53] hover:bg-gray-100"}`}
+            className={`cursor-pointer text-center shadow p-5 rounded-xl transition  
+              ${activeTab === t.id ? "bg-[#022b53] text-white" : "bg-white text-[#022b53] hover:bg-gray-100 md:hover:scale-103"}`}
           >
             <t.icon className="w-8 h-8 mx-auto mb-2" />
             <span className="font-semibold">{t.label}</span>
@@ -217,7 +217,7 @@ export default function Paiement() {
 
       <div className="mt-6 flex flex-col md:flex-row gap-6">
         {/* FORMULAIRE */}
-        <div className="md:w-2/3 bg-white shadow p-4 rounded-lg">
+        <div className="md:w-2/3 bg-white shadow p-4 rounded-lg ">
           <form onSubmit={handlePayment}>
             <Select name="service" value={formData.service} onChange={handleChange}>
               <option value="Eau">Eau</option>
