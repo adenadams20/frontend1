@@ -36,10 +36,10 @@ export default function Navbar({ onSidebarToggle }) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#022b53] text-white shadow">
-      <div className="flex items-center  p-2 md:ml-64 md:pl-0">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#022b53] flex text-white shadow">
+      <div className="p-2 md:ml-0 md:pl-0 items-center w-full flex justify-between">
 
-        <div>
+        <div className="flex">
           {/* 🔥 TOGGLE SIDEBAR (MOBILE) */}
           <button
             onClick={onSidebarToggle}
@@ -47,15 +47,17 @@ export default function Navbar({ onSidebarToggle }) {
           >
             <Menu size={28} />
           </button>
+
+          <div className=" flex justify-start  md:ml-20 sm:hidden md:block ml-4 z-20 shadow">
+          {/* LOGO */}
+          <img src={logo} alt="WECCO" className="w-15 h-15 rounded-full " />
+        </div>
         </div>
 
-        <div className="flex-1 flex justify-center md:justify-start md:ml-2">
-          {/* LOGO */}
-          <img src={logo} alt="WECCO" className="w-20 h-20 rounded-full" />
-        </div>
+        
 
         {/* ACTIONS NAVBAR */}
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex items-center justify-end  gap-4">
 
           {/* 🌙 DARK MODE (AJOUT FONCTIONNEL) */}
           <button

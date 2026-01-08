@@ -25,9 +25,9 @@ export default function Sidebar({ open, onClose }) {
 
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: Home },
+    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/transfer", label: "Transfert", icon: Send },
     { to: "/paiement", label: "Paiement", icon: Wallet },
-    { to: "/transactions", label: "Transactions", icon: CreditCard },
     { to: "/cards", label: "Carte", icon: CreditCard },
     { to: "/settings", label: "Paramètres", icon: Settings },
     { to: "/faq", label: "Support", icon: HelpCircle },
@@ -57,7 +57,7 @@ export default function Sidebar({ open, onClose }) {
           md:translate-x-0
         `}
       >
-        <div className="flex flex-col h-full mt-5 justify-between">
+        <div className="flex flex-col h-full mt-0 justify-between">
           <div>
             <h2 className="text-2xl font-bold mb-8 text-[#022b53]">WECCO</h2>
 

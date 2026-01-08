@@ -153,7 +153,7 @@ body {
    STYLES GLOBAUX
 -------------------------- */
 a {
-  @apply text-[#011a33]  hover:text-[#02354] focus:text-white;
+  @apply  hover:text-[#02354] focus:text-white;
   
 }
 

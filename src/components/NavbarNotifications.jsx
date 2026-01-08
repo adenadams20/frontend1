@@ -125,10 +125,10 @@ export default function NavbarNotifications({ backendUrl }) {
                   type="button"
                   onClick={() => markAsRead(n._id)}
                   className={`w-full text-left p-2 rounded-md hover:bg-gray-100 transition ${
-                    !n.isRead ? "bg-blue-50" : "bg-white"
+                    !n.isRead ? "bg-gray-100" : "bg-white"
                   }`}
                 >
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start text-gray-900 justify-between gap-2">
                     <p className={`text-sm ${!n.isRead ? "font-semibold" : "font-medium"}`}>
                       {n.title}
                     </p>
@@ -139,7 +139,7 @@ export default function NavbarNotifications({ backendUrl }) {
 
                   <p className="text-xs text-gray-600 mt-1">{n.message}</p>
 
-                  <p className="text-[11px] text-gray-400 mt-1">
+                  <p className="text-[11px] text-gray-500 mt-1">
                     {n.createdAt ? new Date(n.createdAt).toLocaleString() : ""}
                   </p>
                 </button>

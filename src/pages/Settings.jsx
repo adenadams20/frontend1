@@ -44,9 +44,24 @@ const SvgMoon = (props) => (
 
 // SVG PaintBrush (Préférence)
 const SvgPaintBrush = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" viewBox="0 0 24 24" {...props}>
-    <circle cx="12" cy="5" r="5" />
-    <path d="M2 12h20" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    {...props}
+  >
+    {/* Manche du pinceau */}
+    <path d="M14 3l7 7" />
+
+    {/* Tête du pinceau */}
+    <path d="M10 7l7 7" />
+
+    {/* Poils */}
+    <path d="M3 21c2-2 5-2 7 0 2 2 5 2 7 0" />
   </svg>
 );
 
