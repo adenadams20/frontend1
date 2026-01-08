@@ -20,7 +20,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/charts";
 /**
  * Dashboard (version optimisée)
  * - récupère transactions, comptes et charts depuis le backend
@@ -81,7 +81,8 @@ export default function Dashboard() {
       _id: acc._id,
       type,
       name: cfg.name,
-      number: acc.number || (acc._id ? "**** " + String(acc._id).slice(-4) : "****"),
+      number:
+        acc.number || (acc._id ? "**** " + String(acc._id).slice(-4) : "****"),
       amount: (balanceNumber || 0).toLocaleString(), // displayed like "12,345"
       amountRaw: balanceNumber, // numeric raw for sums
       icon: cfg.icon,
@@ -96,6 +97,33 @@ export default function Dashboard() {
       setLoading(true);
       setError(null);
 
+      const CATEGORIES = [
+        {
+          key: "eau",
+          label: "Eau",
+          color: "#3b82f6",
+          colorClass: "bg-blue-500",
+        },
+        {
+          key: "electricite",
+          label: "Électricité",
+          color: "#f59e0b",
+          colorClass: "bg-yellow-500",
+        },
+        {
+          key: "internet",
+          label: "Internet",
+          color: "#22c55e",
+          colorClass: "bg-green-500",
+        },
+        {
+          key: "mobile",
+          label: "Mobile",
+          color: "#ef4444",
+          colorClass: "bg-red-500",
+        },
+      ];
+
       try {
         // transactions
         const resTrans = await fetch(`${API_URL}/api/transactions`, {
@@ -103,10 +131,12 @@ export default function Dashboard() {
         });
         if (!resTrans.ok) {
           const text = await resTrans.text().catch(() => resTrans.statusText);
-          throw new Error(`Transactions fetch failed: ${resTrans.status} ${text}`);
+          throw new Error(
+            `Transactions fetch failed: ${resTrans.status} ${text}`
+          );
         }
         const dataTrans = await resTrans.json();
-    
+
         const txs = Array.isArray(dataTrans)
           ? dataTrans.map((t) => ({
               id: t._id || t.id,
@@ -115,8 +145,17 @@ export default function Dashboard() {
               color: t.color || "text-blue-500",
               title: t.title || t.description || t.label || "Transaction",
               subtitle: t.subtitle || t.category || "",
-              amount: typeof t.amount === "number" ? (t.amount > 0 ? `+${t.amount.toLocaleString()}` : `${t.amount.toLocaleString()}`) : t.amount || "",
-              date: t.date ? t.date.slice(0, 10) : t.createdAt ? t.createdAt.slice(0, 10) : "",
+              amount:
+                typeof t.amount === "number"
+                  ? t.amount > 0
+                    ? `+${t.amount.toLocaleString()}`
+                    : `${t.amount.toLocaleString()}`
+                  : t.amount || "",
+              date: t.date
+                ? t.date.slice(0, 10)
+                : t.createdAt
+                ? t.createdAt.slice(0, 10)
+                : "",
             }))
           : [];
         setTransactions(txs);
@@ -145,16 +184,44 @@ export default function Dashboard() {
         }
         const chartsJson = await resCharts.json();
         // support previously used format { line, bar, pie } or direct arrays
-        setLineData(Array.isArray(chartsJson.line) ? chartsJson.line : chartsJson.lineData || []);
-        setBarData(Array.isArray(chartsJson.bar) ? chartsJson.bar : chartsJson.barData || []);
-        // for pie, ensure each entry has color or colorClass for rendering
-        const pieSource = Array.isArray(chartsJson.pie) ? chartsJson.pie : chartsJson.pieData || [];
-        const normalizedPie = pieSource.map((p, i) => ({
-          name: p.name || `Part ${i + 1}`,
-          value: typeof p.value === "number" ? p.value : Number(p.value) || 0,
-          color: p.color, // optional hex
-          colorClass: p.colorClass, // optional tailwind class
-        }));
+        setLineData(
+          Array.isArray(chartsJson.line)
+            ? chartsJson.line
+            : chartsJson.lineData || []
+        );
+        const rawBar = Array.isArray(chartsJson.bar)
+          ? chartsJson.bar
+          : chartsJson.barData || [];
+
+        const rawPie = Array.isArray(chartsJson.pie)
+          ? chartsJson.pie
+          : chartsJson.pieData || [];
+
+        // BAR CHART → toujours 4 catégories
+        const normalizedBar = CATEGORIES.map((cat) => {
+          const found = rawBar.find(
+            (b) => b.name?.toLowerCase() === cat.label.toLowerCase()
+          );
+          return {
+            name: cat.label,
+            value: found ? Number(found.value) || 0 : 0,
+          };
+        });
+
+        // PIE CHART → mêmes 4 catégories + couleurs fixes
+        const normalizedPie = CATEGORIES.map((cat) => {
+          const found = rawPie.find(
+            (p) => p.name?.toLowerCase() === cat.label.toLowerCase()
+          );
+          return {
+            name: cat.label,
+            value: found ? Number(found.value) || 0 : 0,
+            color: cat.color,
+            colorClass: cat.colorClass,
+          };
+        });
+
+        setBarData(normalizedBar);
         setPieData(normalizedPie);
       } catch (err) {
         console.error("Dashboard fetch error:", err);
@@ -168,21 +235,41 @@ export default function Dashboard() {
   }, [token]);
 
   const cards = [
-    { title: "Transfert", icon: ArrowsRightLeftIcon, color: "text-blue-600", link: "/transfer" },
-    { title: "Paiement", icon: CreditCardIcon, color: "text-green-500", link: "/paiement" },
-    { title: "Historique", icon: ClockIcon, color: "text-purple-500", link: "/transactions" },
+    {
+      title: "Transfert",
+      icon: ArrowsRightLeftIcon,
+      color: "text-blue-600",
+      link: "/transfer",
+    },
+    {
+      title: "Paiement",
+      icon: CreditCardIcon,
+      color: "text-green-500",
+      link: "/paiement",
+    },
+    {
+      title: "Historique",
+      icon: ClockIcon,
+      color: "text-purple-500",
+      link: "/transactions",
+    },
   ];
 
   if (loading) return <p className="p-6">Chargement...</p>;
   if (error) return <p className="p-6 text-red-500">Erreur : {error}</p>;
 
   // compute total safely (use amountRaw numeric)
-  const totalBalance = accounts.reduce((sum, acc) => sum + (acc.amountRaw || 0), 0);
+  const totalBalance = accounts.reduce(
+    (sum, acc) => sum + (acc.amountRaw || 0),
+    0
+  );
 
   return (
     <div className="min-h-screen mt-20  px-3 md:p-2">
       {/* HEADER */}
-      <h1 className="text-2xl md:text-3xl font-semibold text-center">Dashboard</h1>
+      <h1 className="text-2xl md:text-3xl font-semibold text-center">
+        Dashboard
+      </h1>
       <p className=" mb-10 text-center">Vue d'ensemble de vos finances</p>
 
       {/* SOLDE TOTAL */}
@@ -191,13 +278,25 @@ export default function Dashboard() {
           <div>
             <p className="text-sm opacity-90">Solde Total</p>
             <p className="text-3xl font-semibold mt-2">
-              {Number.isFinite(totalBalance) ? totalBalance.toLocaleString() : "0"} XOF
+              {Number.isFinite(totalBalance)
+                ? totalBalance.toLocaleString()
+                : "0"}{" "}
+              XOF
             </p>
             <div className="flex items-center mt-4 text-sm opacity-90">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10l6 6L21 4"></path>
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 10l6 6L21 4"
+                ></path>
               </svg>
-             
             </div>
           </div>
           <div className="flex-1 mt-6 lg:mt-0">
@@ -229,7 +328,9 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* LINE CHART */}
         <div className="bg-white p-4 md:p-6 rounded-2xl shadow w-full overflow-x-auto">
-          <h2 className="text-lg md:text-xl font-semibold">Revenus vs Dépenses</h2>
+          <h2 className="text-lg md:text-xl font-semibold">
+            Revenus vs Dépenses
+          </h2>
           <p className="text-gray-500 mb-4 text-sm">6 derniers mois</p>
           <div className="min-w-[320px]">
             <LineChart width={500} height={260} data={lineData}>
@@ -237,15 +338,27 @@ export default function Dashboard() {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="revenus" stroke="#22c55e" strokeWidth={3} />
-              <Line type="monotone" dataKey="depenses" stroke="#ef4444" strokeWidth={3} />
+              <Line
+                type="monotone"
+                dataKey="revenus"
+                stroke="#22c55e"
+                strokeWidth={3}
+              />
+              <Line
+                type="monotone"
+                dataKey="depenses"
+                stroke="#ef4444"
+                strokeWidth={3}
+              />
             </LineChart>
           </div>
         </div>
 
         {/* BAR CHART */}
         <div className="bg-white p-4 md:p-6 rounded-2xl shadow w-full overflow-x-auto">
-          <h2 className="text-lg md:text-xl font-semibold">Dépenses par catégorie</h2>
+          <h2 className="text-lg md:text-xl font-semibold">
+            Dépenses par catégorie
+          </h2>
           <p className="text-gray-500 mb-4 text-sm">Ce mois</p>
           <div className="min-w-[320px] ">
             <BarChart width={500} height={260} data={barData}>
@@ -276,7 +389,9 @@ export default function Dashboard() {
                 title={t.title}
                 subtitle={t.subtitle}
                 amount={t.amount}
-                amountColor={t.amount?.startsWith("-") ? "text-red-500" : "text-green-600"}
+                amountColor={
+                  t.amount?.startsWith("-") ? "text-red-500" : "text-green-600"
+                }
                 date={t.date}
               />
             ))
@@ -290,9 +405,18 @@ export default function Dashboard() {
           <h2 className="text-xl font-semibold mb-4">Répartition</h2>
 
           <PieChart width={250} height={250}>
-            <Pie data={pieData} cx={125} cy={125} outerRadius={110} dataKey="value">
+            <Pie
+              data={pieData}
+              cx={125}
+              cy={125}
+              outerRadius={110}
+              dataKey="value"
+            >
               {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color || (index === 0 ? "#ef4444" : "#22c55e")} />
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color || (index === 0 ? "#ef4444" : "#22c55e")}
+                />
               ))}
             </Pie>
           </PieChart>
@@ -300,9 +424,16 @@ export default function Dashboard() {
           <div className="mt-6 w-full space-y-2">
             {pieData.map((entry, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className={`w-3 h-3 rounded-full ${entry.colorClass || (i === 0 ? "bg-red-500" : "bg-green-500")}`}></span>
+                <span
+                  className={`w-3 h-3 rounded-full ${
+                    entry.colorClass ||
+                    (i === 0 ? "bg-red-500" : "bg-green-500")
+                  }`}
+                ></span>
                 <p className="text-gray-700">{entry.name}</p>
-                <span className="font-semibold ml-auto">{(entry.value || 0).toLocaleString()} XOF</span>
+                <span className="font-semibold ml-auto">
+                  {(entry.value || 0).toLocaleString()} XOF
+                </span>
               </div>
             ))}
           </div>
@@ -313,11 +444,22 @@ export default function Dashboard() {
 }
 
 /* TRANSACTION ITEM */
-function TransactionItem({ icon, bg, color, title, subtitle, amount, amountColor, date }) {
+function TransactionItem({
+  icon,
+  bg,
+  color,
+  title,
+  subtitle,
+  amount,
+  amountColor,
+  date,
+}) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center`}>
+        <div
+          className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center`}
+        >
           <span className={`${color} text-xl`}>{icon}</span>
         </div>
         <div>
@@ -344,7 +486,10 @@ function AccountsCards({ accounts }) {
         {accounts.map((acc, i) => {
           const IconComp = acc.icon || CreditCardIcon;
           return (
-            <div key={i} className={`p-6 rounded-2xl text-white sm:hover:scale-102  bg-gradient-to-r ${acc.gradient} shadow-lg`}>
+            <div
+              key={i}
+              className={`p-6 rounded-2xl text-white sm:hover:scale-102  bg-gradient-to-r ${acc.gradient} shadow-lg`}
+            >
               <div className="flex justify-between mb-10">
                 <IconComp className="w-10 h-10 text-white" />
                 <span className="opacity-80">{acc.number}</span>
